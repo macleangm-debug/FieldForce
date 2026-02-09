@@ -1,5 +1,5 @@
 /**
- * DataPulse - Canva-inspired Layout
+ * FieldForce - Canva-inspired Layout
  * Rail + Expandable Panel navigation system
  */
 
