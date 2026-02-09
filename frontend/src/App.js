@@ -1,52 +1,236 @@
-import { useEffect } from "react";
-import "@/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import { useAuthStore, useUIStore } from './store';
+import { LoginPage, RegisterPage, AuthCallbackPage } from './pages/AuthPages';
+import { DashboardPage } from './pages/DashboardPage';
+import { ProjectsPage } from './pages/ProjectsPage';
+import { FormsPage } from './pages/FormsPage';
+import { FormBuilderPage } from './pages/FormBuilderPage';
+import { FormPreviewPage } from './pages/FormPreviewPage';
+import { FormTemplatesPage } from './pages/FormTemplatesPage';
+import { SubmissionsPage } from './pages/SubmissionsPage';
+import { TeamPage, CreateOrganizationPage } from './pages/TeamPage';
+import { CasesPage } from './pages/CasesPage';
+import { CaseImportPage } from './pages/CaseImportPage';
+import { QualityPage } from './pages/QualityPage';
+import { SettingsPage } from './pages/SettingsPage';
+import { GPSMapPage } from './pages/GPSMapPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
+import { RBACPage } from './pages/RBACPage';
+import { TranslationsPage } from './pages/TranslationsPage';
+import { DatasetsPage } from './pages/DatasetsPage';
+import { DeviceManagementPage } from './pages/DeviceManagementPage';
+import { CAWISurveyPage, SurveyCompletePage } from './pages/CAWISurveyPage';
+import { PWAInstallPrompt } from './components/PWAComponents';
+import { NetworkStatusBanner } from './components/OfflineSync';
+import '@/App.css';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
+// Register service worker for offline support
+const registerServiceWorker = async () => {
+  if ('serviceWorker' in navigator) {
     try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registered:', registration);
+      window.registration = registration;
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
     }
-  };
+  }
+};
 
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+// Protected Route wrapper
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+};
 
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
+// Public Route wrapper (redirect to dashboard if authenticated)
+const PublicRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  return children;
 };
 
 function App() {
+  const { theme } = useUIStore();
+
+  // Register service worker on mount
+  useEffect(() => {
+    registerServiceWorker();
+  }, []);
+
   return (
-    <div className="App">
+    <div className={theme === 'dark' ? 'dark' : ''}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          {/* Public Routes */}
+          <Route path="/login" element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          } />
+          <Route path="/register" element={
+            <PublicRoute>
+              <RegisterPage />
+            </PublicRoute>
+          } />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
+          {/* Protected Routes - Core FieldForce Features */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/projects" element={
+            <ProtectedRoute>
+              <ProjectsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/projects/:projectId" element={
+            <ProtectedRoute>
+              <ProjectsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/forms" element={
+            <ProtectedRoute>
+              <FormsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/forms/new" element={
+            <ProtectedRoute>
+              <FormsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/forms/:formId" element={
+            <ProtectedRoute>
+              <FormBuilderPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/forms/:formId/edit" element={
+            <ProtectedRoute>
+              <FormBuilderPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/forms/:formId/preview" element={
+            <ProtectedRoute>
+              <FormPreviewPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/submissions" element={
+            <ProtectedRoute>
+              <SubmissionsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/cases" element={
+            <ProtectedRoute>
+              <CasesPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/cases/import" element={
+            <ProtectedRoute>
+              <CaseImportPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/quality" element={
+            <ProtectedRoute>
+              <QualityPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/map" element={
+            <ProtectedRoute>
+              <GPSMapPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/templates" element={
+            <ProtectedRoute>
+              <FormTemplatesPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/exports" element={
+            <ProtectedRoute>
+              <SubmissionsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/team" element={
+            <ProtectedRoute>
+              <TeamPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/analytics" element={
+            <ProtectedRoute>
+              <AnalyticsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/rbac" element={
+            <ProtectedRoute>
+              <RBACPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/translations" element={
+            <ProtectedRoute>
+              <TranslationsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/datasets" element={
+            <ProtectedRoute>
+              <DatasetsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/devices" element={
+            <ProtectedRoute>
+              <DeviceManagementPage />
+            </ProtectedRoute>
+          } />
+          
+          {/* Public CAWI Survey Routes */}
+          <Route path="/survey/:formId" element={<CAWISurveyPage />} />
+          <Route path="/survey/complete" element={<SurveyCompletePage />} />
+          
+          <Route path="/organizations/new" element={
+            <ProtectedRoute>
+              <CreateOrganizationPage />
+            </ProtectedRoute>
+          } />
+
+          {/* Default redirect */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
+        
+        {/* PWA Components */}
+        <PWAInstallPrompt />
+        
+        {/* Offline Sync Status */}
+        <NetworkStatusBanner />
       </BrowserRouter>
+      
+      <Toaster 
+        position="top-right" 
+        richColors 
+        toastOptions={{
+          style: {
+            background: 'hsl(var(--card))',
+            border: '1px solid hsl(var(--border))',
+            color: 'hsl(var(--foreground))'
+          }
+        }}
+      />
     </div>
   );
 }
