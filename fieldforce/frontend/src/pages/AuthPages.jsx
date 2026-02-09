@@ -304,7 +304,7 @@ export function RegisterPage() {
               </div>
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600" 
+                className="w-full" 
                 disabled={loading}
                 data-testid="register-submit-btn"
               >
