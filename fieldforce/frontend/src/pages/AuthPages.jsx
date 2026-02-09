@@ -243,8 +243,8 @@ export function RegisterPage() {
         <Card className="border-border shadow-sm">
           <CardHeader className="text-center pb-2">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-primary-foreground" />
               </div>
               <span className="font-barlow text-2xl font-bold">FieldForce</span>
             </div>
