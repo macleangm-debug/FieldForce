@@ -1,6 +1,6 @@
 /**
- * FieldForce - Canva-inspired Layout
- * Simplified navigation for mobile data collection
+ * DataPulse - Canva-inspired Layout
+ * Rail + Expandable Panel navigation system
  */
 
 import React, { useState, useEffect } from 'react';
@@ -11,6 +11,8 @@ import {
   Folder,
   Database,
   MapPin,
+  Sparkles,
+  LayoutGrid,
   Settings,
   LogOut,
   Menu,
@@ -24,13 +26,22 @@ import {
   Briefcase,
   Table2,
   Download,
+  Phone,
+  ClipboardCheck,
+  Link2,
+  ArrowLeftRight,
   Smartphone,
+  Brain,
+  Route,
+  BarChart3,
+  Puzzle,
+  Workflow,
   Users,
   Shield,
   Languages,
-  BarChart3,
-  Plus,
-  Zap
+  Key,
+  Crown,
+  Plus
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
@@ -51,7 +62,7 @@ import { useAuthStore, useOrgStore, useUIStore } from '../store';
 import { cn } from '../lib/utils';
 import { OfflineStatusIndicator } from '../components/OfflineStatus';
 
-// FieldForce Navigation - Simplified for mobile data collection
+// Navigation structure - grouped for Canva-style rail
 const NAVIGATION = [
   {
     id: 'home',
@@ -83,14 +94,37 @@ const NAVIGATION = [
     ]
   },
   {
-    id: 'field',
-    label: 'Field',
+    id: 'field_ops',
+    label: 'Field Ops',
     icon: MapPin,
     items: [
-      { label: 'GPS Map', path: '/map', icon: MapPin },
-      { label: 'Devices', path: '/devices', icon: Smartphone },
-      { label: 'Quality', path: '/quality', icon: Zap },
-      { label: 'Analytics', path: '/analytics', icon: BarChart3 }
+      { label: 'CATI Center', path: '/cati', icon: Phone },
+      { label: 'Back-check', path: '/backcheck', icon: ClipboardCheck },
+      { label: 'Token Surveys', path: '/token-surveys', icon: Link2 },
+      { label: 'Preload/Writeback', path: '/preload', icon: ArrowLeftRight },
+      { label: 'Devices', path: '/devices', icon: Smartphone }
+    ]
+  },
+  {
+    id: 'quality',
+    label: 'Quality & AI',
+    icon: Sparkles,
+    items: [
+      { label: 'Data Analysis', path: '/analysis', icon: BarChart3 },
+      { label: 'Quality AI', path: '/quality-ai', icon: Brain },
+      { label: 'Simulation', path: '/simulation', icon: Route },
+      { label: 'Analytics', path: '/analytics', icon: BarChart3 },
+      { label: 'Quality', path: '/quality', icon: Sparkles },
+      { label: 'GPS Map', path: '/map', icon: MapPin }
+    ]
+  },
+  {
+    id: 'apps',
+    label: 'Apps',
+    icon: LayoutGrid,
+    items: [
+      { label: 'Plugins', path: '/plugins', icon: Puzzle },
+      { label: 'Workflows', path: '/workflows', icon: Workflow }
     ]
   },
   {
@@ -101,7 +135,9 @@ const NAVIGATION = [
       { label: 'Team', path: '/team', icon: Users },
       { label: 'Roles', path: '/rbac', icon: Shield },
       { label: 'Translations', path: '/translations', icon: Languages },
-      { label: 'Settings', path: '/settings', icon: Settings }
+      { label: 'API Security', path: '/security', icon: Key },
+      { label: 'Settings', path: '/settings', icon: Settings },
+      { label: 'Super Admin', path: '/admin', icon: Crown }
     ]
   }
 ];
@@ -156,10 +192,10 @@ export function DashboardLayout({ children }) {
       <div className="flex h-screen bg-background">
         {/* Rail - Thin icon sidebar with labels */}
         <aside className="hidden lg:flex flex-col items-center w-[80px] bg-card border-r border-border py-4">
-          {/* Logo - FieldForce */}
+          {/* Logo */}
           <Link to="/dashboard" className="mb-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/20">
-              <MapPin className="w-5 h-5 text-white" />
+              <Sparkles className="w-5 h-5 text-white" />
             </div>
           </Link>
 
@@ -180,24 +216,24 @@ export function DashboardLayout({ children }) {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/projects')}>
                 <Folder className="w-4 h-4 mr-2" />
-                Projects
+                Recent Projects
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/forms')}>
                 <FileText className="w-4 h-4 mr-2" />
-                Forms
+                Recent Forms
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/forms/new')}>
                 <Plus className="w-4 h-4 mr-2" />
                 New Form
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate('/analysis')}>
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Data Analysis
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/submissions')}>
                 <ClipboardList className="w-4 h-4 mr-2" />
                 Submissions
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/map')}>
-                <MapPin className="w-4 h-4 mr-2" />
-                GPS Map
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate('/settings')}>
@@ -447,10 +483,10 @@ export function DashboardLayout({ children }) {
               >
                 <div className="p-4 border-b border-border flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
-                      <MapPin className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-primary-foreground" />
                     </div>
-                    <span className="font-semibold text-foreground">FieldForce</span>
+                    <span className="font-semibold text-foreground">DataPulse</span>
                   </div>
                   <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg hover:bg-muted">
                     <X className="w-5 h-5" />
@@ -539,7 +575,7 @@ export function DashboardLayout({ children }) {
 }
 
 // Named exports for backward compatibility
-export const Sidebar = () => null;
-export const TopBar = () => null;
+export const Sidebar = () => null; // Deprecated - use DashboardLayout
+export const TopBar = () => null; // Deprecated - integrated into DashboardLayout
 
 export default DashboardLayout;
