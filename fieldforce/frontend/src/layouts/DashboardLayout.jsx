@@ -447,7 +447,7 @@ export function DashboardLayout({ children }) {
               >
                 <div className="p-4 border-b border-border flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
                       <MapPin className="w-4 h-4 text-white" />
                     </div>
                     <span className="font-semibold text-foreground">FieldForce</span>
