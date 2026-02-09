@@ -46,8 +46,8 @@ export function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left side - Clean branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-emerald-500/10 via-transparent to-teal-500/10">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-teal-500/5" />
+      <div className="hidden lg:flex lg:w-1/2 relative bg-primary/5">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5" />
         
         <div className="relative z-10 flex flex-col justify-center p-12 w-full">
           <motion.div
@@ -56,8 +56,8 @@ export function LoginPage() {
             transition={{ delay: 0.2 }}
           >
             <div className="flex items-center gap-3 mb-12">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                <MapPin className="w-7 h-7 text-white" />
+              <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
+                <MapPin className="w-7 h-7 text-primary-foreground" />
               </div>
               <span className="font-barlow text-3xl font-bold tracking-tight text-foreground">FieldForce</span>
             </div>
@@ -80,7 +80,7 @@ export function LoginPage() {
                 'Multi-language support (English, Swahili)'
               ].map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-foreground/70">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <div className="w-2 h-2 rounded-full bg-primary" />
                   <span className="text-sm">{feature}</span>
                 </div>
               ))}
