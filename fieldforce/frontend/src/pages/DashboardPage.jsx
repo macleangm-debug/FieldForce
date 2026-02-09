@@ -43,21 +43,21 @@ const StatCard = ({ title, value, icon: Icon, trend, description, onClick }) => 
     transition={{ duration: 0.2 }}
   >
     <Card 
-      className="bg-white hover:shadow-md transition-all cursor-pointer h-full border border-slate-200"
+      className="bg-card hover:shadow-md transition-all cursor-pointer h-full border border-border"
       onClick={onClick}
       data-testid={`stat-card-${title.toLowerCase().replace(/\s/g, '-')}`}
     >
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-slate-500 mb-1">{title}</p>
-            <p className="text-3xl font-semibold tracking-tight text-slate-900">{value}</p>
+            <p className="text-sm text-muted-foreground mb-1">{title}</p>
+            <p className="text-3xl font-semibold tracking-tight text-foreground">{value}</p>
             {description && (
-              <p className="text-xs text-slate-400 mt-2">{description}</p>
+              <p className="text-xs text-muted-foreground mt-2">{description}</p>
             )}
           </div>
-          <div className="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-sky-500" />
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Icon className="w-5 h-5 text-primary" />
           </div>
         </div>
         {trend !== undefined && (
@@ -66,7 +66,7 @@ const StatCard = ({ title, value, icon: Icon, trend, description, onClick }) => 
             <span className={`text-sm ${trend >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
               {trend >= 0 ? '+' : ''}{trend}%
             </span>
-            <span className="text-xs text-slate-400 ml-1">vs last week</span>
+            <span className="text-xs text-muted-foreground ml-1">vs last week</span>
           </div>
         )}
       </CardContent>
@@ -75,21 +75,21 @@ const StatCard = ({ title, value, icon: Icon, trend, description, onClick }) => 
 );
 
 const ActivityItem = ({ activity }) => (
-  <div className="flex items-start gap-3 py-3 border-b border-slate-100 last:border-0">
-    <div className="w-8 h-8 rounded-full bg-sky-50 flex items-center justify-center mt-0.5">
-      <Database className="w-4 h-4 text-sky-500" />
+  <div className="flex items-start gap-3 py-3 border-b border-border last:border-0">
+    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-0.5">
+      <Database className="w-4 h-4 text-primary" />
     </div>
     <div className="flex-1 min-w-0">
-      <p className="text-sm text-slate-700">
-        <span className="font-medium text-slate-900">{activity.user_name}</span>
+      <p className="text-sm text-foreground">
+        <span className="font-medium">{activity.user_name}</span>
         {' submitted to '}
-        <span className="font-medium text-slate-900">{activity.form_name}</span>
+        <span className="font-medium">{activity.form_name}</span>
       </p>
       <div className="flex items-center gap-2 mt-1">
         <Badge variant={activity.status === 'approved' ? 'default' : 'secondary'} className="text-xs">
           {activity.status}
         </Badge>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-muted-foreground">
           {formatRelativeTime(activity.timestamp)}
         </span>
       </div>
@@ -214,7 +214,7 @@ export function DashboardPage() {
         {viewMode === 'standard' && (
           <>
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {loading ? (
             Array(4).fill(0).map((_, i) => (
               <Card key={i}>
@@ -258,10 +258,10 @@ export function DashboardPage() {
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Submission Trends */}
-          <Card className="lg:col-span-2 bg-white border border-slate-200">
+          <Card className="lg:col-span-2 bg-card border border-border">
             <CardHeader>
-              <CardTitle className="text-slate-900">Submission Trends</CardTitle>
-              <CardDescription className="text-slate-500">Last 14 days</CardDescription>
+              <CardTitle className="text-foreground">Submission Trends</CardTitle>
+              <CardDescription className="text-muted-foreground">Last 14 days</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (
@@ -305,10 +305,10 @@ export function DashboardPage() {
           </Card>
 
           {/* Data Quality */}
-          <Card className="bg-white border border-slate-200">
+          <Card className="bg-card border border-border">
             <CardHeader>
-              <CardTitle className="text-slate-900">Data Quality</CardTitle>
-              <CardDescription className="text-slate-500">Overall quality metrics</CardDescription>
+              <CardTitle className="text-foreground">Data Quality</CardTitle>
+              <CardDescription className="text-muted-foreground">Overall quality metrics</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {loading ? (
@@ -321,7 +321,7 @@ export function DashboardPage() {
                 <>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="text-sm text-slate-500">Avg Quality Score</span>
+                      <span className="text-sm text-muted-foreground">Avg Quality Score</span>
                       <span className={`text-sm font-mono font-medium ${getQualityColor(quality.avg_quality_score)}`}>
                         {quality.avg_quality_score}%
                       </span>
@@ -329,22 +329,22 @@ export function DashboardPage() {
                     <Progress value={quality.avg_quality_score} className="h-2" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 rounded-lg bg-emerald-50 border border-emerald-100">
-                      <p className="text-2xl font-semibold text-emerald-600">{quality.approved_count}</p>
-                      <p className="text-xs text-slate-500">Approved</p>
+                    <div className="text-center p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                      <p className="text-2xl font-semibold text-emerald-500">{quality.approved_count}</p>
+                      <p className="text-xs text-muted-foreground">Approved</p>
                     </div>
-                    <div className="text-center p-3 rounded-lg bg-red-50 border border-red-100">
-                      <p className="text-2xl font-semibold text-red-600">{quality.rejected_count}</p>
-                      <p className="text-xs text-slate-500">Rejected</p>
+                    <div className="text-center p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                      <p className="text-2xl font-semibold text-red-500">{quality.rejected_count}</p>
+                      <p className="text-xs text-muted-foreground">Rejected</p>
                     </div>
                   </div>
-                  <div className="text-center p-3 rounded-lg bg-amber-50 border border-amber-100">
-                    <p className="text-2xl font-semibold text-amber-600">{quality.flagged_count}</p>
-                    <p className="text-xs text-slate-500">Flagged for Review</p>
+                  <div className="text-center p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                    <p className="text-2xl font-semibold text-amber-500">{quality.flagged_count}</p>
+                    <p className="text-xs text-muted-foreground">Flagged for Review</p>
                   </div>
                 </>
               ) : (
-                <p className="text-sm text-slate-400 text-center py-8">No data yet</p>
+                <p className="text-sm text-muted-foreground text-center py-8">No data yet</p>
               )}
             </CardContent>
           </Card>
@@ -353,11 +353,11 @@ export function DashboardPage() {
         {/* Recent Activity & Quick Stats */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Activity */}
-          <Card className="lg:col-span-2 bg-white border border-slate-200">
+          <Card className="lg:col-span-2 bg-card border border-border">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-slate-900">Recent Activity</CardTitle>
-                <CardDescription className="text-slate-500">Latest submissions</CardDescription>
+                <CardTitle className="text-foreground">Recent Activity</CardTitle>
+                <CardDescription className="text-muted-foreground">Latest submissions</CardDescription>
               </div>
               <Button variant="ghost" size="sm" onClick={() => navigate('/submissions')}>
                 View all
@@ -385,32 +385,32 @@ export function DashboardPage() {
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <Database className="w-12 h-12 text-slate-300 mx-auto mb-2" />
-                  <p className="text-sm text-slate-400">No recent activity</p>
+                  <Database className="w-12 h-12 text-muted-foreground/30 mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">No recent activity</p>
                 </div>
               )}
             </CardContent>
           </Card>
 
           {/* Quick Actions */}
-          <Card className="bg-white border border-slate-200">
+          <Card className="bg-card border border-border">
             <CardHeader>
-              <CardTitle className="text-slate-900">Quick Actions</CardTitle>
+              <CardTitle className="text-foreground">Quick Actions</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full justify-start hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200" onClick={() => navigate('/projects/new')}>
+            <CardContent className="space-y-3">
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/projects/new')}>
                 <FolderKanban className="w-4 h-4 mr-2" />
                 New Project
               </Button>
-              <Button variant="outline" className="w-full justify-start hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200" onClick={() => navigate('/forms/new')}>
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/forms/new')}>
                 <FileText className="w-4 h-4 mr-2" />
                 New Form
               </Button>
-              <Button variant="outline" className="w-full justify-start hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200" onClick={() => navigate('/team')}>
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/team')}>
                 <Users className="w-4 h-4 mr-2" />
                 Manage Team
               </Button>
-              <Button variant="outline" className="w-full justify-start hover:bg-sky-50 hover:text-sky-600 hover:border-sky-200" onClick={() => navigate('/exports')}>
+              <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/exports')}>
                 <Activity className="w-4 h-4 mr-2" />
                 Export Data
               </Button>
