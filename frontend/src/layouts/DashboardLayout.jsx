@@ -62,7 +62,7 @@ import { useAuthStore, useOrgStore, useUIStore } from '../store';
 import { cn } from '../lib/utils';
 import { OfflineStatusIndicator } from '../components/OfflineStatus';
 
-// Navigation structure - grouped for Canva-style rail
+// Navigation structure - grouped for Canva-style rail (FieldForce simplified)
 const NAVIGATION = [
   {
     id: 'home',
@@ -94,37 +94,14 @@ const NAVIGATION = [
     ]
   },
   {
-    id: 'field_ops',
-    label: 'Field Ops',
+    id: 'field',
+    label: 'Field',
     icon: MapPin,
     items: [
-      { label: 'CATI Center', path: '/cati', icon: Phone },
-      { label: 'Back-check', path: '/backcheck', icon: ClipboardCheck },
-      { label: 'Token Surveys', path: '/token-surveys', icon: Link2 },
-      { label: 'Preload/Writeback', path: '/preload', icon: ArrowLeftRight },
-      { label: 'Devices', path: '/devices', icon: Smartphone }
-    ]
-  },
-  {
-    id: 'quality',
-    label: 'Quality & AI',
-    icon: Sparkles,
-    items: [
-      { label: 'Data Analysis', path: '/analysis', icon: BarChart3 },
-      { label: 'Quality AI', path: '/quality-ai', icon: Brain },
-      { label: 'Simulation', path: '/simulation', icon: Route },
-      { label: 'Analytics', path: '/analytics', icon: BarChart3 },
+      { label: 'GPS Map', path: '/map', icon: MapPin },
+      { label: 'Devices', path: '/devices', icon: Smartphone },
       { label: 'Quality', path: '/quality', icon: Sparkles },
-      { label: 'GPS Map', path: '/map', icon: MapPin }
-    ]
-  },
-  {
-    id: 'apps',
-    label: 'Apps',
-    icon: LayoutGrid,
-    items: [
-      { label: 'Plugins', path: '/plugins', icon: Puzzle },
-      { label: 'Workflows', path: '/workflows', icon: Workflow }
+      { label: 'Analytics', path: '/analytics', icon: BarChart3 }
     ]
   },
   {
@@ -135,9 +112,7 @@ const NAVIGATION = [
       { label: 'Team', path: '/team', icon: Users },
       { label: 'Roles', path: '/rbac', icon: Shield },
       { label: 'Translations', path: '/translations', icon: Languages },
-      { label: 'API Security', path: '/security', icon: Key },
-      { label: 'Settings', path: '/settings', icon: Settings },
-      { label: 'Super Admin', path: '/admin', icon: Crown }
+      { label: 'Settings', path: '/settings', icon: Settings }
     ]
   }
 ];
