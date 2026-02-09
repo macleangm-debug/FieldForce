@@ -166,7 +166,7 @@ async def sso_callback(request: Request, data: SSOCallbackRequest):
                 {"id": user_doc["id"]},
                 {
                     "$set": {
-                        "sso_provider": "software_galaxy",
+                        "sso_provider": "datavision",
                         "sso_sub": userinfo.get("sub"),
                         "name": userinfo.get("name", user_doc["name"]),
                         "avatar": userinfo.get("picture", user_doc.get("avatar")),
