@@ -1,4 +1,4 @@
-"""DataPulse - Authentication Module with JWT & SSO Support"""
+"""FieldForce - Authentication Module with JWT & DataVision SSO Support"""
 import os
 import httpx
 from datetime import datetime, timedelta, timezone
@@ -9,13 +9,13 @@ from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 # Security config
-SECRET_KEY = os.environ.get("JWT_SECRET", "datapulse-secret-key-change-in-production")
+SECRET_KEY = os.environ.get("JWT_SECRET", "fieldforce-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 24
 
-# SSO Configuration
-SSO_ISSUER = os.environ.get("SSO_ISSUER", "https://sso.softwaregalaxy.com")
-SSO_CLIENT_ID = os.environ.get("SSO_CLIENT_ID", "datapulse")
+# DataVision SSO Configuration
+SSO_ISSUER = os.environ.get("SSO_ISSUER", "https://auth-checkout-1.preview.emergentagent.com")
+SSO_CLIENT_ID = os.environ.get("SSO_CLIENT_ID", "fieldforce")
 SSO_CLIENT_SECRET = os.environ.get("SSO_CLIENT_SECRET", "")
 SSO_REDIRECT_URI = os.environ.get("SSO_REDIRECT_URI", "")
 
@@ -109,9 +109,9 @@ async def get_optional_user(
         return None
 
 
-# ============= SSO Functions =============
+# ============= DataVision SSO Functions =============
 async def get_sso_authorization_url(redirect_uri: str, state: str) -> str:
-    """Generate SSO authorization URL"""
+    """Generate DataVision SSO authorization URL"""
     params = {
         "client_id": SSO_CLIENT_ID,
         "response_type": "code",
@@ -147,7 +147,7 @@ async def exchange_sso_code(code: str, redirect_uri: str) -> dict:
 
 
 async def get_sso_userinfo(access_token: str) -> dict:
-    """Get user info from SSO provider"""
+    """Get user info from DataVision SSO provider"""
     async with httpx.AsyncClient() as client:
         response = await client.get(
             f"{SSO_ISSUER}/api/sso/oauth/userinfo",
@@ -166,6 +166,5 @@ async def get_sso_userinfo(access_token: str) -> dict:
 def require_role(allowed_roles: list):
     """Dependency to check user role in organization"""
     async def role_checker(current_user: dict = Depends(get_current_user)):
-        # This will be checked at the route level with org membership
         return current_user
     return role_checker
