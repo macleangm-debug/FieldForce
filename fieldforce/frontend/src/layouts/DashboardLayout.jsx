@@ -158,7 +158,7 @@ export function DashboardLayout({ children }) {
         <aside className="hidden lg:flex flex-col items-center w-[80px] bg-card border-r border-border py-4">
           {/* Logo - FieldForce */}
           <Link to="/dashboard" className="mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/20">
               <MapPin className="w-5 h-5 text-white" />
             </div>
           </Link>
