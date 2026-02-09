@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Activity, Mail, Lock, User, ArrowRight, ExternalLink } from 'lucide-react';
+import { MapPin, Mail, Lock, User, ArrowRight, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -46,8 +46,8 @@ export function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left side - Clean branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-primary/5">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5" />
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-emerald-500/10 via-transparent to-teal-500/10">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-teal-500/5" />
         
         <div className="relative z-10 flex flex-col justify-center p-12 w-full">
           <motion.div
@@ -56,29 +56,41 @@ export function LoginPage() {
             transition={{ delay: 0.2 }}
           >
             <div className="flex items-center gap-3 mb-12">
-              <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-                <Activity className="w-7 h-7 text-primary-foreground" />
+              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <MapPin className="w-7 h-7 text-white" />
               </div>
-              <span className="font-barlow text-3xl font-bold tracking-tight text-foreground">DataPulse</span>
+              <span className="font-barlow text-3xl font-bold tracking-tight text-foreground">FieldForce</span>
             </div>
             <h1 className="font-barlow text-4xl font-bold tracking-tight mb-4 text-foreground">
-              Field Data Collection
+              Mobile Data Collection
               <br />
-              Reimagined
+              Made Simple
             </h1>
             <p className="text-lg text-foreground/70 max-w-md">
-              Enterprise-grade platform for research, monitoring & evaluation. 
-              Collect data anywhere, even offline.
+              Powerful mobile tools for field teams and enumerators. 
+              Built for reliability, scalability, and actionable insights.
             </p>
             
             {/* Feature highlights */}
             <div className="mt-10 space-y-4">
-              {['Offline-first data collection', 'Real-time quality monitoring', 'Multi-language support (EN/SW)'].map((feature, idx) => (
+              {[
+                'Works fully offline in remote areas',
+                'GPS tracking & geofencing',
+                'Photo & audio capture',
+                'Multi-language support (English, Swahili)'
+              ].map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-3 text-foreground/70">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
                   <span className="text-sm">{feature}</span>
                 </div>
               ))}
+            </div>
+
+            {/* DataVision branding */}
+            <div className="mt-12 pt-8 border-t border-border/50">
+              <p className="text-xs text-muted-foreground mb-2">Powered by</p>
+              <p className="text-sm font-medium text-foreground">DataVision International</p>
+              <p className="text-xs text-muted-foreground">Research & Statistics Consultancy</p>
             </div>
           </motion.div>
         </div>
@@ -94,31 +106,31 @@ export function LoginPage() {
           <Card className="border-border shadow-sm">
             <CardHeader className="text-center pb-2">
               <div className="lg:hidden flex items-center justify-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-primary-foreground" />
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center">
+                  <MapPin className="w-6 h-6 text-white" />
                 </div>
-                <span className="font-barlow text-2xl font-bold">DataPulse</span>
+                <span className="font-barlow text-2xl font-bold">FieldForce</span>
               </div>
               <CardTitle className="font-barlow text-2xl">Welcome back</CardTitle>
               <CardDescription>Sign in to your account to continue</CardDescription>
             </CardHeader>
             <CardContent>
               {/* Demo Credentials Box */}
-              <div className="mb-4 p-3 bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-200 rounded-lg">
+              <div className="mb-4 p-3 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg dark:from-emerald-950/20 dark:to-teal-950/20 dark:border-emerald-800">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 rounded-full bg-sky-500 flex items-center justify-center">
+                  <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
                     <span className="text-white text-xs font-bold">i</span>
                   </div>
-                  <span className="font-medium text-sky-800 text-sm">Demo Credentials</span>
+                  <span className="font-medium text-emerald-800 dark:text-emerald-200 text-sm">Demo Credentials</span>
                 </div>
                 <div className="space-y-1 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Email:</span>
-                    <code className="bg-white px-2 py-0.5 rounded text-sky-700 font-mono text-xs">demo@datapulse.io</code>
+                    <span className="text-slate-600 dark:text-slate-400">Email:</span>
+                    <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded text-emerald-700 dark:text-emerald-300 font-mono text-xs">demo@fieldforce.io</code>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-600">Password:</span>
-                    <code className="bg-white px-2 py-0.5 rounded text-sky-700 font-mono text-xs">Test123!</code>
+                    <span className="text-slate-600 dark:text-slate-400">Password:</span>
+                    <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded text-emerald-700 dark:text-emerald-300 font-mono text-xs">Test123!</code>
                   </div>
                 </div>
               </div>
@@ -158,7 +170,7 @@ export function LoginPage() {
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full" 
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600" 
                   disabled={loading}
                   data-testid="login-submit-btn"
                 >
@@ -181,12 +193,12 @@ export function LoginPage() {
                 data-testid="sso-login-btn"
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
-                Continue with Software Galaxy SSO
+                Continue with DataVision SSO
               </Button>
 
               <p className="text-center text-sm text-muted-foreground mt-6">
                 Don&apos;t have an account?{' '}
-                <Link to="/register" className="text-primary hover:underline font-medium" data-testid="register-link">
+                <Link to="/register" className="text-emerald-600 hover:underline font-medium" data-testid="register-link">
                   Sign up
                 </Link>
               </p>
@@ -231,10 +243,10 @@ export function RegisterPage() {
         <Card className="border-border shadow-sm">
           <CardHeader className="text-center pb-2">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                <Activity className="w-6 h-6 text-primary-foreground" />
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-400 flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-white" />
               </div>
-              <span className="font-barlow text-2xl font-bold">DataPulse</span>
+              <span className="font-barlow text-2xl font-bold">FieldForce</span>
             </div>
             <CardTitle className="font-barlow text-2xl">Create account</CardTitle>
             <CardDescription>Start collecting data with your team</CardDescription>
@@ -292,7 +304,7 @@ export function RegisterPage() {
               </div>
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600" 
                 disabled={loading}
                 data-testid="register-submit-btn"
               >
@@ -303,7 +315,7 @@ export function RegisterPage() {
 
             <p className="text-center text-sm text-muted-foreground mt-6">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary hover:underline font-medium" data-testid="login-link">
+              <Link to="/login" className="text-emerald-600 hover:underline font-medium" data-testid="login-link">
                 Sign in
               </Link>
             </p>
@@ -344,7 +356,7 @@ export function AuthCallbackPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="text-center">
-        <Activity className="w-12 h-12 text-primary animate-pulse mx-auto mb-4" />
+        <MapPin className="w-12 h-12 text-emerald-500 animate-pulse mx-auto mb-4" />
         <p className="text-muted-foreground">Completing authentication...</p>
       </div>
     </div>
