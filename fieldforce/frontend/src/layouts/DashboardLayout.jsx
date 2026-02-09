@@ -1,6 +1,6 @@
 /**
  * FieldForce - Canva-inspired Layout
- * Simplified navigation for mobile data collection
+ * Rail + Expandable Panel navigation system
  */
 
 import React, { useState, useEffect } from 'react';
@@ -11,6 +11,8 @@ import {
   Folder,
   Database,
   MapPin,
+  Sparkles,
+  LayoutGrid,
   Settings,
   LogOut,
   Menu,
@@ -24,13 +26,22 @@ import {
   Briefcase,
   Table2,
   Download,
+  Phone,
+  ClipboardCheck,
+  Link2,
+  ArrowLeftRight,
   Smartphone,
+  Brain,
+  Route,
+  BarChart3,
+  Puzzle,
+  Workflow,
   Users,
   Shield,
   Languages,
-  BarChart3,
-  Plus,
-  Zap
+  Key,
+  Crown,
+  Plus
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
@@ -51,7 +62,7 @@ import { useAuthStore, useOrgStore, useUIStore } from '../store';
 import { cn } from '../lib/utils';
 import { OfflineStatusIndicator } from '../components/OfflineStatus';
 
-// FieldForce Navigation - Simplified for mobile data collection
+// Navigation structure - grouped for Canva-style rail (FieldForce simplified)
 const NAVIGATION = [
   {
     id: 'home',
@@ -89,7 +100,7 @@ const NAVIGATION = [
     items: [
       { label: 'GPS Map', path: '/map', icon: MapPin },
       { label: 'Devices', path: '/devices', icon: Smartphone },
-      { label: 'Quality', path: '/quality', icon: Zap },
+      { label: 'Quality', path: '/quality', icon: Sparkles },
       { label: 'Analytics', path: '/analytics', icon: BarChart3 }
     ]
   },
@@ -156,7 +167,7 @@ export function DashboardLayout({ children }) {
       <div className="flex h-screen bg-background">
         {/* Rail - Thin icon sidebar with labels */}
         <aside className="hidden lg:flex flex-col items-center w-[80px] bg-card border-r border-border py-4">
-          {/* Logo - FieldForce */}
+          {/* Logo */}
           <Link to="/dashboard" className="mb-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/20">
               <MapPin className="w-5 h-5 text-white" />
@@ -180,24 +191,24 @@ export function DashboardLayout({ children }) {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/projects')}>
                 <Folder className="w-4 h-4 mr-2" />
-                Projects
+                Recent Projects
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/forms')}>
                 <FileText className="w-4 h-4 mr-2" />
-                Forms
+                Recent Forms
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/forms/new')}>
                 <Plus className="w-4 h-4 mr-2" />
                 New Form
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => navigate('/analysis')}>
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Data Analysis
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate('/submissions')}>
                 <ClipboardList className="w-4 h-4 mr-2" />
                 Submissions
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/map')}>
-                <MapPin className="w-4 h-4 mr-2" />
-                GPS Map
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate('/settings')}>
@@ -393,6 +404,44 @@ export function DashboardLayout({ children }) {
               </button>
             )}
 
+            {/* Organization Dropdown */}
+            {organizations?.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted hover:bg-muted/80 transition-colors">
+                    <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center text-primary font-medium text-xs">
+                      {currentOrg?.name?.charAt(0) || 'O'}
+                    </div>
+                    <span className="text-sm font-medium text-foreground max-w-[120px] truncate">
+                      {currentOrg?.name || 'Select Org'}
+                    </span>
+                    <ChevronRight className="w-3 h-3 text-muted-foreground rotate-90" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  {organizations.map((org) => (
+                    <DropdownMenuItem
+                      key={org.id}
+                      onClick={() => setCurrentOrg(org)}
+                      className={cn(
+                        currentOrg?.id === org.id && "bg-primary/10"
+                      )}
+                    >
+                      <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center text-primary text-xs mr-2">
+                        {org.name?.charAt(0)}
+                      </div>
+                      {org.name}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate('/organizations/new')}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Organization
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
             {/* Search */}
             <div className="flex-1 max-w-md">
               <div className="relative">
@@ -407,15 +456,65 @@ export function DashboardLayout({ children }) {
 
             {/* Right side actions */}
             <div className="flex items-center gap-2">
+              {/* Help Button */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="hidden lg:flex p-2 rounded-lg hover:bg-muted text-muted-foreground">
+                    <span className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center text-xs font-bold">?</span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Help & Resources</TooltipContent>
+              </Tooltip>
+
+              {/* New Button */}
+              <Button 
+                size="sm" 
+                className="hidden lg:flex gap-1"
+                onClick={() => navigate('/forms/new')}
+              >
+                <Plus className="w-4 h-4" />
+                New
+              </Button>
+
+              {/* Notifications */}
               <button className="p-2 rounded-lg hover:bg-muted text-muted-foreground relative">
                 <Bell className="w-5 h-5" />
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
               </button>
 
               {/* Desktop Profile */}
-              <div className="hidden lg:flex items-center gap-2 pl-2 border-l border-border">
-                <span className="text-sm text-muted-foreground">{user?.name}</span>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="hidden lg:flex items-center gap-2 pl-2 border-l border-border">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={user?.avatar} />
+                      <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                        {user?.name?.charAt(0) || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-foreground">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground">Member</p>
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-3 py-2">
+                    <p className="font-medium text-sm">{user?.name}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate('/settings')}>
+                    <Settings className="w-4 h-4 mr-2" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </header>
 
@@ -447,8 +546,8 @@ export function DashboardLayout({ children }) {
               >
                 <div className="p-4 border-b border-border flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
-                      <MapPin className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                      <MapPin className="w-4 h-4 text-primary-foreground" />
                     </div>
                     <span className="font-semibold text-foreground">FieldForce</span>
                   </div>
@@ -539,7 +638,7 @@ export function DashboardLayout({ children }) {
 }
 
 // Named exports for backward compatibility
-export const Sidebar = () => null;
-export const TopBar = () => null;
+export const Sidebar = () => null; // Deprecated - use DashboardLayout
+export const TopBar = () => null; // Deprecated - integrated into DashboardLayout
 
 export default DashboardLayout;
