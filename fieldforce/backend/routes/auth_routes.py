@@ -180,7 +180,7 @@ async def sso_callback(request: Request, data: SSOCallbackRequest):
                 email=email,
                 name=userinfo.get("name", email.split("@")[0]),
                 avatar=userinfo.get("picture"),
-                sso_provider="software_galaxy",
+                sso_provider="datavision",
                 sso_sub=userinfo.get("sub"),
                 locale=userinfo.get("locale", "en")
             )
