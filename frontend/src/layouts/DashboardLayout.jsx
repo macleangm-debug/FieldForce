@@ -459,9 +459,9 @@ export function DashboardLayout({ children }) {
                 <div className="p-4 border-b border-border flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-primary-foreground" />
+                      <MapPin className="w-4 h-4 text-primary-foreground" />
                     </div>
-                    <span className="font-semibold text-foreground">DataPulse</span>
+                    <span className="font-semibold text-foreground">FieldForce</span>
                   </div>
                   <button onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg hover:bg-muted">
                     <X className="w-5 h-5" />
