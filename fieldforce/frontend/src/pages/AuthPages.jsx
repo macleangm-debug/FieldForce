@@ -198,7 +198,7 @@ export function LoginPage() {
 
               <p className="text-center text-sm text-muted-foreground mt-6">
                 Don&apos;t have an account?{' '}
-                <Link to="/register" className="text-emerald-600 hover:underline font-medium" data-testid="register-link">
+                <Link to="/register" className="text-primary hover:underline font-medium" data-testid="register-link">
                   Sign up
                 </Link>
               </p>
