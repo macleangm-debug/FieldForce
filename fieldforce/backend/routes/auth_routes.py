@@ -1,4 +1,4 @@
-"""DataPulse - Authentication Routes"""
+"""FieldForce - Authentication Routes with DataVision SSO"""
 from fastapi import APIRouter, HTTPException, status, Request
 from pydantic import BaseModel, EmailStr
 from datetime import datetime, timezone
