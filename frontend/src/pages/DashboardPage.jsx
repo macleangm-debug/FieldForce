@@ -258,10 +258,10 @@ export function DashboardPage() {
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Submission Trends */}
-          <Card className="lg:col-span-2 bg-white border border-slate-200">
+          <Card className="lg:col-span-2 bg-card border border-border">
             <CardHeader>
-              <CardTitle className="text-slate-900">Submission Trends</CardTitle>
-              <CardDescription className="text-slate-500">Last 14 days</CardDescription>
+              <CardTitle className="text-foreground">Submission Trends</CardTitle>
+              <CardDescription className="text-muted-foreground">Last 14 days</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (
