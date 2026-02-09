@@ -116,21 +116,21 @@ export function LoginPage() {
             </CardHeader>
             <CardContent>
               {/* Demo Credentials Box */}
-              <div className="mb-4 p-3 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg dark:from-emerald-950/20 dark:to-teal-950/20 dark:border-emerald-800">
+              <div className="mb-4 p-3 bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-200 rounded-lg dark:from-sky-950/20 dark:to-blue-950/20 dark:border-sky-800">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center">
+                  <div className="w-5 h-5 rounded-full bg-sky-500 flex items-center justify-center">
                     <span className="text-white text-xs font-bold">i</span>
                   </div>
-                  <span className="font-medium text-emerald-800 dark:text-emerald-200 text-sm">Demo Credentials</span>
+                  <span className="font-medium text-sky-800 dark:text-sky-200 text-sm">Demo Credentials</span>
                 </div>
                 <div className="space-y-1 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-600 dark:text-slate-400">Email:</span>
-                    <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded text-emerald-700 dark:text-emerald-300 font-mono text-xs">demo@fieldforce.io</code>
+                    <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded text-sky-700 dark:text-sky-300 font-mono text-xs">demo@fieldforce.io</code>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-600 dark:text-slate-400">Password:</span>
-                    <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded text-emerald-700 dark:text-emerald-300 font-mono text-xs">Test123!</code>
+                    <code className="bg-white dark:bg-slate-800 px-2 py-0.5 rounded text-sky-700 dark:text-sky-300 font-mono text-xs">Test123!</code>
                   </div>
                 </div>
               </div>
