@@ -170,7 +170,7 @@ export function DashboardLayout({ children }) {
           {/* Logo */}
           <Link to="/dashboard" className="mb-2">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/20">
-              <Sparkles className="w-5 h-5 text-white" />
+              <MapPin className="w-5 h-5 text-white" />
             </div>
           </Link>
 
