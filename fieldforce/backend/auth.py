@@ -14,7 +14,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 24
 
 # DataVision SSO Configuration
-SSO_ISSUER = os.environ.get("SSO_ISSUER", "https://auth-checkout-1.preview.emergentagent.com")
+SSO_ISSUER = os.environ.get("SSO_ISSUER", "https://fieldforce-preview.preview.emergentagent.com")
 SSO_CLIENT_ID = os.environ.get("SSO_CLIENT_ID", "fieldforce")
 SSO_CLIENT_SECRET = os.environ.get("SSO_CLIENT_SECRET", "")
 SSO_REDIRECT_URI = os.environ.get("SSO_REDIRECT_URI", "")
