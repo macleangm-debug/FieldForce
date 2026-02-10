@@ -9,12 +9,13 @@ from auth import get_current_user
 
 router = APIRouter(prefix="/billing", tags=["billing"])
 
-# Pricing Plans Configuration (80% margin)
+# Pricing Plans Configuration (87% margin)
 PRICING_PLANS = {
     "free": {
         "id": "free",
         "name": "Free",
-        "price": 0,
+        "price_monthly": 0,
+        "price_yearly": 0,
         "billing_period": "monthly",
         "submissions_limit": 250,
         "storage_gb": 0.5,
@@ -26,12 +27,14 @@ PRICING_PLANS = {
             "Community support",
             "Mobile app access"
         ],
-        "badge": None
+        "badge": None,
+        "margin": 0
     },
     "starter": {
         "id": "starter",
         "name": "Starter",
-        "price": 45,
+        "price_monthly": 69,
+        "price_yearly": 690,  # 2 months free (10 months)
         "billing_period": "monthly",
         "submissions_limit": 1500,
         "storage_gb": 5,
@@ -46,12 +49,15 @@ PRICING_PLANS = {
             "GPS tracking",
             "Email support"
         ],
-        "badge": None
+        "badge": None,
+        "margin": 87,
+        "yearly_savings": 138  # $69 × 2 months
     },
     "pro": {
         "id": "pro",
         "name": "Pro",
-        "price": 125,
+        "price_monthly": 189,
+        "price_yearly": 1890,  # 2 months free
         "billing_period": "monthly",
         "submissions_limit": 5000,
         "storage_gb": 25,
@@ -67,12 +73,15 @@ PRICING_PLANS = {
             "Geofencing",
             "Priority support"
         ],
-        "badge": "Most Popular"
+        "badge": "Most Popular",
+        "margin": 87,
+        "yearly_savings": 378  # $189 × 2 months
     },
     "enterprise": {
         "id": "enterprise",
         "name": "Enterprise",
-        "price": 350,
+        "price_monthly": 499,
+        "price_yearly": 4990,  # 2 months free
         "billing_period": "monthly",
         "submissions_limit": 20000,
         "storage_gb": 100,
@@ -88,16 +97,18 @@ PRICING_PLANS = {
             "Dedicated support",
             "SLA guarantee"
         ],
-        "badge": None
+        "badge": None,
+        "margin": 86,
+        "yearly_savings": 998  # $499 × 2 months
     }
 }
 
-# Credit Packs (80% margin - cost $0.006, price $0.03)
+# Credit Packs (87% margin - cost $0.006, price ~$0.04)
 CREDIT_PACKS = [
-    {"id": "pack_500", "credits": 500, "price": 15, "per_credit": 0.03, "popular": False},
-    {"id": "pack_2000", "credits": 2000, "price": 50, "per_credit": 0.025, "popular": True},
-    {"id": "pack_10000", "credits": 10000, "price": 200, "per_credit": 0.02, "popular": False},
-    {"id": "pack_50000", "credits": 50000, "price": 800, "per_credit": 0.016, "popular": False},
+    {"id": "pack_500", "credits": 500, "price": 20, "per_credit": 0.04, "popular": False, "margin": 87},
+    {"id": "pack_2000", "credits": 2000, "price": 70, "per_credit": 0.035, "popular": True, "margin": 87},
+    {"id": "pack_10000", "credits": 10000, "price": 280, "per_credit": 0.028, "popular": False, "margin": 87},
+    {"id": "pack_50000", "credits": 50000, "price": 1100, "per_credit": 0.022, "popular": False, "margin": 87},
 ]
 
 # Credit usage rates
