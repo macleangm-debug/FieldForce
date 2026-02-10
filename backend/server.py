@@ -133,8 +133,6 @@ async def detailed_health_check():
     # MongoDB check
     try:
         await db.command("ping")
-        # Check if we can read/write
-        test_result = await db.health_check.find_one({"type": "ping"})
         health_status["checks"]["mongodb"] = {
             "status": "healthy",
             "connection_pool": {
@@ -178,7 +176,7 @@ async def detailed_health_check():
             "rss_mb": round(memory_info.rss / 1024 / 1024, 2),
             "vms_mb": round(memory_info.vms / 1024 / 1024, 2)
         }
-    except:
+    except ImportError:
         pass
     
     return health_status
