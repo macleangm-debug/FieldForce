@@ -520,10 +520,13 @@ export function PricingPage() {
 
   // Public pricing page
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <TooltipProvider>
-        {content}
-      </TooltipProvider>
+    <div className="min-h-screen bg-background">
+      <PublicHeader />
+      <div className="py-12 px-4">
+        <TooltipProvider>
+          {content}
+        </TooltipProvider>
+      </div>
     </div>
   );
 }
