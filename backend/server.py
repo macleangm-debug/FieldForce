@@ -247,8 +247,30 @@ logger = logging.getLogger(__name__)
 
 @app.on_event("startup")
 async def startup_db_client():
-    """Initialize database indexes on startup"""
+    """Initialize database indexes and production services on startup"""
     logger.info("FieldForce API starting up...")
+    logger.info(f"Production Mode: {PRODUCTION_MODE}")
+    
+    # Initialize Redis if available
+    try:
+        from config.production import RedisConfig
+        redis = await RedisConfig.get_client()
+        if redis:
+            logger.info("Redis connected successfully")
+        else:
+            logger.info("Redis not available - caching disabled")
+    except Exception as e:
+        logger.warning(f"Redis initialization error: {e}")
+    
+    # Initialize S3 if configured
+    try:
+        from config.production import S3Storage
+        if S3Storage.is_available():
+            logger.info("S3 storage initialized")
+        else:
+            logger.info("S3 not configured - using local storage")
+    except Exception as e:
+        logger.warning(f"S3 initialization error: {e}")
     
     try:
         # Users
