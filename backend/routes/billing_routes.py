@@ -174,13 +174,22 @@ async def create_subscription(
     
     plan = PRICING_PLANS[subscription.plan_id]
     
+    # Determine price based on billing period
+    if subscription.billing_period == "yearly":
+        price = plan.get("price_yearly", plan.get("price_monthly", 0) * 10)
+        billing_period = "yearly"
+    else:
+        price = plan.get("price_monthly", 0)
+        billing_period = "monthly"
+    
     # Create subscription record
     sub_record = {
         "id": str(uuid.uuid4()),
         "user_id": current_user["user_id"],
         "plan_id": subscription.plan_id,
         "plan_name": plan["name"],
-        "price": plan["price"],
+        "price": price,
+        "billing_period": billing_period,
         "status": "active",
         "current_period_start": datetime.now(timezone.utc),
         "submissions_limit": plan["submissions_limit"],
