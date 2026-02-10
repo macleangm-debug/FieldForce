@@ -530,7 +530,11 @@ export function PricingCalculatorPage() {
                 <div className="text-center">
                   <p className="text-sm text-slate-400 mb-1">Avg. Margin</p>
                   <p className="text-3xl font-bold">
-                    {Math.round((margins.starter + margins.pro + margins.enterprise) / 3)}%
+                    {Math.round(
+                      ((calculatedPrices.starter?.profitMargin || 0) + 
+                       (calculatedPrices.pro?.profitMargin || 0) + 
+                       (calculatedPrices.enterprise?.profitMargin || 0)) / 3
+                    )}%
                   </p>
                 </div>
                 <div className="text-center">
