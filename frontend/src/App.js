@@ -25,6 +25,7 @@ import { DatasetsPage } from './pages/DatasetsPage';
 import { DeviceManagementPage } from './pages/DeviceManagementPage';
 import { CAWISurveyPage, SurveyCompletePage } from './pages/CAWISurveyPage';
 import { PricingPage } from './pages/PricingPage';
+import { PricingCalculatorPage } from './pages/PricingCalculatorPage';
 import { PWAInstallPrompt } from './components/PWAComponents';
 import { NetworkStatusBanner } from './components/OfflineSync';
 import '@/App.css';
