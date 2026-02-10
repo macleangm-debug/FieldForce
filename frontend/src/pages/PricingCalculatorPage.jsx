@@ -112,15 +112,6 @@ export function PricingCalculatorPage() {
   // Cost inputs
   const [costs, setCosts] = useState(DEFAULT_COSTS);
   
-  // Margin settings
-  const [margins, setMargins] = useState({
-    free: 0,
-    starter: 87,
-    pro: 87,
-    enterprise: 86,
-    credits: 87
-  });
-  
   // Mode: 'analyze' shows current pricing, 'simulate' allows margin changes
   const [mode, setMode] = useState('analyze');
   
