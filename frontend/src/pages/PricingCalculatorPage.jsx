@@ -322,57 +322,86 @@ export function PricingCalculatorPage() {
               </CardContent>
             </Card>
             
-            {/* Margin Configuration */}
+            {/* Price Configuration / Implied Margins */}
             <Card className="lg:col-span-2">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Percent className="w-5 h-5" />
-                  Profit Margins
-                </CardTitle>
-                <CardDescription>Set target profit margin for each plan</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Percent className="w-5 h-5" />
+                      {mode === 'analyze' ? 'Current Pricing Analysis' : 'Price Simulation'}
+                    </CardTitle>
+                    <CardDescription>
+                      {mode === 'analyze' 
+                        ? 'See implied margins from current pricing' 
+                        : 'Adjust prices to see new margins'}
+                    </CardDescription>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setMode(mode === 'analyze' ? 'simulate' : 'analyze')}
+                  >
+                    {mode === 'analyze' ? 'Simulate New Prices' : 'View Current'}
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                {PLAN_CONFIGS.map(plan => (
-                  <div key={plan.id} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label className="font-medium">{plan.name}</Label>
-                      <Badge variant={margins[plan.id] >= 80 ? 'default' : margins[plan.id] >= 50 ? 'secondary' : 'outline'}>
-                        {margins[plan.id]}% margin
-                      </Badge>
+                {PLAN_CONFIGS.filter(p => p.id !== 'free').map(plan => {
+                  const prices = calculatedPrices[plan.id] || {};
+                  return (
+                    <div key={plan.id} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="font-medium">{plan.name}</Label>
+                        <div className="flex items-center gap-3">
+                          {mode === 'simulate' ? (
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-muted-foreground">$</span>
+                              <Input
+                                type="number"
+                                value={customPrices[plan.id] || plan.currentPrice}
+                                onChange={(e) => handlePriceChange(plan.id, e.target.value)}
+                                className="w-24"
+                              />
+                            </div>
+                          ) : (
+                            <span className="text-lg font-bold">${plan.currentPrice}/mo</span>
+                          )}
+                          <Badge variant={prices.profitMargin >= 80 ? 'default' : prices.profitMargin >= 50 ? 'secondary' : 'destructive'}>
+                            {prices.profitMargin || 0}% margin
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <span>Cost: ${prices.cost?.toFixed(2)}</span>
+                        <span>•</span>
+                        <span className="text-emerald-500">Profit: ${prices.profit?.toFixed(2)}/mo</span>
+                      </div>
                     </div>
-                    <Slider
-                      value={[margins[plan.id]]}
-                      onValueChange={(value) => handleMarginChange(plan.id, value)}
-                      max={95}
-                      min={0}
-                      step={1}
-                      disabled={plan.id === 'free'}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>0%</span>
-                      <span>50%</span>
-                      <span>95%</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 
-                {/* Credits Margin */}
-                <div className="pt-4 border-t space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label className="font-medium">Credit Packs</Label>
-                    <Badge variant={margins.credits >= 80 ? 'default' : 'secondary'}>
-                      {margins.credits}% margin
-                    </Badge>
+                {/* Credit Packs Summary */}
+                <div className="pt-4 border-t">
+                  <Label className="font-medium">Credit Packs</Label>
+                  <div className="grid grid-cols-2 gap-4 mt-3">
+                    {CREDIT_PACK_CONFIGS.map(pack => {
+                      const prices = creditPrices[pack.id] || {};
+                      return (
+                        <div key={pack.id} className="p-3 bg-muted/50 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium">{pack.name}</span>
+                            <Badge variant="outline" className="text-xs">
+                              {prices.margin || 0}%
+                            </Badge>
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {pack.credits.toLocaleString()} credits @ ${prices.price}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <Slider
-                    value={[margins.credits]}
-                    onValueChange={(value) => setMargins(prev => ({ ...prev, credits: value[0] }))}
-                    max={95}
-                    min={0}
-                    step={1}
-                    className="w-full"
-                  />
                 </div>
               </CardContent>
             </Card>
