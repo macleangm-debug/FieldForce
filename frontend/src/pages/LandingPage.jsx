@@ -26,7 +26,6 @@ import {
   Heart,
   Leaf,
   GraduationCap,
-  Droplets,
   Star,
   Quote
 } from 'lucide-react';
