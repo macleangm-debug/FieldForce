@@ -48,6 +48,339 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
+// ==================== INTERACTIVE FORM BUILDER SANDBOX ====================
+const InteractiveFormBuilderSandbox = () => {
+  const [formFields, setFormFields] = useState([]);
+  const [draggedField, setDraggedField] = useState(null);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [editingField, setEditingField] = useState(null);
+  
+  const availableFieldTypes = [
+    { id: 'text', type: 'text', label: 'Text Input', icon: Type, defaultLabel: 'Text Question', color: 'sky' },
+    { id: 'number', type: 'number', label: 'Number', icon: Hash, defaultLabel: 'Number Question', color: 'violet' },
+    { id: 'select', type: 'select', label: 'Dropdown', icon: List, defaultLabel: 'Select Option', color: 'emerald' },
+    { id: 'date', type: 'date', label: 'Date', icon: Calendar, defaultLabel: 'Date Question', color: 'amber' },
+    { id: 'gps', type: 'gps', label: 'GPS Location', icon: Navigation, defaultLabel: 'Capture Location', color: 'rose' },
+    { id: 'photo', type: 'photo', label: 'Photo', icon: Camera, defaultLabel: 'Take Photo', color: 'cyan' },
+    { id: 'audio', type: 'audio', label: 'Audio', icon: Mic, defaultLabel: 'Record Audio', color: 'orange' },
+    { id: 'checkbox', type: 'checkbox', label: 'Checkbox', icon: ToggleLeft, defaultLabel: 'Yes/No Question', color: 'lime' },
+  ];
+
+  const handleDragStart = (e, fieldType) => {
+    setDraggedField(fieldType);
+    e.dataTransfer.effectAllowed = 'copy';
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    setIsDraggingOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDraggingOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDraggingOver(false);
+    
+    if (draggedField) {
+      const newField = {
+        ...draggedField,
+        instanceId: `${draggedField.id}-${Date.now()}`,
+        label: draggedField.defaultLabel,
+        required: false,
+      };
+      setFormFields(prev => [...prev, newField]);
+      setDraggedField(null);
+    }
+  };
+
+  const handleRemoveField = (instanceId) => {
+    setFormFields(prev => prev.filter(f => f.instanceId !== instanceId));
+  };
+
+  const handleReorderField = (dragIndex, hoverIndex) => {
+    setFormFields(prev => {
+      const result = [...prev];
+      const [removed] = result.splice(dragIndex, 1);
+      result.splice(hoverIndex, 0, removed);
+      return result;
+    });
+  };
+
+  const handleUpdateFieldLabel = (instanceId, newLabel) => {
+    setFormFields(prev => prev.map(f => 
+      f.instanceId === instanceId ? { ...f, label: newLabel } : f
+    ));
+  };
+
+  const handleToggleRequired = (instanceId) => {
+    setFormFields(prev => prev.map(f => 
+      f.instanceId === instanceId ? { ...f, required: !f.required } : f
+    ));
+  };
+
+  const handlePreviewForm = () => {
+    if (formFields.length > 0) {
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    }
+  };
+
+  const handleClearForm = () => {
+    setFormFields([]);
+  };
+
+  // Field item component with internal drag state
+  const DraggableFormField = ({ field, index }) => {
+    const [isDragging, setIsDragging] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [labelValue, setLabelValue] = useState(field.label);
+
+    const handleFieldDragStart = (e) => {
+      setIsDragging(true);
+      e.dataTransfer.setData('fieldIndex', index.toString());
+    };
+
+    const handleFieldDragEnd = () => {
+      setIsDragging(false);
+    };
+
+    const handleFieldDragOver = (e) => {
+      e.preventDefault();
+      const dragIndex = parseInt(e.dataTransfer.getData('fieldIndex'));
+      if (!isNaN(dragIndex) && dragIndex !== index) {
+        handleReorderField(dragIndex, index);
+        e.dataTransfer.setData('fieldIndex', index.toString());
+      }
+    };
+
+    const handleLabelSave = () => {
+      handleUpdateFieldLabel(field.instanceId, labelValue);
+      setIsEditing(false);
+    };
+
+    const IconComponent = field.icon;
+
+    return (
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+        animate={{ opacity: isDragging ? 0.5 : 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9, x: -20 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        draggable
+        onDragStart={handleFieldDragStart}
+        onDragEnd={handleFieldDragEnd}
+        onDragOver={handleFieldDragOver}
+        className={`group bg-slate-700/80 backdrop-blur rounded-xl p-4 border-2 transition-all cursor-move ${
+          isDragging ? 'border-sky-500 shadow-lg shadow-sky-500/20' : 'border-slate-600 hover:border-slate-500'
+        }`}
+      >
+        <div className="flex items-start gap-3">
+          <div className="mt-1 cursor-grab active:cursor-grabbing">
+            <GripVertical className="w-4 h-4 text-slate-500 group-hover:text-slate-400" />
+          </div>
+          
+          <div className={`p-2 rounded-lg bg-${field.color}-500/20`}>
+            <IconComponent className={`w-4 h-4 text-${field.color}-400`} />
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            {isEditing ? (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={labelValue}
+                  onChange={(e) => setLabelValue(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleLabelSave()}
+                  className="flex-1 bg-slate-600 border border-slate-500 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-sky-500"
+                  autoFocus
+                />
+                <button
+                  onClick={handleLabelSave}
+                  className="text-emerald-400 hover:text-emerald-300"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div 
+                className="text-sm font-medium text-white cursor-text hover:text-sky-300 transition-colors"
+                onClick={() => setIsEditing(true)}
+              >
+                {field.label}
+              </div>
+            )}
+            <div className="flex items-center gap-3 mt-2">
+              <span className="text-xs text-slate-500 uppercase tracking-wide">{field.type}</span>
+              <button
+                onClick={() => handleToggleRequired(field.instanceId)}
+                className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
+                  field.required 
+                    ? 'bg-rose-500/20 text-rose-400' 
+                    : 'bg-slate-600 text-slate-400 hover:text-slate-300'
+                }`}
+              >
+                {field.required ? 'Required' : 'Optional'}
+              </button>
+            </div>
+          </div>
+          
+          <button
+            onClick={() => handleRemoveField(field.instanceId)}
+            className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors opacity-0 group-hover:opacity-100"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      </motion.div>
+    );
+  };
+
+  return (
+    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-6 border border-slate-700 shadow-2xl">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500">
+            <Sparkles className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-white">Try Form Builder</h3>
+            <p className="text-sm text-slate-400">Drag fields to build your survey</p>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button 
+            onClick={handleClearForm}
+            className="px-3 py-2 rounded-lg border border-slate-600 text-slate-400 hover:text-white hover:border-slate-500 transition-colors text-sm flex items-center gap-2"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Clear
+          </button>
+          <button 
+            onClick={handlePreviewForm}
+            disabled={formFields.length === 0}
+            className="px-4 py-2 rounded-lg bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-medium text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:from-sky-600 hover:to-cyan-600 transition-all"
+          >
+            <Play className="w-4 h-4" />
+            Preview
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Field Types Toolbox */}
+        <div className="lg:col-span-2 space-y-3">
+          <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3">Field Types</p>
+          <div className="grid grid-cols-2 gap-2">
+            {availableFieldTypes.map((fieldType) => {
+              const IconComponent = fieldType.icon;
+              return (
+                <motion.div
+                  key={fieldType.id}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, fieldType)}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`flex items-center gap-2 p-3 rounded-xl bg-slate-800/80 border border-slate-700 cursor-grab active:cursor-grabbing hover:border-${fieldType.color}-500/50 hover:bg-slate-800 transition-all group`}
+                >
+                  <div className={`p-1.5 rounded-lg bg-${fieldType.color}-500/20 group-hover:bg-${fieldType.color}-500/30 transition-colors`}>
+                    <IconComponent className={`w-4 h-4 text-${fieldType.color}-400`} />
+                  </div>
+                  <span className="text-sm text-slate-300 group-hover:text-white transition-colors">{fieldType.label}</span>
+                </motion.div>
+              );
+            })}
+          </div>
+          
+          {/* Tips */}
+          <div className="mt-4 p-3 rounded-xl bg-sky-500/10 border border-sky-500/20">
+            <p className="text-xs text-sky-300 flex items-start gap-2">
+              <Zap className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <span>Drag fields to the form canvas, click labels to edit, and drag to reorder!</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Form Canvas */}
+        <div className="lg:col-span-3">
+          <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-3">Form Canvas</p>
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`min-h-[350px] rounded-xl border-2 border-dashed transition-all p-4 ${
+              isDraggingOver 
+                ? 'border-sky-500 bg-sky-500/10' 
+                : 'border-slate-700 bg-slate-800/50'
+            }`}
+          >
+            {formFields.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-[320px] text-slate-500">
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <MousePointer className="w-10 h-10 mb-4 text-slate-600" />
+                </motion.div>
+                <p className="text-base font-medium mb-1">Drag & drop fields here</p>
+                <p className="text-sm text-slate-600">Start building your survey form</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <AnimatePresence mode="popLayout">
+                  {formFields.map((field, index) => (
+                    <DraggableFormField 
+                      key={field.instanceId} 
+                      field={field} 
+                      index={index}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+          
+          {/* Field Count */}
+          {formFields.length > 0 && (
+            <div className="mt-3 flex items-center justify-between">
+              <span className="text-sm text-slate-400">
+                {formFields.length} field{formFields.length !== 1 ? 's' : ''} added
+              </span>
+              <span className="text-xs text-slate-500">
+                {formFields.filter(f => f.required).length} required
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Success Toast */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed bottom-6 right-6 bg-emerald-500 text-white px-6 py-4 rounded-xl shadow-2xl shadow-emerald-500/30 flex items-center gap-3 z-50"
+          >
+            <CheckCircle2 className="w-5 h-5" />
+            <div>
+              <p className="font-semibold">Form Preview Ready!</p>
+              <p className="text-sm text-emerald-100">Sign up to deploy this form to your team</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 // ==================== DEMO 1: FORM BUILDER VISUALIZATION ====================
 const FormBuilderDemo = () => {
   const [currentStep, setCurrentStep] = useState(0);
