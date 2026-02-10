@@ -1,5 +1,6 @@
 """FieldForce - Mobile Data Collection Suite API
 A streamlined version focused on field data collection for DataVision International
+Production-ready with Redis caching, rate limiting, and S3 storage support
 """
 from fastapi import FastAPI, APIRouter, Request
 from dotenv import load_dotenv
@@ -8,19 +9,25 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
+from datetime import datetime
 
 # Load environment variables
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Production mode check
+PRODUCTION_MODE = os.environ.get("PRODUCTION_MODE", "false").lower() == "true"
+
 # MongoDB connection with connection pooling
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(
     mongo_url,
-    minPoolSize=5,
-    maxPoolSize=50,
+    minPoolSize=10,
+    maxPoolSize=100,
     maxIdleTimeMS=30000,
-    serverSelectionTimeoutMS=5000
+    serverSelectionTimeoutMS=5000,
+    retryWrites=True,
+    w='majority'
 )
 db = client[os.environ['DB_NAME']]
 
@@ -28,7 +35,9 @@ db = client[os.environ['DB_NAME']]
 app = FastAPI(
     title="FieldForce API",
     description="Mobile Data Collection Suite by DataVision International",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/api/docs" if not PRODUCTION_MODE else None,
+    redoc_url="/api/redoc" if not PRODUCTION_MODE else None,
 )
 
 # Store db in app state for route access
