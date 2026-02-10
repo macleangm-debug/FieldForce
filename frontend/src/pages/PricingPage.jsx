@@ -306,13 +306,13 @@ export function PricingPage() {
     }
   };
 
-  const handleSelectPlan = async (plan) => {
+  const handleSelectPlan = async (plan, billingPeriod) => {
     if (!token) {
       navigate('/register');
       return;
     }
 
-    if (plan.price === 0) {
+    if (plan.price_monthly === 0) {
       toast.success('You are on the Free plan');
       return;
     }
@@ -324,11 +324,15 @@ export function PricingPage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ plan_id: plan.id })
+        body: JSON.stringify({ 
+          plan_id: plan.id,
+          billing_period: billingPeriod
+        })
       });
 
       if (response.ok) {
-        toast.success(`Subscribed to ${plan.name} plan!`);
+        const period = billingPeriod === 'yearly' ? 'annual' : 'monthly';
+        toast.success(`Subscribed to ${plan.name} (${period})!`);
         fetchPricingData();
       } else {
         toast.error('Failed to subscribe');
