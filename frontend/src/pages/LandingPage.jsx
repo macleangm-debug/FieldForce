@@ -678,19 +678,16 @@ const Footer = () => {
 
 // Main Landing Page Component
 export function LandingPage() {
-  const [videoOpen, setVideoOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-slate-900">
       <PublicHeader />
-      <HeroSection onWatchDemo={() => setVideoOpen(true)} />
+      <HeroSection />
       <HowItWorksSection />
       <FeaturesSection />
       <UseCasesSection />
       <PricingPreviewSection />
       <CTASection />
       <Footer />
-      <VideoModal isOpen={videoOpen} onClose={() => setVideoOpen(false)} />
     </div>
   );
 }
