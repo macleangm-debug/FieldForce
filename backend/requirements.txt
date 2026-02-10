@@ -181,3 +181,4 @@ zipp==3.23.0
 zopfli==0.4.0
 psutil==7.2.2
 gunicorn==25.0.3
+redis==7.1.1
