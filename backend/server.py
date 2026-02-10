@@ -85,6 +85,7 @@ api_router.include_router(revision_router)
 api_router.include_router(dataset_router)
 api_router.include_router(cawi_router)
 api_router.include_router(quality_ai_router)
+api_router.include_router(billing_router)
 
 
 # Health check endpoint
