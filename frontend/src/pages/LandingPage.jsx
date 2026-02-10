@@ -33,6 +33,8 @@ import {
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
+import { PublicHeader } from '../components/PublicHeader';
+import { VideoModal } from '../components/VideoModal';
 
 // Animation variants
 const fadeInUp = {
