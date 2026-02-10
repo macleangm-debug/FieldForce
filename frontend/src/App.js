@@ -208,6 +208,9 @@ function App() {
           {/* Pricing Page - Public and Protected */}
           <Route path="/pricing" element={<PricingPage />} />
           
+          {/* Demo Page - Public */}
+          <Route path="/demo" element={<DemoPage />} />
+          
           <Route path="/organizations/new" element={
             <ProtectedRoute>
               <CreateOrganizationPage />
