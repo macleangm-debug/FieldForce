@@ -54,7 +54,7 @@ const DEFAULT_COSTS = {
   paymentFixedFee: 0.30,         // $0.30 fixed fee per transaction
 };
 
-// Plan configurations
+// Plan configurations with current selling prices
 const PLAN_CONFIGS = [
   {
     id: 'free',
@@ -63,6 +63,7 @@ const PLAN_CONFIGS = [
     storage: 0.5,
     users: 3,
     support: 'community',
+    currentPrice: 0, // Current selling price
     features: ['Basic form builder', 'CSV export', 'Mobile app access']
   },
   {
@@ -72,6 +73,7 @@ const PLAN_CONFIGS = [
     storage: 5,
     users: 10,
     support: 'email',
+    currentPrice: 69, // Current selling price
     features: ['Everything in Free', 'Excel export', 'GPS tracking', 'Email support']
   },
   {
@@ -81,6 +83,7 @@ const PLAN_CONFIGS = [
     storage: 25,
     users: 30,
     support: 'priority',
+    currentPrice: 189, // Current selling price
     features: ['Everything in Starter', 'SPSS & Stata export', 'API access', 'Geofencing', 'Priority support']
   },
   {
@@ -90,6 +93,7 @@ const PLAN_CONFIGS = [
     storage: 100,
     users: -1, // unlimited
     support: 'dedicated',
+    currentPrice: 499, // Current selling price
     features: ['Everything in Pro', 'SSO integration', 'Custom branding', 'Dedicated support', 'SLA guarantee']
   }
 ];
