@@ -57,9 +57,12 @@ const PricingCard = ({ plan, isCurrentPlan, onSelect, billingPeriod }) => {
   const gradientClass = planColors[plan.id] || planColors.free;
   const isPopular = plan.badge === 'Most Popular';
   
-  const displayPrice = billingPeriod === 'yearly' 
-    ? Math.round(plan.price * 10) // 2 months free
-    : plan.price;
+  const monthlyPrice = plan.price_monthly || 0;
+  const yearlyPrice = plan.price_yearly || 0;
+  const yearlySavings = plan.yearly_savings || 0;
+  
+  const displayPrice = billingPeriod === 'yearly' ? yearlyPrice : monthlyPrice;
+  const monthlyEquivalent = billingPeriod === 'yearly' ? Math.round(yearlyPrice / 12) : monthlyPrice;
   
   return (
     <motion.div
@@ -87,17 +90,34 @@ const PricingCard = ({ plan, isCurrentPlan, onSelect, billingPeriod }) => {
           </div>
           <CardTitle className="text-xl">{plan.name}</CardTitle>
           <div className="flex items-baseline gap-1 mt-2">
-            <span className="text-4xl font-bold">${displayPrice}</span>
-            {plan.price > 0 && (
-              <span className="text-muted-foreground">
-                /{billingPeriod === 'yearly' ? 'year' : 'month'}
-              </span>
+            {billingPeriod === 'yearly' && monthlyPrice > 0 ? (
+              <>
+                <span className="text-4xl font-bold">${monthlyEquivalent}</span>
+                <span className="text-muted-foreground">/month</span>
+              </>
+            ) : (
+              <>
+                <span className="text-4xl font-bold">${displayPrice}</span>
+                {monthlyPrice > 0 && (
+                  <span className="text-muted-foreground">/month</span>
+                )}
+              </>
             )}
           </div>
-          {billingPeriod === 'yearly' && plan.price > 0 && (
-            <p className="text-sm text-emerald-500 font-medium">
-              Save ${plan.price * 2}/year (2 months free)
-            </p>
+          {billingPeriod === 'yearly' && monthlyPrice > 0 && (
+            <div className="mt-2 space-y-1">
+              <p className="text-sm text-muted-foreground">
+                ${yearlyPrice}/year billed annually
+              </p>
+              <p className="text-sm text-emerald-500 font-medium">
+                Save ${yearlySavings}/year (2 months free!)
+              </p>
+            </div>
+          )}
+          {plan.margin && (
+            <Badge variant="outline" className="mt-2 text-xs">
+              {plan.margin}% margin
+            </Badge>
           )}
         </CardHeader>
         
@@ -136,11 +156,11 @@ const PricingCard = ({ plan, isCurrentPlan, onSelect, billingPeriod }) => {
           <Button 
             className={`w-full ${isPopular ? 'bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600' : ''}`}
             variant={isCurrentPlan ? 'outline' : 'default'}
-            onClick={() => onSelect(plan)}
+            onClick={() => onSelect(plan, billingPeriod)}
             disabled={isCurrentPlan}
             data-testid={`select-plan-${plan.id}`}
           >
-            {isCurrentPlan ? 'Current Plan' : plan.price === 0 ? 'Get Started Free' : 'Subscribe'}
+            {isCurrentPlan ? 'Current Plan' : monthlyPrice === 0 ? 'Get Started Free' : 'Subscribe'}
             {!isCurrentPlan && <ArrowRight className="w-4 h-4 ml-2" />}
           </Button>
         </CardFooter>
@@ -163,9 +183,14 @@ const CreditPackCard = ({ pack, onPurchase }) => {
               <p className="text-sm text-muted-foreground">${pack.per_credit}/credit</p>
             </div>
           </div>
-          {pack.popular && (
-            <Badge className="bg-emerald-500 text-white border-0">Best Value</Badge>
-          )}
+          <div className="text-right">
+            {pack.popular && (
+              <Badge className="bg-emerald-500 text-white border-0 mb-1">Best Value</Badge>
+            )}
+            {pack.margin && (
+              <p className="text-xs text-muted-foreground">{pack.margin}% margin</p>
+            )}
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
@@ -286,13 +311,13 @@ export function PricingPage() {
     }
   };
 
-  const handleSelectPlan = async (plan) => {
+  const handleSelectPlan = async (plan, billingPeriod) => {
     if (!token) {
       navigate('/register');
       return;
     }
 
-    if (plan.price === 0) {
+    if (plan.price_monthly === 0) {
       toast.success('You are on the Free plan');
       return;
     }
@@ -304,11 +329,15 @@ export function PricingPage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ plan_id: plan.id })
+        body: JSON.stringify({ 
+          plan_id: plan.id,
+          billing_period: billingPeriod
+        })
       });
 
       if (response.ok) {
-        toast.success(`Subscribed to ${plan.name} plan!`);
+        const period = billingPeriod === 'yearly' ? 'annual' : 'monthly';
+        toast.success(`Subscribed to ${plan.name} (${period})!`);
         fetchPricingData();
       } else {
         toast.error('Failed to subscribe');
