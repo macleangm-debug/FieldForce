@@ -387,17 +387,9 @@ export function PricingPage() {
         <h1 className="text-4xl font-bold tracking-tight mb-4">
           Simple, Transparent Pricing
         </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Start free, scale as you grow. No hidden fees, no surprises.
         </p>
-        <Button 
-          variant="link" 
-          onClick={() => navigate('/pricing/calculator')}
-          className="text-muted-foreground hover:text-primary"
-        >
-          <Calculator className="w-4 h-4 mr-2" />
-          View Pricing Calculator
-        </Button>
       </div>
 
       {/* Usage Dashboard (if logged in) */}
