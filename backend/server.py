@@ -105,12 +105,100 @@ async def root():
 
 @api_router.get("/health")
 async def health_check():
-    """Health check endpoint"""
+    """Basic health check endpoint for load balancer"""
     try:
         await db.command("ping")
         return {"status": "healthy", "database": "connected"}
     except Exception as e:
         return {"status": "unhealthy", "database": str(e)}
+
+
+@api_router.get("/health/detailed")
+async def detailed_health_check():
+    """Detailed health check with all services"""
+    health_status = {
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "version": "1.0.0",
+        "checks": {}
+    }
+    
+    # MongoDB check
+    try:
+        await db.command("ping")
+        # Check if we can read/write
+        test_result = await db.health_check.find_one({"type": "ping"})
+        health_status["checks"]["mongodb"] = {
+            "status": "healthy",
+            "connection_pool": {
+                "min": 10,
+                "max": 100
+            }
+        }
+    except Exception as e:
+        health_status["checks"]["mongodb"] = {"status": "unhealthy", "error": str(e)}
+        health_status["status"] = "degraded"
+    
+    # Redis check (if enabled)
+    try:
+        from config.production import RedisConfig
+        redis = await RedisConfig.get_client()
+        if redis:
+            await redis.ping()
+            health_status["checks"]["redis"] = {"status": "healthy"}
+        else:
+            health_status["checks"]["redis"] = {"status": "unavailable", "message": "Redis not configured"}
+    except Exception as e:
+        health_status["checks"]["redis"] = {"status": "unhealthy", "error": str(e)}
+    
+    # S3 check (if configured)
+    try:
+        from config.production import S3Storage
+        if S3Storage.is_available():
+            health_status["checks"]["s3"] = {"status": "healthy"}
+        else:
+            health_status["checks"]["s3"] = {"status": "unavailable", "message": "S3 not configured"}
+    except Exception as e:
+        health_status["checks"]["s3"] = {"status": "error", "error": str(e)}
+    
+    # Memory usage
+    try:
+        import psutil
+        process = psutil.Process()
+        memory_info = process.memory_info()
+        health_status["checks"]["memory"] = {
+            "status": "healthy",
+            "rss_mb": round(memory_info.rss / 1024 / 1024, 2),
+            "vms_mb": round(memory_info.vms / 1024 / 1024, 2)
+        }
+    except:
+        pass
+    
+    return health_status
+
+
+@api_router.get("/metrics")
+async def get_metrics():
+    """Prometheus-compatible metrics endpoint"""
+    try:
+        # Get basic metrics
+        from config.production import RedisConfig
+        redis = await RedisConfig.get_client()
+        
+        metrics = []
+        
+        if redis:
+            # Get all metric keys
+            keys = await redis.keys("metrics:*")
+            for key in keys:
+                value = await redis.get(key)
+                if value:
+                    metric_name = key.replace("metrics:", "fieldforce_")
+                    metrics.append(f"{metric_name} {value}")
+        
+        return "\n".join(metrics) if metrics else "# No metrics available"
+    except Exception as e:
+        return f"# Error: {e}"
 
 
 # Include the router in the main app
