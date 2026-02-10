@@ -213,6 +213,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Production middleware (rate limiting, timing, security headers)
+if PRODUCTION_MODE:
+    try:
+        from middleware.production import (
+            RateLimitMiddleware,
+            RequestTimingMiddleware,
+            SecurityHeadersMiddleware,
+            RequestLoggingMiddleware
+        )
+        app.add_middleware(SecurityHeadersMiddleware)
+        app.add_middleware(RequestTimingMiddleware, enabled=True)
+        app.add_middleware(RateLimitMiddleware, enabled=True)
+        logger.info("Production middleware enabled")
+    except ImportError as e:
+        logger.warning(f"Could not load production middleware: {e}")
+else:
+    # Development mode - just add timing
+    try:
+        from middleware.production import RequestTimingMiddleware, RequestLoggingMiddleware
+        app.add_middleware(RequestTimingMiddleware, enabled=True)
+        logger.info("Development middleware enabled")
+    except ImportError:
+        pass
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
