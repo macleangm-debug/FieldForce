@@ -432,31 +432,59 @@ const UseCasesSection = () => {
   const useCases = [
     {
       icon: Heart,
-      title: 'Health Surveys',
-      description: 'Community health assessments, vaccination tracking, maternal health monitoring.',
-      example: 'Used by USAID for health program M&E across East Africa.',
+      title: 'Healthcare & Public Health',
+      description: 'Patient surveys, vaccination tracking, community health assessments, clinical trials data.',
+      examples: ['Disease surveillance', 'Patient satisfaction', 'Health facility audits'],
       color: 'rose'
     },
     {
       icon: Leaf,
-      title: 'Agriculture',
-      description: 'Crop yield assessments, farmer interviews, livestock census, food security.',
-      example: 'FAO uses for agricultural surveys in 15 countries.',
+      title: 'Agriculture & Environment',
+      description: 'Crop yield assessments, farmer interviews, livestock census, environmental monitoring.',
+      examples: ['Farm productivity surveys', 'Climate impact studies', 'Supply chain tracking'],
       color: 'emerald'
     },
     {
       icon: GraduationCap,
-      title: 'Education',
-      description: 'School audits, enrollment verification, learning assessments (EGRA/EGMA).',
-      example: 'Room to Read literacy evaluations worldwide.',
+      title: 'Education & Research',
+      description: 'Student assessments, school audits, academic research, enrollment verification.',
+      examples: ['Learning outcome evaluations', 'Teacher feedback', 'Campus surveys'],
       color: 'amber'
     },
     {
-      icon: Droplets,
-      title: 'WASH Programs',
-      description: 'Water point surveys, sanitation inspections, hygiene behavior studies.',
-      example: 'UNICEF WASH monitoring in rural communities.',
+      icon: BarChart3,
+      title: 'Market Research',
+      description: 'Consumer surveys, brand tracking, product feedback, competitive analysis.',
+      examples: ['Customer satisfaction', 'Brand awareness studies', 'Pricing research'],
+      color: 'sky'
+    },
+    {
+      icon: Building2,
+      title: 'Retail & Field Sales',
+      description: 'Store audits, merchandising checks, mystery shopping, sales rep tracking.',
+      examples: ['Planogram compliance', 'Inventory checks', 'Competitor pricing'],
+      color: 'violet'
+    },
+    {
+      icon: Users,
+      title: 'NGO & Development',
+      description: 'Beneficiary registration, program monitoring, impact evaluations, needs assessments.',
+      examples: ['Humanitarian response', 'Project M&E', 'Baseline surveys'],
       color: 'cyan'
+    },
+    {
+      icon: Shield,
+      title: 'Insurance & Finance',
+      description: 'Claims verification, risk assessments, KYC data collection, field underwriting.',
+      examples: ['Property inspections', 'Loan applications', 'Damage assessments'],
+      color: 'orange'
+    },
+    {
+      icon: Smartphone,
+      title: 'Utilities & Infrastructure',
+      description: 'Asset inspections, meter readings, maintenance logs, service quality audits.',
+      examples: ['Equipment condition reports', 'Site surveys', 'Compliance checks'],
+      color: 'lime'
     }
   ];
 
@@ -468,37 +496,63 @@ const UseCasesSection = () => {
             Use Cases
           </Badge>
           <h2 className="text-4xl font-bold text-white mb-4">
-            Trusted Across Industries
+            Built for Every Industry
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto">
-            From health programs to agricultural research, FieldForce powers data collection for organizations worldwide.
+          <p className="text-slate-400 max-w-3xl mx-auto">
+            From market research to humanitarian operations, FieldForce empowers organizations 
+            worldwide to collect accurate, real-time data from the field.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {useCases.map((useCase, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <Card className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all h-full">
-                <CardContent className="p-8">
-                  <div className="flex items-start gap-4">
-                    <div className={`w-14 h-14 rounded-xl bg-${useCase.color}-500/20 flex items-center justify-center flex-shrink-0`}>
-                      <useCase.icon className={`w-7 h-7 text-${useCase.color}-400`} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {useCases.map((useCase, idx) => {
+            const colorClasses = {
+              rose: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+              emerald: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+              amber: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+              sky: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
+              violet: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
+              cyan: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+              orange: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+              lime: 'bg-lime-500/20 text-lime-400 border-lime-500/30',
+            };
+            const [bgClass, textClass, borderClass] = (colorClasses[useCase.color] || '').split(' ');
+            
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.05 }}
+              >
+                <Card className="bg-slate-800/50 border-slate-700 hover:border-slate-600 transition-all h-full group">
+                  <CardContent className="p-6">
+                    <div className={`w-12 h-12 rounded-xl ${bgClass} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                      <useCase.icon className={`w-6 h-6 ${textClass}`} />
                     </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-white mb-2">{useCase.title}</h3>
-                      <p className="text-slate-400 mb-3">{useCase.description}</p>
-                      <p className="text-sm text-slate-500 italic">"{useCase.example}"</p>
+                    <h3 className="text-lg font-semibold text-white mb-2">{useCase.title}</h3>
+                    <p className="text-sm text-slate-400 mb-4">{useCase.description}</p>
+                    <div className="space-y-1">
+                      {useCase.examples.map((example, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs text-slate-500">
+                          <div className={`w-1 h-1 rounded-full ${bgClass}`} />
+                          {example}
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+        
+        {/* Additional Industries Banner */}
+        <div className="mt-12 text-center">
+          <p className="text-slate-500 text-sm">
+            Also used in: <span className="text-slate-400">Real Estate • Construction • Logistics • Government • Tourism • Manufacturing</span>
+          </p>
         </div>
       </div>
     </section>
