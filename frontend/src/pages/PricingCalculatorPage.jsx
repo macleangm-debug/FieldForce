@@ -412,9 +412,9 @@ export function PricingCalculatorPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5" />
-                Calculated Subscription Prices
+                Subscription Pricing Breakdown
               </CardTitle>
-              <CardDescription>Based on costs and margins above</CardDescription>
+              <CardDescription>Cost analysis for each plan</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -424,10 +424,10 @@ export function PricingCalculatorPage() {
                     <TableHead>Submissions</TableHead>
                     <TableHead>Storage</TableHead>
                     <TableHead>Users</TableHead>
-                    <TableHead className="text-right">Base Cost</TableHead>
-                    <TableHead className="text-right">Margin</TableHead>
-                    <TableHead className="text-right">Monthly Price</TableHead>
+                    <TableHead className="text-right">Est. Cost</TableHead>
+                    <TableHead className="text-right">Selling Price</TableHead>
                     <TableHead className="text-right">Yearly Price</TableHead>
+                    <TableHead className="text-right">Margin</TableHead>
                     <TableHead className="text-right">Profit/mo</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -443,14 +443,18 @@ export function PricingCalculatorPage() {
                         <TableCell className="text-right text-muted-foreground">
                           ${prices.cost?.toFixed(2) || '0.00'}
                         </TableCell>
-                        <TableCell className="text-right">
-                          <Badge variant="outline">{prices.margin || 0}%</Badge>
-                        </TableCell>
                         <TableCell className="text-right font-bold text-lg">
                           ${prices.monthlyPrice || 0}
                         </TableCell>
                         <TableCell className="text-right">
                           ${prices.yearlyPrice || 0}/yr
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge 
+                            variant={prices.profitMargin >= 80 ? 'default' : prices.profitMargin >= 50 ? 'secondary' : 'destructive'}
+                          >
+                            {prices.profitMargin || 0}%
+                          </Badge>
                         </TableCell>
                         <TableCell className="text-right text-emerald-500">
                           +${prices.profit?.toFixed(2) || '0.00'}
