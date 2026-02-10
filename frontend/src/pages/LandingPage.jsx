@@ -52,7 +52,7 @@ const staggerContainer = {
 };
 
 // Hero Section
-const HeroSection = () => {
+const HeroSection = ({ onWatchDemo }) => {
   const navigate = useNavigate();
   
   return (
