@@ -121,6 +121,16 @@ export function PricingCalculatorPage() {
     credits: 87
   });
   
+  // Mode: 'analyze' shows current pricing, 'simulate' allows margin changes
+  const [mode, setMode] = useState('analyze');
+  
+  // Custom prices for simulation mode
+  const [customPrices, setCustomPrices] = useState({
+    starter: 69,
+    pro: 189,
+    enterprise: 499
+  });
+  
   // Calculated prices
   const [calculatedPrices, setCalculatedPrices] = useState({});
   const [creditPrices, setCreditPrices] = useState({});
@@ -131,7 +141,7 @@ export function PricingCalculatorPage() {
     
     PLAN_CONFIGS.forEach(plan => {
       // Calculate base cost
-      const userCount = plan.users === -1 ? 50 : plan.users; // Estimate 50 for unlimited
+      const userCount = plan.users === -1 ? 50 : plan.users;
       const supportMultiplier = plan.support === 'dedicated' ? 3 : plan.support === 'priority' ? 2 : plan.support === 'email' ? 1 : 0;
       
       const serverCost = userCount * costs.serverPerUser;
@@ -142,23 +152,21 @@ export function PricingCalculatorPage() {
       
       const totalCost = serverCost + storageCost + submissionCost + supportCost + fixedCost;
       
-      // Calculate selling price based on margin
-      const margin = margins[plan.id] / 100;
-      const sellingPrice = margin > 0 ? totalCost / (1 - margin) : 0;
+      // Use current price or custom price based on mode
+      const sellingPrice = mode === 'analyze' ? plan.currentPrice : (customPrices[plan.id] || plan.currentPrice);
       
-      // Round to nearest whole dollar
-      const roundedPrice = Math.round(sellingPrice);
+      // Calculate implied margin
+      const impliedMargin = sellingPrice > 0 ? ((sellingPrice - totalCost) / sellingPrice * 100) : 0;
       
       // Calculate yearly price with 2 months free
-      const yearlyPrice = roundedPrice * 10; // 10 months instead of 12
+      const yearlyPrice = sellingPrice * 10;
       
       newPrices[plan.id] = {
         cost: totalCost,
-        margin: margins[plan.id],
-        monthlyPrice: roundedPrice,
+        monthlyPrice: sellingPrice,
         yearlyPrice: yearlyPrice,
-        profit: roundedPrice - totalCost,
-        profitMargin: roundedPrice > 0 ? ((roundedPrice - totalCost) / roundedPrice * 100) : 0
+        profit: sellingPrice - totalCost,
+        profitMargin: Math.round(impliedMargin * 10) / 10
       };
     });
     
@@ -166,24 +174,24 @@ export function PricingCalculatorPage() {
     
     // Calculate credit pack prices
     const newCreditPrices = {};
-    const creditMargin = margins.credits / 100;
     
     CREDIT_PACK_CONFIGS.forEach(pack => {
-      const sellingPrice = creditMargin > 0 ? pack.baseCost / (1 - creditMargin) : pack.baseCost;
-      const roundedPrice = Math.round(sellingPrice);
-      const perCredit = (roundedPrice / pack.credits).toFixed(3);
+      const sellingPrice = pack.currentPrice;
+      const impliedMargin = ((sellingPrice - pack.baseCost) / sellingPrice * 100);
+      const perCredit = (sellingPrice / pack.credits).toFixed(3);
       
       newCreditPrices[pack.id] = {
         cost: pack.baseCost,
-        price: roundedPrice,
+        price: sellingPrice,
         perCredit: perCredit,
-        profit: roundedPrice - pack.baseCost
+        profit: sellingPrice - pack.baseCost,
+        margin: Math.round(impliedMargin * 10) / 10
       };
     });
     
     setCreditPrices(newCreditPrices);
     
-  }, [costs, margins]);
+  }, [costs, mode, customPrices]);
   
   const handleMarginChange = (planId, value) => {
     setMargins(prev => ({
