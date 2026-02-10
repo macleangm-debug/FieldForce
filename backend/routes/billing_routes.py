@@ -124,6 +124,7 @@ CREDIT_RATES = {
 
 class SubscriptionCreate(BaseModel):
     plan_id: str
+    billing_period: str = "monthly"  # monthly or yearly
     payment_method: Optional[str] = None
 
 
