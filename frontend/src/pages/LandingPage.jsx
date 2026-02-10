@@ -608,14 +608,14 @@ const CTASection = () => {
               size="lg"
               variant="outline"
               className="border-slate-600 text-white hover:bg-slate-700 text-lg px-8 py-6"
+              onClick={() => navigate('/pricing')}
             >
-              <Play className="w-5 h-5 mr-2" />
-              Watch Demo
+              View Pricing
             </Button>
           </div>
           
           <p className="text-sm text-slate-500 mt-6">
-            No credit card required • 500 free submissions • Cancel anytime
+            No credit card required • 500 free submissions • Full onboarding wizard included
           </p>
         </motion.div>
       </div>
