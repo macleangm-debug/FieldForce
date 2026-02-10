@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -31,7 +31,17 @@ import {
   CheckCheck,
   AlertCircle,
   RefreshCw,
-  Video
+  Video,
+  GripVertical,
+  Trash2,
+  Type,
+  Hash,
+  Calendar,
+  List,
+  ToggleLeft,
+  Star,
+  Sparkles,
+  X
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
