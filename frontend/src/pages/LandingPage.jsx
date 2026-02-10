@@ -144,7 +144,7 @@ const HeroSection = ({ onWatchDemo }) => {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { value: '87%', label: 'Cheaper than competitors' },
+              { value: '500+', label: 'Free submissions' },
               { value: '100%', label: 'Offline capable' },
               { value: '256-bit', label: 'AES Encryption' },
               { value: '24/7', label: 'Support available' }
