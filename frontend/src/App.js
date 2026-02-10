@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import { useAuthStore, useUIStore } from './store';
 import { LoginPage, RegisterPage, AuthCallbackPage } from './pages/AuthPages';
 import { LandingPage } from './pages/LandingPage';
+import { DemoPage } from './pages/DemoPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { FormsPage } from './pages/FormsPage';
