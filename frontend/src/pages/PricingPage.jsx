@@ -183,9 +183,14 @@ const CreditPackCard = ({ pack, onPurchase }) => {
               <p className="text-sm text-muted-foreground">${pack.per_credit}/credit</p>
             </div>
           </div>
-          {pack.popular && (
-            <Badge className="bg-emerald-500 text-white border-0">Best Value</Badge>
-          )}
+          <div className="text-right">
+            {pack.popular && (
+              <Badge className="bg-emerald-500 text-white border-0 mb-1">Best Value</Badge>
+            )}
+            {pack.margin && (
+              <p className="text-xs text-muted-foreground">{pack.margin}% margin</p>
+            )}
+          </div>
         </div>
         
         <div className="flex items-center justify-between">
