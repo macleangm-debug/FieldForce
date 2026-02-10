@@ -203,6 +203,9 @@ function App() {
           <Route path="/survey/:formId" element={<CAWISurveyPage />} />
           <Route path="/survey/complete" element={<SurveyCompletePage />} />
           
+          {/* Pricing Page - Public and Protected */}
+          <Route path="/pricing" element={<PricingPage />} />
+          
           <Route path="/organizations/new" element={
             <ProtectedRoute>
               <CreateOrganizationPage />
