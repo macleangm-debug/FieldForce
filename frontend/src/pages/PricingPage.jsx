@@ -494,11 +494,11 @@ export function PricingPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center gap-4">
-          <Button variant="outline">
-            <Smartphone className="w-4 h-4 mr-2" />
-            Schedule Demo
+          <Button variant="outline" onClick={() => navigate('/demo')}>
+            <Play className="w-4 h-4 mr-2" />
+            Try Interactive Demo
           </Button>
-          <Button>
+          <Button onClick={() => navigate('/register')}>
             <CreditCard className="w-4 h-4 mr-2" />
             Start Free Trial
           </Button>
