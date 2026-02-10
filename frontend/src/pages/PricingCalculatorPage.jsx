@@ -472,9 +472,9 @@ export function PricingCalculatorPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5" />
-                Calculated Credit Pack Prices
+                Credit Pack Pricing
               </CardTitle>
-              <CardDescription>Pay-as-you-go credit pricing</CardDescription>
+              <CardDescription>Pay-as-you-go credit packs</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -482,9 +482,10 @@ export function PricingCalculatorPage() {
                   <TableRow>
                     <TableHead>Pack</TableHead>
                     <TableHead>Credits</TableHead>
-                    <TableHead className="text-right">Base Cost</TableHead>
+                    <TableHead className="text-right">Est. Cost</TableHead>
                     <TableHead className="text-right">Selling Price</TableHead>
                     <TableHead className="text-right">Per Credit</TableHead>
+                    <TableHead className="text-right">Margin</TableHead>
                     <TableHead className="text-right">Profit</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -503,6 +504,13 @@ export function PricingCalculatorPage() {
                         </TableCell>
                         <TableCell className="text-right">
                           ${prices.perCredit || '0.000'}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Badge 
+                            variant={prices.margin >= 80 ? 'default' : prices.margin >= 50 ? 'secondary' : 'destructive'}
+                          >
+                            {prices.margin || 0}%
+                          </Badge>
                         </TableCell>
                         <TableCell className="text-right text-emerald-500">
                           +${prices.profit || 0}
