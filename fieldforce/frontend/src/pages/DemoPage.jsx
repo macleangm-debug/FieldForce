@@ -954,7 +954,7 @@ const LiveDashboardDemo = () => {
 // ==================== MAIN DEMO PAGE ====================
 export function DemoPage() {
   const navigate = useNavigate();
-  const [activeDemo, setActiveDemo] = useState('builder');
+  const [activeDemo, setActiveDemo] = useState('sandbox');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12 px-4">
@@ -973,10 +973,19 @@ export function DemoPage() {
           </p>
         </div>
 
+        {/* Featured: Interactive Form Builder Sandbox */}
+        <div className="mb-12">
+          <div className="flex items-center gap-2 mb-4">
+            <Star className="w-5 h-5 text-amber-400" />
+            <span className="text-sm font-semibold text-amber-400 uppercase tracking-wider">Featured</span>
+          </div>
+          <InteractiveFormBuilderSandbox />
+        </div>
+
         {/* Demo Tabs */}
         <Tabs value={activeDemo} onValueChange={setActiveDemo} className="mb-8">
           <TabsList className="grid grid-cols-5 w-full max-w-3xl mx-auto bg-slate-800 p-1">
-            <TabsTrigger value="builder" className="data-[state=active]:bg-sky-500">
+            <TabsTrigger value="sandbox" className="data-[state=active]:bg-sky-500">
               Form Builder
             </TabsTrigger>
             <TabsTrigger value="sync" className="data-[state=active]:bg-sky-500">
@@ -993,7 +1002,7 @@ export function DemoPage() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="builder" className="mt-8">
+          <TabsContent value="sandbox" className="mt-8">
             <FormBuilderDemo />
           </TabsContent>
           <TabsContent value="sync" className="mt-8">
