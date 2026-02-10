@@ -329,4 +329,15 @@ async def startup_db_client():
 async def shutdown_db_client():
     """Cleanup on shutdown"""
     logger.info("FieldForce API shutting down...")
+    
+    # Close Redis connection
+    try:
+        from config.production import RedisConfig
+        await RedisConfig.close()
+        logger.info("Redis connection closed")
+    except Exception as e:
+        logger.warning(f"Redis close error: {e}")
+    
+    # Close MongoDB connection
     client.close()
+    logger.info("MongoDB connection closed")
