@@ -209,6 +209,9 @@ function App() {
           {/* Pricing Page - Public and Protected */}
           <Route path="/pricing" element={<PricingPage />} />
           
+          {/* Pricing Calculator - Public */}
+          <Route path="/pricing/calculator" element={<PricingCalculatorPage />} />
+          
           {/* Demo Page - Public */}
           <Route path="/demo" element={<DemoPage />} />
           
