@@ -98,12 +98,12 @@ const PLAN_CONFIGS = [
   }
 ];
 
-// Credit pack configurations
+// Credit pack configurations with current prices
 const CREDIT_PACK_CONFIGS = [
-  { id: 'small', name: 'Small', credits: 500, baseCost: 5 },
-  { id: 'medium', name: 'Medium', credits: 2000, baseCost: 18 },
-  { id: 'large', name: 'Large', credits: 10000, baseCost: 75 },
-  { id: 'xlarge', name: 'X-Large', credits: 50000, baseCost: 300 },
+  { id: 'small', name: 'Small', credits: 500, baseCost: 5, currentPrice: 20 },
+  { id: 'medium', name: 'Medium', credits: 2000, baseCost: 18, currentPrice: 70 },
+  { id: 'large', name: 'Large', credits: 10000, baseCost: 75, currentPrice: 280 },
+  { id: 'xlarge', name: 'X-Large', credits: 50000, baseCost: 300, currentPrice: 1100 },
 ];
 
 export function PricingCalculatorPage() {
