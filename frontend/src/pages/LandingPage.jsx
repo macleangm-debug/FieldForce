@@ -132,9 +132,10 @@ const HeroSection = () => {
               size="lg" 
               variant="outline" 
               className="border-slate-600 text-white hover:bg-slate-800 text-lg px-8 py-6"
-              onClick={() => navigate('/pricing')}
+              onClick={() => navigate('/demo')}
             >
-              View Pricing
+              <Play className="w-5 h-5 mr-2" />
+              Interactive Demo
             </Button>
           </div>
           
