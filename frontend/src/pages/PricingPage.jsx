@@ -381,7 +381,7 @@ export function PricingPage() {
       {/* Header */}
       <div className="text-center mb-12">
         <Badge className="mb-4 bg-primary/10 text-primary border-0">
-          80% cheaper than SurveyCTO
+          Enterprise Features, Startup Pricing
         </Badge>
         <h1 className="text-4xl font-bold tracking-tight mb-4">
           Simple, Transparent Pricing
