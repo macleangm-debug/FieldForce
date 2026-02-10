@@ -17,7 +17,8 @@ import {
   Smartphone,
   Cloud,
   HeadphonesIcon,
-  Info
+  Info,
+  Play
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -31,6 +32,7 @@ import {
   TooltipTrigger,
 } from '../components/ui/tooltip';
 import { DashboardLayout } from '../layouts/DashboardLayout';
+import { PublicHeader } from '../components/PublicHeader';
 import { useAuthStore } from '../store';
 import { toast } from 'sonner';
 
