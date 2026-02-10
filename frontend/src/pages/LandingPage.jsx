@@ -390,7 +390,7 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-slate-800">
+    <section id="features" className="py-24 bg-slate-800 scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
