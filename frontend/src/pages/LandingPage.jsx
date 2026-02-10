@@ -518,10 +518,10 @@ const PricingPreviewSection = () => {
             Pricing
           </Badge>
           <h2 className="text-4xl font-bold text-white mb-4">
-            87% Cheaper Than SurveyCTO
+            Enterprise Features, Startup Pricing
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Enterprise features at startup prices. Start free, scale as you grow.
+            Affordable data collection for organizations of all sizes. Start free, scale as you grow.
           </p>
         </div>
 
