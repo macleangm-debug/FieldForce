@@ -193,13 +193,6 @@ export function PricingCalculatorPage() {
     
   }, [costs, mode, customPrices]);
   
-  const handleMarginChange = (planId, value) => {
-    setMargins(prev => ({
-      ...prev,
-      [planId]: value[0]
-    }));
-  };
-  
   const handleCostChange = (costKey, value) => {
     setCosts(prev => ({
       ...prev,
@@ -207,20 +200,25 @@ export function PricingCalculatorPage() {
     }));
   };
   
+  const handlePriceChange = (planId, value) => {
+    setCustomPrices(prev => ({
+      ...prev,
+      [planId]: parseInt(value) || 0
+    }));
+  };
+  
   const resetToDefaults = () => {
     setCosts(DEFAULT_COSTS);
-    setMargins({
-      free: 0,
-      starter: 87,
-      pro: 87,
-      enterprise: 86,
-      credits: 87
+    setCustomPrices({
+      starter: 69,
+      pro: 189,
+      enterprise: 499
     });
+    setMode('analyze');
     toast.success('Reset to default values');
   };
   
   const applyPricing = () => {
-    // In a real app, this would save to backend
     toast.success('Pricing configuration saved!');
     console.log('Calculated Prices:', calculatedPrices);
     console.log('Credit Prices:', creditPrices);
