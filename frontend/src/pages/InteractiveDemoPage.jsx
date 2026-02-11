@@ -781,7 +781,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
 );
 
 // Forms Tab
-const FormsTab = () => (
+const FormsTab = ({ onViewForm }) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -795,7 +795,12 @@ const FormsTab = () => (
 
     <div className="grid gap-4">
       {SAMPLE_FORMS.map((form) => (
-        <Card key={form.id} className="hover:border-primary/50 transition-colors">
+        <Card 
+          key={form.id} 
+          className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+          onClick={() => onViewForm(form)}
+          data-testid={`form-card-${form.id}`}
+        >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -820,7 +825,12 @@ const FormsTab = () => (
                   {form.status}
                 </Badge>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={(e) => { e.stopPropagation(); onViewForm(form); }}
+                    data-testid={`view-form-${form.id}`}
+                  >
                     <Eye className="w-4 h-4" />
                   </Button>
                   <TooltipProvider>
@@ -835,12 +845,12 @@ const FormsTab = () => (
                   </TooltipProvider>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onViewForm(form)}>
                         <Eye className="w-4 h-4 mr-2" /> Preview
                       </DropdownMenuItem>
                       <DropdownMenuItem disabled>
