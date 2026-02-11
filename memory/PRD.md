@@ -6,6 +6,11 @@ FieldForce is a Mobile Data Collection Suite by DataVision International, derive
 ## Current Status: Production Ready
 
 ### Completed Features
+- [x] **Light/Dark Mode Theme System**
+  - Theme toggle in navigation headers
+  - Persisted user preference
+  - Full support on authenticated pages
+  
 - [x] **Marketing Website**
   - Landing page with workflow visualization
   - Interactive Demo page with Form Builder sandbox
