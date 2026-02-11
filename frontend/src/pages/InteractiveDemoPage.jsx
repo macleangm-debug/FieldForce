@@ -682,14 +682,14 @@ const TeamMemberDetail = ({ member }) => (
 );
 
 // Dashboard Tab
-const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
+const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject, industryData }) => (
   <div className="space-y-6">
     {/* Stats Row */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard 
         icon={FileText} 
         label="Total Submissions" 
-        value="5,262" 
+        value={industryData.stats.totalSubmissions.toLocaleString()} 
         change="+12%" 
         changeType="up" 
         color="sky"
@@ -698,7 +698,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
       <StatCard 
         icon={Users} 
         label="Active Enumerators" 
-        value="47" 
+        value={industryData.stats.activeEnumerators.toString()} 
         change="+3" 
         changeType="up" 
         color="emerald"
@@ -707,7 +707,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
       <StatCard 
         icon={CheckCircle2} 
         label="Validated" 
-        value="4,891" 
+        value={industryData.stats.validated.toLocaleString()} 
         change="93%" 
         changeType="up" 
         color="violet"
@@ -716,7 +716,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
       <StatCard 
         icon={AlertCircle} 
         label="Pending Review" 
-        value="371" 
+        value={industryData.stats.pendingReview.toString()} 
         change="-8%" 
         changeType="down" 
         color="amber"
@@ -731,7 +731,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
         <LockedButton icon={Plus}>New Project</LockedButton>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {SAMPLE_PROJECTS.map((project) => (
+        {industryData.projects.map((project) => (
           <Card 
             key={project.id} 
             className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
@@ -786,8 +786,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {[
-            { icon: Upload, text: 'Sarah Johnson synced 12 submissions', time: '2 mins ago', color: 'emerald' },
+          {industryData.activity.map((activity, idx) => (
             { icon: CheckCircle2, text: 'QA approved 45 submissions in batch', time: '15 mins ago', color: 'sky' },
             { icon: AlertCircle, text: '3 submissions flagged for review', time: '1 hour ago', color: 'amber' },
             { icon: Users, text: 'New team member added: Lisa Anderson', time: '2 hours ago', color: 'violet' },
