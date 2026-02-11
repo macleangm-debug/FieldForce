@@ -525,6 +525,135 @@ const ProjectDetail = ({ project }) => (
   </div>
 );
 
+// Form Detail Content
+const FormDetail = ({ form }) => (
+  <div className="space-y-6">
+    <div className="flex items-start gap-4">
+      <div className="p-3 rounded-xl bg-primary/10">
+        <ClipboardList className="w-8 h-8 text-primary" />
+      </div>
+      <div className="flex-1">
+        <h3 className="text-xl font-semibold">{form.name}</h3>
+        <p className="text-muted-foreground">{form.project}</p>
+      </div>
+      <Badge variant={form.status === 'active' ? 'default' : 'secondary'} className="text-sm">
+        {form.status}
+      </Badge>
+    </div>
+    
+    <div className="grid grid-cols-3 gap-4">
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold text-primary">{form.questions}</p>
+          <p className="text-sm text-muted-foreground">Questions</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold">{form.submissions.toLocaleString()}</p>
+          <p className="text-sm text-muted-foreground">Submissions</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold">v{form.version}</p>
+          <p className="text-sm text-muted-foreground">Version</p>
+        </CardContent>
+      </Card>
+    </div>
+    
+    <div>
+      <p className="text-sm text-muted-foreground mb-2">Sample Questions</p>
+      <div className="space-y-2">
+        {[
+          { type: 'Text', label: 'Respondent Name', required: true },
+          { type: 'Select', label: 'Region', required: true },
+          { type: 'Number', label: 'Household Size', required: true },
+          { type: 'GPS', label: 'Location', required: true },
+          { type: 'Photo', label: 'Photo Evidence', required: false },
+        ].map((q, i) => (
+          <div key={i} className="flex items-center justify-between py-2 px-3 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-3">
+              <Badge variant="outline" className="text-xs">{q.type}</Badge>
+              <span className="text-sm">{q.label}</span>
+            </div>
+            {q.required && <Badge variant="secondary" className="text-xs">Required</Badge>}
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t">
+      <span>Last modified: {form.lastModified}</span>
+      <span>Version: {form.version}</span>
+    </div>
+  </div>
+);
+
+// Team Member Detail Content
+const TeamMemberDetail = ({ member }) => (
+  <div className="space-y-6">
+    <div className="flex items-center gap-4">
+      <div className="relative">
+        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+          <span className="text-2xl font-semibold text-primary">
+            {member.name.split(' ').map(n => n[0]).join('')}
+          </span>
+        </div>
+        <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-background ${
+          member.status === 'online' ? 'bg-emerald-500' : 'bg-slate-400'
+        }`} />
+      </div>
+      <div>
+        <h3 className="text-xl font-semibold">{member.name}</h3>
+        <p className="text-muted-foreground">{member.role}</p>
+      </div>
+    </div>
+    
+    <div className="grid grid-cols-2 gap-4">
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold text-primary">{member.submissions}</p>
+          <p className="text-sm text-muted-foreground">Submissions</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold capitalize">{member.status}</p>
+          <p className="text-sm text-muted-foreground">Status</p>
+        </CardContent>
+      </Card>
+    </div>
+    
+    <div>
+      <p className="text-sm text-muted-foreground mb-2">Location</p>
+      <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
+        <MapPin className="w-4 h-4 text-muted-foreground" />
+        <span>{member.location}</span>
+      </div>
+    </div>
+    
+    <div>
+      <p className="text-sm text-muted-foreground mb-2">Recent Activity</p>
+      <div className="space-y-2">
+        {[
+          { action: 'Submitted form', detail: 'Household Survey', time: '2 hours ago' },
+          { action: 'Synced data', detail: '15 submissions', time: '3 hours ago' },
+          { action: 'Started session', detail: 'Logged in', time: '4 hours ago' },
+        ].map((activity, i) => (
+          <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
+            <div>
+              <p className="text-sm font-medium">{activity.action}</p>
+              <p className="text-xs text-muted-foreground">{activity.detail}</p>
+            </div>
+            <span className="text-xs text-muted-foreground">{activity.time}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 // Dashboard Tab
 const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
   <div className="space-y-6">
