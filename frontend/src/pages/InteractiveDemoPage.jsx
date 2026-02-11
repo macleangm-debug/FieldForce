@@ -1080,6 +1080,17 @@ export function InteractiveDemoPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  
+  // Modal states for detail views
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedForm, setSelectedForm] = useState(null);
+  const [selectedTeamMember, setSelectedTeamMember] = useState(null);
+  
+  // Handle switching tabs based on stats card clicks
+  const handleViewSubmissions = () => setActiveTab('submissions');
+  const handleViewTeam = () => setActiveTab('team');
+  const handleViewForms = () => setActiveTab('forms');
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
