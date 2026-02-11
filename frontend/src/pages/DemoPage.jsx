@@ -932,168 +932,427 @@ const LiveDashboardDemo = () => {
 export function DemoPage() {
   const navigate = useNavigate();
   const [activeDemo, setActiveDemo] = useState('builder');
-  const [videoOpen, setVideoOpen] = useState(false);
+  const [hoveredFeature, setHoveredFeature] = useState(null);
+
+  // Demo features for the interactive showcase
+  const demoFeatures = [
+    {
+      id: 'dashboard',
+      title: 'Real-time Dashboard',
+      description: 'Monitor submissions, track team activity, and view analytics in real-time.',
+      icon: BarChart3,
+      color: 'sky',
+      stats: { value: '5,262', label: 'Submissions tracked' }
+    },
+    {
+      id: 'forms',
+      title: 'Form Builder',
+      description: 'Drag-and-drop form creation with skip logic, validations, and calculations.',
+      icon: FileText,
+      color: 'emerald',
+      stats: { value: '45+', label: 'Question types' }
+    },
+    {
+      id: 'gps',
+      title: 'GPS Tracking',
+      description: 'Automatic location capture with geofencing and route visualization.',
+      icon: MapPin,
+      color: 'violet',
+      stats: { value: '100%', label: 'Accuracy' }
+    },
+    {
+      id: 'team',
+      title: 'Team Management',
+      description: 'Assign forms, track progress, and manage permissions across your field team.',
+      icon: Users,
+      color: 'amber',
+      stats: { value: '47', label: 'Active users' }
+    },
+    {
+      id: 'offline',
+      title: 'Offline Mode',
+      description: 'Collect data without internet. Auto-sync when connection is restored.',
+      icon: WifiOff,
+      color: 'rose',
+      stats: { value: '0%', label: 'Data loss' }
+    },
+    {
+      id: 'media',
+      title: 'Media Capture',
+      description: 'Photos, audio, video, and signatures with automatic compression.',
+      icon: Camera,
+      color: 'cyan',
+      stats: { value: '2,847', label: 'Media files' }
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <PublicHeader />
       
-      <div className="py-8 sm:py-12 px-4">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <Badge className="mb-4 bg-violet-500/20 text-violet-300 border-violet-500/30">
+      {/* Hero Section with Floating Elements */}
+      <section className="relative py-20 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.1) 2px, transparent 0)`,
+            backgroundSize: '50px 50px'
+          }} />
+        </div>
+        
+        {/* Floating Elements */}
+        <motion.div
+          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+          transition={{ duration: 4, repeat: Infinity }}
+          className="absolute top-20 left-[10%] w-16 h-16 rounded-2xl bg-sky-500/20 backdrop-blur-sm border border-sky-500/30 flex items-center justify-center"
+        >
+          <BarChart3 className="w-8 h-8 text-sky-400" />
+        </motion.div>
+        
+        <motion.div
+          animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+          transition={{ duration: 5, repeat: Infinity }}
+          className="absolute top-32 right-[15%] w-14 h-14 rounded-xl bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 flex items-center justify-center"
+        >
+          <FileText className="w-7 h-7 text-emerald-400" />
+        </motion.div>
+        
+        <motion.div
+          animate={{ y: [0, -15, 0] }}
+          transition={{ duration: 3.5, repeat: Infinity }}
+          className="absolute bottom-20 left-[20%] w-12 h-12 rounded-lg bg-violet-500/20 backdrop-blur-sm border border-violet-500/30 flex items-center justify-center"
+        >
+          <MapPin className="w-6 h-6 text-violet-400" />
+        </motion.div>
+        
+        <motion.div
+          animate={{ y: [0, 15, 0], x: [0, 10, 0] }}
+          transition={{ duration: 4.5, repeat: Infinity }}
+          className="absolute top-40 left-[5%] w-10 h-10 rounded-lg bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 flex items-center justify-center"
+        >
+          <Users className="w-5 h-5 text-amber-400" />
+        </motion.div>
+        
+        <motion.div
+          animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="absolute bottom-32 right-[10%] w-14 h-14 rounded-xl bg-cyan-500/20 backdrop-blur-sm border border-cyan-500/30 flex items-center justify-center"
+        >
+          <Camera className="w-7 h-7 text-cyan-400" />
+        </motion.div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Badge className="mb-6 bg-gradient-to-r from-violet-500/20 to-indigo-500/20 text-violet-300 border-violet-500/30 px-4 py-1.5">
+              <Sparkles className="w-4 h-4 mr-2 inline" />
               Interactive Demo
             </Badge>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              See FieldForce in Action
+            
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+              Experience FieldForce
+              <br />
+              <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-emerald-400 bg-clip-text text-transparent">
+                Before You Sign Up
+              </span>
             </h1>
-            <p className="text-slate-400 max-w-2xl mx-auto mb-6">
-              Experience our powerful data collection platform through interactive visualizations.
+            
+            <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto mb-10">
+              Explore our complete data collection platform with real sample data. 
+              No account needed - just click and discover.
             </p>
             
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button
-                onClick={() => navigate('/demo/sandbox')}
-                className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600"
-                size="lg"
+            {/* Primary CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <Play className="w-4 h-4 mr-2" />
-                Try Full Product Demo
-              </Button>
-              <Button
-                onClick={() => setVideoOpen(true)}
-                variant="outline"
-                className="border-slate-600 text-white hover:bg-slate-800"
-                size="lg"
-              >
-                <Video className="w-4 h-4 mr-2" />
-                Watch Video Walkthrough
-              </Button>
-            </div>
-          </div>
-
-          {/* Full Demo Banner */}
-          <div className="mb-10 sm:mb-12">
-            <Card className="bg-gradient-to-r from-violet-500/10 to-indigo-500/10 border-violet-500/30">
-              <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-violet-500/20">
-                    <Smartphone className="w-6 h-6 text-violet-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">Experience the Full Product</h3>
-                    <p className="text-sm text-slate-400">Explore dashboard, forms, submissions, GPS map, and more with sample data</p>
-                  </div>
-                </div>
-                <Button 
+                <Button
                   onClick={() => navigate('/demo/sandbox')}
-                  className="bg-violet-500 hover:bg-violet-600 whitespace-nowrap"
+                  size="lg"
+                  className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-lg px-8 py-6 shadow-lg shadow-sky-500/25"
                 >
-                  Launch Full Demo
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <Play className="w-5 h-5 mr-2" />
+                  Launch Interactive Demo
+                  <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-              </CardContent>
-            </Card>
-          </div>
+              </motion.div>
+              
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  onClick={() => navigate('/register')}
+                  variant="outline"
+                  size="lg"
+                  className="border-slate-600 text-white hover:bg-slate-800 text-lg px-8 py-6"
+                >
+                  Start Free Trial
+                </Button>
+              </motion.div>
+            </motion.div>
 
-          {/* Featured: Interactive Form Builder Sandbox */}
-          <div className="mb-10 sm:mb-12">
-            <div className="flex items-center gap-2 mb-4">
+            {/* Demo Preview Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto"
+            >
+              {[
+                { value: '6', label: 'Interactive tabs' },
+                { value: '3', label: 'Sample projects' },
+                { value: '5,262', label: 'Demo submissions' },
+                { value: '47', label: 'Simulated users' }
+              ].map((stat, idx) => (
+                <motion.div 
+                  key={idx} 
+                  className="text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + idx * 0.1 }}
+                >
+                  <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-sky-400 to-cyan-400 bg-clip-text text-transparent">{stat.value}</p>
+                  <p className="text-sm text-slate-400">{stat.label}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+        
+        {/* Scroll indicator */}
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2"
+        >
+          <ChevronRight className="w-8 h-8 text-slate-500 rotate-90" />
+        </motion.div>
+      </section>
+
+      {/* Feature Preview Cards */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              What You'll Explore
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Click on any feature to see it in action within our interactive demo
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {demoFeatures.map((feature, idx) => (
+              <motion.div
+                key={feature.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                onHoverStart={() => setHoveredFeature(feature.id)}
+                onHoverEnd={() => setHoveredFeature(null)}
+              >
+                <Card 
+                  className={`bg-slate-800/50 border-slate-700 hover:border-${feature.color}-500/50 transition-all duration-300 cursor-pointer h-full overflow-hidden group`}
+                  onClick={() => navigate('/demo/sandbox')}
+                >
+                  <CardContent className="p-6 relative">
+                    {/* Glow effect on hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-br from-${feature.color}-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-start justify-between mb-4">
+                        <motion.div 
+                          className={`p-3 rounded-xl bg-${feature.color}-500/20 border border-${feature.color}-500/30`}
+                          animate={hoveredFeature === feature.id ? { rotate: [0, -10, 10, 0] } : {}}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <feature.icon className={`w-6 h-6 text-${feature.color}-400`} />
+                        </motion.div>
+                        <Badge variant="outline" className={`text-${feature.color}-400 border-${feature.color}-500/30`}>
+                          {feature.stats.value}
+                        </Badge>
+                      </div>
+                      
+                      <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-sky-400 transition-colors">
+                        {feature.title}
+                      </h3>
+                      <p className="text-sm text-slate-400 mb-4">
+                        {feature.description}
+                      </p>
+                      
+                      <div className="flex items-center text-xs text-slate-500">
+                        <span>{feature.stats.label}</span>
+                        <ArrowRight className="w-4 h-4 ml-auto text-slate-600 group-hover:text-sky-400 group-hover:translate-x-1 transition-all" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Form Builder Section */}
+      <section className="py-16 px-4 bg-slate-800/30">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <div className="flex items-center justify-center gap-2 mb-4">
               <Star className="w-5 h-5 text-amber-400" />
               <span className="text-sm font-semibold text-amber-400 uppercase tracking-wider">Try It Now</span>
             </div>
-            <InteractiveFormBuilderSandbox />
-          </div>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Build a Form Right Here
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              Drag and drop fields to create your own form. This is the same builder you'll use in the full product.
+            </p>
+          </motion.div>
+          
+          <InteractiveFormBuilderSandbox />
+        </div>
+      </section>
 
-          {/* Demo Tabs */}
+      {/* Feature Demos Tabs */}
+      <section className="py-16 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Feature Previews
+            </h2>
+            <p className="text-slate-400">
+              Quick demos of key capabilities
+            </p>
+          </motion.div>
+
           <Tabs value={activeDemo} onValueChange={setActiveDemo} className="mb-8">
-            <TabsList className="grid grid-cols-3 sm:grid-cols-5 w-full max-w-3xl mx-auto bg-slate-800 p-1 h-auto">
-              <TabsTrigger value="builder" className="data-[state=active]:bg-sky-500 text-xs sm:text-sm py-2">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-5 w-full max-w-3xl mx-auto bg-slate-800/80 backdrop-blur p-1.5 h-auto rounded-xl">
+              <TabsTrigger value="builder" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-500 data-[state=active]:to-cyan-500 text-xs sm:text-sm py-2.5 rounded-lg transition-all">
                 <span className="hidden sm:inline">Form Builder</span>
                 <span className="sm:hidden">Builder</span>
               </TabsTrigger>
-              <TabsTrigger value="sync" className="data-[state=active]:bg-sky-500 text-xs sm:text-sm py-2">
+              <TabsTrigger value="sync" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-500 data-[state=active]:to-cyan-500 text-xs sm:text-sm py-2.5 rounded-lg transition-all">
                 <span className="hidden sm:inline">Offline Sync</span>
                 <span className="sm:hidden">Sync</span>
               </TabsTrigger>
-              <TabsTrigger value="gps" className="data-[state=active]:bg-sky-500 text-xs sm:text-sm py-2">
+              <TabsTrigger value="gps" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-500 data-[state=active]:to-cyan-500 text-xs sm:text-sm py-2.5 rounded-lg transition-all">
                 GPS
               </TabsTrigger>
-              <TabsTrigger value="flow" className="data-[state=active]:bg-sky-500 text-xs sm:text-sm py-2 hidden sm:block">
+              <TabsTrigger value="flow" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-500 data-[state=active]:to-cyan-500 text-xs sm:text-sm py-2.5 rounded-lg transition-all hidden sm:block">
                 Flow
               </TabsTrigger>
-              <TabsTrigger value="dashboard" className="data-[state=active]:bg-sky-500 text-xs sm:text-sm py-2 hidden sm:block">
+              <TabsTrigger value="dashboard" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-500 data-[state=active]:to-cyan-500 text-xs sm:text-sm py-2.5 rounded-lg transition-all hidden sm:block">
                 Dashboard
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="builder" className="mt-6 sm:mt-8">
-              <FormBuilderDemo />
-            </TabsContent>
-            <TabsContent value="sync" className="mt-6 sm:mt-8">
-              <OfflineSyncDemo />
-            </TabsContent>
-            <TabsContent value="gps" className="mt-6 sm:mt-8">
-              <GPSTrackingDemo />
-            </TabsContent>
-            <TabsContent value="flow" className="mt-6 sm:mt-8">
-              <SubmissionFlowDemo />
-            </TabsContent>
-            <TabsContent value="dashboard" className="mt-6 sm:mt-8">
-              <LiveDashboardDemo />
-            </TabsContent>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeDemo}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <TabsContent value="builder" className="mt-8">
+                  <FormBuilderDemo />
+                </TabsContent>
+                <TabsContent value="sync" className="mt-8">
+                  <OfflineSyncDemo />
+                </TabsContent>
+                <TabsContent value="gps" className="mt-8">
+                  <GPSTrackingDemo />
+                </TabsContent>
+                <TabsContent value="flow" className="mt-8">
+                  <SubmissionFlowDemo />
+                </TabsContent>
+                <TabsContent value="dashboard" className="mt-8">
+                  <LiveDashboardDemo />
+                </TabsContent>
+              </motion.div>
+            </AnimatePresence>
           </Tabs>
-
-          {/* All Demos View - Only on larger screens */}
-          <div className="hidden lg:block mt-16 space-y-8">
-            <h2 className="text-2xl font-bold text-white text-center mb-8">
-              All Features at a Glance
-            </h2>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <FormBuilderDemo />
-              <OfflineSyncDemo />
-              <GPSTrackingDemo />
-              <SubmissionFlowDemo />
-            </div>
-            
-            <LiveDashboardDemo />
-          </div>
-
-          {/* CTA */}
-          <div className="text-center mt-12 sm:mt-16">
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">
-              Ready to Get Started?
-            </h3>
-            <p className="text-slate-400 mb-6 sm:mb-8">
-              Start your free trial and transform your field operations today.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600"
-                onClick={() => navigate('/register')}
-              >
-                Start Free Trial
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-slate-600 text-white hover:bg-slate-800"
-                onClick={() => navigate('/pricing')}
-              >
-                View Pricing
-              </Button>
-            </div>
-          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Video Modal */}
-      <VideoModal isOpen={videoOpen} onClose={() => setVideoOpen(false)} />
+      {/* Final CTA Section */}
+      <section className="py-20 px-4 relative overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-sky-500/10 to-transparent" />
+        
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Ready to Transform Your
+              <span className="bg-gradient-to-r from-sky-400 to-cyan-400 bg-clip-text text-transparent"> Field Operations?</span>
+            </h2>
+            <p className="text-lg text-slate-400 mb-8 max-w-2xl mx-auto">
+              Join thousands of researchers and organizations already using FieldForce to collect better data, faster.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Button 
+                  size="lg"
+                  className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-lg px-8 py-6 shadow-lg shadow-sky-500/25"
+                  onClick={() => navigate('/register')}
+                >
+                  Start Free Trial
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </motion.div>
+              
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  className="border-slate-600 text-white hover:bg-slate-800 text-lg px-8 py-6"
+                  onClick={() => navigate('/demo/sandbox')}
+                >
+                  <Play className="w-5 h-5 mr-2" />
+                  Explore Demo Again
+                </Button>
+              </motion.div>
+            </div>
+            
+            <p className="text-sm text-slate-500 mt-6">
+              No credit card required • 500 free submissions • Cancel anytime
+            </p>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }
