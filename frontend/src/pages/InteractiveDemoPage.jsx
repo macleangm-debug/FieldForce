@@ -1528,11 +1528,12 @@ export function InteractiveDemoPage() {
                     </div>
 
                     {/* Navigation */}
-                    <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
+                    <nav className="flex-1 p-2 space-y-1 overflow-y-auto" data-tour="sidebar-nav">
                       {navItems.map((item, index) => (
                         <motion.button
                           key={item.id}
                           onClick={() => handleTabChange(item.id)}
+                          data-tour={item.id === 'forms' ? 'forms-nav' : item.id === 'team' ? 'team-nav' : undefined}
                           className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg transition-all duration-200 relative overflow-hidden text-sm ${
                             activeTab === item.id 
                               ? 'text-primary-foreground' 
