@@ -1408,21 +1408,28 @@ export function InteractiveDemoPage() {
                     <TooltipContent>Sign up to access settings</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <Button onClick={() => navigate('/register')}>
-                  <ArrowRight className="w-4 h-4 mr-2" />
-                  Start Trial
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Button onClick={() => navigate('/register')} className="shadow-lg shadow-primary/25">
+                    <ArrowRight className="w-4 h-4 mr-2" />
+                    Start Trial
+                  </Button>
+                </motion.div>
               </div>
             </div>
 
-            {/* Tab Content */}
-            <AnimatePresence mode="wait">
+            {/* Tab Content with Enhanced Animations */}
+            <AnimatePresence mode="wait" custom={slideDirection}>
               <motion.div
                 key={activeTab}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
+                custom={slideDirection}
+                variants={tabVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="overflow-hidden"
               >
                 {activeTab === 'dashboard' && (
                   <DashboardTab 
