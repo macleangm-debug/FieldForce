@@ -787,13 +787,9 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject, industryDa
       <CardContent>
         <div className="space-y-4">
           {industryData.activity.map((activity, idx) => (
-            { icon: CheckCircle2, text: 'QA approved 45 submissions in batch', time: '15 mins ago', color: 'sky' },
-            { icon: AlertCircle, text: '3 submissions flagged for review', time: '1 hour ago', color: 'amber' },
-            { icon: Users, text: 'New team member added: Lisa Anderson', time: '2 hours ago', color: 'violet' },
-          ].map((activity, idx) => (
             <div key={idx} className="flex items-center gap-3">
               <div className={`p-2 rounded-lg bg-${activity.color}-500/10`}>
-                <activity.icon className={`w-4 h-4 text-${activity.color}-500`} />
+                <Upload className={`w-4 h-4 text-${activity.color}-500`} />
               </div>
               <div className="flex-1">
                 <p className="text-sm">{activity.text}</p>
@@ -808,7 +804,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject, industryDa
 );
 
 // Forms Tab
-const FormsTab = ({ onViewForm }) => (
+const FormsTab = ({ onViewForm, industryData }) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -821,7 +817,7 @@ const FormsTab = ({ onViewForm }) => (
     </div>
 
     <div className="grid gap-4">
-      {SAMPLE_FORMS.map((form) => (
+      {industryData.forms.map((form) => (
         <Card 
           key={form.id} 
           className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
