@@ -1412,7 +1412,7 @@ export function InteractiveDemoPage() {
                       <Play className="w-3 h-3" />
                     </motion.div>
                     <span className="text-xs font-medium">
-                      Sample data from Kenya Health Survey 2026 — Actions like save & export are disabled
+                      Sample data from Community Health Survey — Actions like save & export are disabled
                     </span>
                   </div>
                 </div>
