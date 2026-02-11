@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
 import { useAuthStore } from '../store';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 export function PublicHeader() {
   const navigate = useNavigate();
@@ -108,6 +109,7 @@ export function PublicHeader() {
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-3">
+              <ThemeSwitcher variant="header" />
               {isAuthenticated ? (
                 <Button 
                   onClick={() => navigate('/dashboard')}
@@ -171,6 +173,9 @@ export function PublicHeader() {
                   </a>
                 ))}
                 <div className="pt-4 border-t border-slate-800 space-y-2">
+                  <div className="flex justify-center pb-2">
+                    <ThemeSwitcher showLabel />
+                  </div>
                   {isAuthenticated ? (
                     <Button 
                       onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}
