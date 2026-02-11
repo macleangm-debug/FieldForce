@@ -314,8 +314,11 @@ const LockedButton = ({ children, icon: Icon, variant = 'outline', size = 'defau
 );
 
 // Stats Card
-const StatCard = ({ icon: Icon, label, value, change, changeType, color }) => (
-  <Card className="bg-card border-border">
+const StatCard = ({ icon: Icon, label, value, change, changeType, color, onClick }) => (
+  <Card 
+    className="bg-card border-border hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+    onClick={onClick}
+  >
     <CardContent className="p-6">
       <div className="flex items-center justify-between">
         <div className={`p-3 rounded-xl bg-${color}-500/10`}>
@@ -336,15 +339,233 @@ const StatCard = ({ icon: Icon, label, value, change, changeType, color }) => (
   </Card>
 );
 
+// Detail Modal Component
+const DetailModal = ({ isOpen, onClose, title, children }) => (
+  <AnimatePresence>
+    {isOpen && (
+      <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 z-50"
+          onClick={onClose}
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          className="fixed inset-4 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[800px] md:max-h-[80vh] bg-background rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col"
+        >
+          <div className="flex items-center justify-between p-4 border-b">
+            <h2 className="text-lg font-semibold">{title}</h2>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="flex-1 overflow-auto p-4">
+            {children}
+          </div>
+          <div className="p-4 border-t bg-muted/50">
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <Lock className="w-4 h-4" />
+                Sign up to access full functionality
+              </p>
+              <Button onClick={onClose}>
+                Start Free Trial
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+);
+
+// Submission Detail Content
+const SubmissionDetail = ({ submission }) => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <p className="text-sm text-muted-foreground">Form</p>
+        <p className="font-medium">{submission.form}</p>
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">Respondent ID</p>
+        <p className="font-mono">{submission.respondent}</p>
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">Enumerator</p>
+        <p className="font-medium">{submission.enumerator}</p>
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">Location</p>
+        <p className="font-medium">{submission.location}</p>
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">GPS Coordinates</p>
+        <p className="font-mono text-sm">{submission.gps}</p>
+      </div>
+      <div>
+        <p className="text-sm text-muted-foreground">Status</p>
+        <Badge variant={submission.status === 'validated' ? 'default' : submission.status === 'flagged' ? 'destructive' : 'secondary'}>
+          {submission.status}
+        </Badge>
+      </div>
+    </div>
+    
+    {submission.hasMedia && (
+      <div>
+        <p className="text-sm text-muted-foreground mb-2">Attached Media ({submission.mediaCount} files)</p>
+        <div className="grid grid-cols-3 gap-2">
+          {[1,2,3].slice(0, submission.mediaCount).map(i => (
+            <div key={i} className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+              <Camera className="w-6 h-6 text-muted-foreground" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    <div>
+      <p className="text-sm text-muted-foreground mb-2">Sample Responses</p>
+      <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+        <div className="flex justify-between">
+          <span className="text-sm">Household Size</span>
+          <span className="font-medium">5</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-sm">Water Source</span>
+          <span className="font-medium">Protected Well</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-sm">Vaccination Status</span>
+          <span className="font-medium">Complete</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-sm">Monthly Income</span>
+          <span className="font-medium">KES 25,000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Project Detail Content
+const ProjectDetail = ({ project }) => (
+  <div className="space-y-6">
+    <div className="flex items-start gap-4">
+      <div className={`p-3 rounded-xl bg-${project.color}-500/10`}>
+        <FolderOpen className={`w-8 h-8 text-${project.color}-500`} />
+      </div>
+      <div className="flex-1">
+        <h3 className="text-xl font-semibold">{project.name}</h3>
+        <p className="text-muted-foreground">{project.description}</p>
+      </div>
+      <Badge variant={project.status === 'active' ? 'default' : 'secondary'} className="text-sm">
+        {project.status}
+      </Badge>
+    </div>
+    
+    <div className="grid grid-cols-4 gap-4">
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold text-primary">{project.submissions.toLocaleString()}</p>
+          <p className="text-sm text-muted-foreground">Submissions</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold">{project.target.toLocaleString()}</p>
+          <p className="text-sm text-muted-foreground">Target</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold">{project.forms}</p>
+          <p className="text-sm text-muted-foreground">Forms</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-4 text-center">
+          <p className="text-2xl font-bold">{project.team}</p>
+          <p className="text-sm text-muted-foreground">Team Members</p>
+        </CardContent>
+      </Card>
+    </div>
+    
+    <div>
+      <div className="flex justify-between text-sm mb-2">
+        <span>Progress</span>
+        <span className="font-medium">{Math.round((project.submissions / project.target) * 100)}%</span>
+      </div>
+      <Progress value={(project.submissions / project.target) * 100} className="h-3" />
+    </div>
+    
+    <div>
+      <p className="text-sm text-muted-foreground mb-2">Recent Activity</p>
+      <div className="space-y-2">
+        {[
+          { action: '12 submissions synced', user: 'Jane Wanjiku', time: '2 mins ago' },
+          { action: 'Form updated', user: 'Admin', time: '1 hour ago' },
+          { action: '45 submissions validated', user: 'QA Team', time: '3 hours ago' },
+        ].map((item, i) => (
+          <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
+            <div>
+              <p className="text-sm font-medium">{item.action}</p>
+              <p className="text-xs text-muted-foreground">by {item.user}</p>
+            </div>
+            <span className="text-xs text-muted-foreground">{item.time}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 // Dashboard Tab
-const DashboardTab = () => (
+const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
   <div className="space-y-6">
     {/* Stats Row */}
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <StatCard icon={FileText} label="Total Submissions" value="5,262" change="+12%" changeType="up" color="sky" />
-      <StatCard icon={Users} label="Active Enumerators" value="47" change="+3" changeType="up" color="emerald" />
-      <StatCard icon={CheckCircle2} label="Validated" value="4,891" change="93%" changeType="up" color="violet" />
-      <StatCard icon={AlertCircle} label="Pending Review" value="371" change="-8%" changeType="down" color="amber" />
+      <StatCard 
+        icon={FileText} 
+        label="Total Submissions" 
+        value="5,262" 
+        change="+12%" 
+        changeType="up" 
+        color="sky"
+        onClick={onViewSubmissions}
+      />
+      <StatCard 
+        icon={Users} 
+        label="Active Enumerators" 
+        value="47" 
+        change="+3" 
+        changeType="up" 
+        color="emerald"
+        onClick={onViewTeam}
+      />
+      <StatCard 
+        icon={CheckCircle2} 
+        label="Validated" 
+        value="4,891" 
+        change="93%" 
+        changeType="up" 
+        color="violet"
+        onClick={onViewSubmissions}
+      />
+      <StatCard 
+        icon={AlertCircle} 
+        label="Pending Review" 
+        value="371" 
+        change="-8%" 
+        changeType="down" 
+        color="amber"
+        onClick={onViewSubmissions}
+      />
     </div>
 
     {/* Projects Grid */}
@@ -355,7 +576,11 @@ const DashboardTab = () => (
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {SAMPLE_PROJECTS.map((project) => (
-          <Card key={project.id} className="hover:border-primary/50 transition-colors cursor-pointer">
+          <Card 
+            key={project.id} 
+            className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+            onClick={() => onViewProject(project)}
+          >
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <div className={`p-2 rounded-lg bg-${project.color}-500/10`}>
