@@ -1234,11 +1234,9 @@ export function InteractiveDemoPage() {
   const [selectedForm, setSelectedForm] = useState(null);
   const [selectedTeamMember, setSelectedTeamMember] = useState(null);
   
-  // Handle switching tabs based on stats card clicks
-  const handleViewSubmissions = () => setActiveTab('submissions');
-  const handleViewTeam = () => setActiveTab('team');
-  const handleViewForms = () => setActiveTab('forms');
-
+  // Track previous tab for directional animations
+  const [prevTabIndex, setPrevTabIndex] = useState(0);
+  
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'forms', label: 'Forms', icon: ClipboardList },
@@ -1247,6 +1245,60 @@ export function InteractiveDemoPage() {
     { id: 'map', label: 'GPS Map', icon: MapPinned },
     { id: 'media', label: 'Media', icon: Camera },
   ];
+  
+  // Get current tab index for animation direction
+  const currentTabIndex = navItems.findIndex(item => item.id === activeTab);
+  const slideDirection = currentTabIndex > prevTabIndex ? 1 : -1;
+  
+  // Handle tab switching with direction tracking
+  const handleTabChange = (tabId) => {
+    const newIndex = navItems.findIndex(item => item.id === tabId);
+    setPrevTabIndex(currentTabIndex);
+    setActiveTab(tabId);
+  };
+  
+  // Handle switching tabs based on stats card clicks
+  const handleViewSubmissions = () => handleTabChange('submissions');
+  const handleViewTeam = () => handleTabChange('team');
+  const handleViewForms = () => handleTabChange('forms');
+  
+  // Animation variants for tab content
+  const tabVariants = {
+    initial: (direction) => ({
+      opacity: 0,
+      x: direction * 60,
+      scale: 0.98,
+    }),
+    animate: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        staggerChildren: 0.08,
+      },
+    },
+    exit: (direction) => ({
+      opacity: 0,
+      x: direction * -60,
+      scale: 0.98,
+      transition: {
+        duration: 0.3,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    }),
+  };
+  
+  // Staggered children animation for cards/items
+  const itemVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" }
+    },
+  };
 
   return (
     <TooltipProvider>
