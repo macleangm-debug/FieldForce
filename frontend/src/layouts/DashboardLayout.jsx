@@ -61,6 +61,7 @@ import {
 import { useAuthStore, useOrgStore, useUIStore } from '../store';
 import { cn } from '../lib/utils';
 import { OfflineStatusIndicator } from '../components/OfflineStatus';
+import { ThemeSwitcher } from '../components/ThemeSwitcher';
 
 // Navigation structure - grouped for Canva-style rail (FieldForce simplified)
 const NAVIGATION = [
@@ -456,6 +457,9 @@ export function DashboardLayout({ children }) {
 
             {/* Right side actions */}
             <div className="flex items-center gap-2">
+              {/* Theme Toggle */}
+              <ThemeSwitcher variant="icon" />
+
               {/* Help Button */}
               <Tooltip>
                 <TooltipTrigger asChild>
