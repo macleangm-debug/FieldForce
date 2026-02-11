@@ -1261,6 +1261,18 @@ export function InteractiveDemoPage() {
   const [selectedForm, setSelectedForm] = useState(null);
   const [selectedTeamMember, setSelectedTeamMember] = useState(null);
   
+  // Industry selection state
+  const [selectedIndustry, setSelectedIndustry] = useState('healthcare');
+  const [showIndustrySelector, setShowIndustrySelector] = useState(false);
+  const industryData = getIndustryData(selectedIndustry);
+  
+  // Icon mapping for industries
+  const industryIcons = {
+    healthcare: Heart,
+    agriculture: Wheat,
+    education: GraduationCap
+  };
+  
   // Track previous tab for directional animations
   const [prevTabIndex, setPrevTabIndex] = useState(0);
   
