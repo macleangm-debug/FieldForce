@@ -1103,9 +1103,9 @@ const MapTab = () => (
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
           
-          {/* Kenya Outline (simplified) */}
+          {/* Region Label */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-slate-600 text-[200px] font-bold opacity-20">KENYA</div>
+            <div className="text-slate-600 text-[200px] font-bold opacity-20">MAP</div>
           </div>
           
           {/* GPS Points */}
@@ -1117,8 +1117,8 @@ const MapTab = () => (
               transition={{ delay: idx * 0.1 }}
               className="absolute"
               style={{
-                left: `${30 + (point.lng - 34) * 15}%`,
-                top: `${20 + (point.lat + 1) * 30}%`,
+                left: `${20 + idx * 15}%`,
+                top: `${25 + (idx % 3) * 20}%`,
               }}
             >
               <TooltipProvider>
