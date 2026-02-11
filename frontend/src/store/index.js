@@ -96,20 +96,27 @@ export const useFormBuilderStore = create((set, get) => ({
   markClean: () => set({ isDirty: false }),
 }));
 
-// UI Store
-export const useUIStore = create((set) => ({
-  sidebarOpen: true,
-  theme: 'dark',
-  language: 'en',
-  
-  toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-  setSidebarOpen: (open) => set({ sidebarOpen: open }),
-  
-  setTheme: (theme) => set({ theme }),
-  toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
-  
-  setLanguage: (language) => set({ language }),
-}));
+// UI Store - Persisted for theme preference
+export const useUIStore = create(
+  persist(
+    (set) => ({
+      sidebarOpen: true,
+      theme: 'dark',
+      language: 'en',
+      
+      toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+      setSidebarOpen: (open) => set({ sidebarOpen: open }),
+      
+      setTheme: (theme) => set({ theme }),
+      toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
+      
+      setLanguage: (language) => set({ language }),
+    }),
+    {
+      name: 'ui-storage',
+    }
+  )
+);
 
 // Analysis Store - Persists analysis page state across tabs
 export const useAnalysisStore = create(
