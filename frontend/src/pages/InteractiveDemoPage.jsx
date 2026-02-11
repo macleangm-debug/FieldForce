@@ -1207,10 +1207,22 @@ export function InteractiveDemoPage() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                {activeTab === 'dashboard' && <DashboardTab />}
-                {activeTab === 'forms' && <FormsTab />}
-                {activeTab === 'submissions' && <SubmissionsTab />}
-                {activeTab === 'team' && <TeamTab />}
+                {activeTab === 'dashboard' && (
+                  <DashboardTab 
+                    onViewSubmissions={handleViewSubmissions}
+                    onViewTeam={handleViewTeam}
+                    onViewProject={setSelectedProject}
+                  />
+                )}
+                {activeTab === 'forms' && (
+                  <FormsTab onViewForm={setSelectedForm} />
+                )}
+                {activeTab === 'submissions' && (
+                  <SubmissionsTab onViewSubmission={setSelectedSubmission} />
+                )}
+                {activeTab === 'team' && (
+                  <TeamTab onViewMember={setSelectedTeamMember} />
+                )}
                 {activeTab === 'map' && <MapTab />}
                 {activeTab === 'media' && <MediaTab />}
               </motion.div>
