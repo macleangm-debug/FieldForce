@@ -1339,6 +1339,9 @@ export function InteractiveDemoPage() {
     },
   };
 
+  // Get the current industry icon component
+  const CurrentIndustryIcon = industryIcons[selectedIndustry];
+
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -1351,35 +1354,98 @@ export function InteractiveDemoPage() {
                 className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
               >
                 <ChevronLeft className="w-5 h-5" />
-                <span className="text-sm">Back to Demo</span>
+                <span className="text-sm hidden sm:inline">Back to Demo</span>
               </button>
               <div className="h-6 w-px bg-slate-700" />
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
                   <MapPin className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-semibold text-white">FieldForce</span>
-                <Badge className="bg-violet-500/20 text-violet-300 border-violet-500/30 text-xs">
-                  Interactive Demo
-                </Badge>
+                <span className="font-semibold text-white hidden sm:inline">FieldForce</span>
+              </div>
+              <div className="h-6 w-px bg-slate-700 hidden sm:block" />
+              {/* Industry Selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowIndustrySelector(!showIndustrySelector)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                    showIndustrySelector 
+                      ? 'bg-slate-700 border-slate-600' 
+                      : 'bg-slate-800/50 border-slate-700 hover:bg-slate-800 hover:border-slate-600'
+                  }`}
+                >
+                  <CurrentIndustryIcon className={`w-4 h-4 text-${industryData.color}-400`} />
+                  <span className="text-sm text-white">{industryData.name}</span>
+                  <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${showIndustrySelector ? 'rotate-180' : ''}`} />
+                </button>
+                
+                <AnimatePresence>
+                  {showIndustrySelector && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-0 mt-2 w-72 bg-slate-800 border border-slate-700 rounded-xl shadow-xl shadow-black/50 overflow-hidden z-50"
+                    >
+                      <div className="p-2">
+                        <p className="text-xs text-slate-400 px-2 py-1.5 uppercase tracking-wider">Select Industry Demo</p>
+                        {INDUSTRY_LIST.map((industry) => {
+                          const Icon = industryIcons[industry.id];
+                          return (
+                            <button
+                              key={industry.id}
+                              onClick={() => {
+                                setSelectedIndustry(industry.id);
+                                setShowIndustrySelector(false);
+                              }}
+                              className={`w-full flex items-start gap-3 p-3 rounded-lg transition-all ${
+                                selectedIndustry === industry.id
+                                  ? `bg-${industry.color}-500/20 border border-${industry.color}-500/30`
+                                  : 'hover:bg-slate-700/50'
+                              }`}
+                            >
+                              <div className={`p-2 rounded-lg bg-${industry.color}-500/20`}>
+                                <Icon className={`w-4 h-4 text-${industry.color}-400`} />
+                              </div>
+                              <div className="flex-1 text-left">
+                                <p className="text-sm font-medium text-white">{industry.name}</p>
+                                <p className="text-xs text-slate-400">{industry.description}</p>
+                              </div>
+                              {selectedIndustry === industry.id && (
+                                <CheckCircle2 className={`w-4 h-4 text-${industry.color}-400 mt-1`} />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-400 hidden sm:block">
-                Explore with sample data — no sign up required
-              </span>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Button 
                   onClick={() => navigate('/register')}
                   className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 shadow-lg shadow-sky-500/25"
                 >
-                  Start Free Trial
+                  <span className="hidden sm:inline">Start Free Trial</span>
+                  <span className="sm:hidden">Start Trial</span>
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </motion.div>
             </div>
           </div>
         </header>
+
+        {/* Click outside to close industry selector */}
+        {showIndustrySelector && (
+          <div 
+            className="fixed inset-0 z-40" 
+            onClick={() => setShowIndustrySelector(false)}
+          />
+        )}
 
         {/* Demo Container */}
         <div className="p-4 sm:p-6 lg:p-8">
