@@ -118,6 +118,14 @@ All interactive elements open detail modals. Locked features show "Sign up to un
 ## Changelog
 
 ### Feb 11, 2026
+- **Customizable Industry Demo Data** - Added industry selector to personalize demo experience:
+  - Healthcare: Health surveys, vaccination tracking, facility assessments
+  - Agriculture: Crop surveys, livestock monitoring, farm assessments  
+  - Education: School surveys, enrollment tracking, facility audits
+  - Each industry has unique projects, forms, team members, stats, and activity
+  - Dropdown selector in header with animated transitions
+  - Dynamic banner text updates based on selected industry
+
 - **Interactive Demo Presentation Redesign** - Wrapped the demo in an elegant browser window frame:
   - Page header with "Back to Demo" navigation, FieldForce branding, and "Start Free Trial" CTA
   - macOS-style browser window frame with red/yellow/green window controls
