@@ -952,14 +952,50 @@ export function DemoPage() {
               Experience our powerful data collection platform through interactive visualizations.
             </p>
             
-            {/* Video Walkthrough Button */}
-            <Button
-              onClick={() => setVideoOpen(true)}
-              className="bg-violet-500 hover:bg-violet-600"
-            >
-              <Video className="w-4 h-4 mr-2" />
-              Watch Video Walkthrough
-            </Button>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Button
+                onClick={() => navigate('/demo/sandbox')}
+                className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600"
+                size="lg"
+              >
+                <Play className="w-4 h-4 mr-2" />
+                Try Full Product Demo
+              </Button>
+              <Button
+                onClick={() => setVideoOpen(true)}
+                variant="outline"
+                className="border-slate-600 text-white hover:bg-slate-800"
+                size="lg"
+              >
+                <Video className="w-4 h-4 mr-2" />
+                Watch Video Walkthrough
+              </Button>
+            </div>
+          </div>
+
+          {/* Full Demo Banner */}
+          <div className="mb-10 sm:mb-12">
+            <Card className="bg-gradient-to-r from-violet-500/10 to-indigo-500/10 border-violet-500/30">
+              <CardContent className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-violet-500/20">
+                    <Smartphone className="w-6 h-6 text-violet-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">Experience the Full Product</h3>
+                    <p className="text-sm text-slate-400">Explore dashboard, forms, submissions, GPS map, and more with sample data</p>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => navigate('/demo/sandbox')}
+                  className="bg-violet-500 hover:bg-violet-600 whitespace-nowrap"
+                >
+                  Launch Full Demo
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Featured: Interactive Form Builder Sandbox */}
