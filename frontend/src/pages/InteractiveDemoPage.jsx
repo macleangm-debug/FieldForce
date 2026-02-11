@@ -1424,6 +1424,13 @@ export function InteractiveDemoPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {/* Tour Button - show when tour has been completed */}
+              {tourState.hasSeenTour && (
+                <TourButton 
+                  onClick={tourState.startTour}
+                  className="hidden sm:flex"
+                />
+              )}
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Button 
                   onClick={() => navigate('/register')}
@@ -1437,6 +1444,9 @@ export function InteractiveDemoPage() {
             </div>
           </div>
         </header>
+
+        {/* Guided Tour */}
+        <GuidedTour tourState={tourState} />
 
         {/* Click outside to close industry selector */}
         {showIndustrySelector && (
