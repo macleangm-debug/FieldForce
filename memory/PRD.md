@@ -118,6 +118,16 @@ All interactive elements open detail modals. Locked features show "Sign up to un
 ## Changelog
 
 ### Feb 11, 2026
+- **Light/Dark Mode** - Implemented theme switching functionality:
+  - Created `ThemeSwitcher` component with icon-only and labeled variants
+  - Added theme toggle to Public Header (landing page, pricing page)
+  - Added theme toggle to Dashboard Layout (all authenticated pages)
+  - Added theme toggle to Interactive Demo page header
+  - Theme preference persisted in localStorage via Zustand store
+  - Dashboard and app pages fully support light/dark modes via CSS variables
+  - Marketing pages (landing, demo) maintain dark aesthetic by design
+  - Available variants: `icon` (for headers), `header` (for public nav), default (with label)
+
 - **Guided Tour Feature** - Added interactive tour like Survey360:
   - 7-step guided tour auto-starts on first visit
   - Welcome modal with emoji and friendly message
