@@ -709,6 +709,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
             key={project.id} 
             className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
             onClick={() => onViewProject(project)}
+            data-testid={`project-card-${project.id}`}
           >
             <CardContent className="p-5">
               <div className="flex items-start justify-between mb-3">
