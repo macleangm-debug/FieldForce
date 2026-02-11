@@ -1323,61 +1323,276 @@ export function InteractiveDemoPage() {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background">
-        {/* Demo Banner */}
-        <DemoBanner onStartTrial={() => navigate('/register')} />
-        
-        {/* Main Layout */}
-        <div className="flex">
-          {/* Sidebar */}
-          <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-card border-r min-h-[calc(100vh-48px)] p-4 transition-all duration-300`}>
-            {/* Logo */}
-            <motion.div 
-              className="flex items-center gap-3 mb-8"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/25">
-                <MapPin className="w-5 h-5 text-white" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Page Header */}
+        <header className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => navigate('/demo')}
+                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5" />
+                <span className="text-sm">Back to Demo</span>
+              </button>
+              <div className="h-6 w-px bg-slate-700" />
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-semibold text-white">FieldForce</span>
+                <Badge className="bg-violet-500/20 text-violet-300 border-violet-500/30 text-xs">
+                  Interactive Demo
+                </Badge>
               </div>
-              {sidebarOpen && <span className="font-bold text-lg">FieldForce</span>}
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-slate-400 hidden sm:block">
+                Explore with sample data — no sign up required
+              </span>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Button 
+                  onClick={() => navigate('/register')}
+                  className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 shadow-lg shadow-sky-500/25"
+                >
+                  Start Free Trial
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </motion.div>
+            </div>
+          </div>
+        </header>
+
+        {/* Demo Container */}
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="max-w-[1600px] mx-auto">
+            {/* Browser Window Frame */}
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-slate-700/50"
+            >
+              {/* Window Title Bar */}
+              <div className="bg-slate-800 px-4 py-2.5 flex items-center justify-between border-b border-slate-700/50">
+                <div className="flex items-center gap-3">
+                  {/* Window Controls */}
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors cursor-pointer" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors cursor-pointer" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors cursor-pointer" />
+                  </div>
+                  {/* URL Bar */}
+                  <div className="hidden sm:flex items-center gap-2 bg-slate-900/50 rounded-lg px-3 py-1.5 min-w-[300px]">
+                    <Lock className="w-3.5 h-3.5 text-green-400" />
+                    <span className="text-xs text-slate-400">app.fieldforce.io/dashboard</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-emerald-400 border-emerald-500/30 gap-1.5 text-xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Live Demo
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Demo Content Area */}
+              <div className="bg-background">
+                {/* Demo Banner inside window */}
+                <div className="bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 bg-[length:200%_100%] animate-gradient text-white py-2 px-4 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer" />
+                  <div className="flex items-center justify-center gap-3 relative z-10">
+                    <motion.div 
+                      className="p-1 bg-white/20 rounded"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                    >
+                      <Play className="w-3 h-3" />
+                    </motion.div>
+                    <span className="text-xs font-medium">
+                      Sample data from Kenya Health Survey 2026 — Actions like save & export are disabled
+                    </span>
+                  </div>
+                </div>
+        
+                {/* Main Layout */}
+                <div className="flex" style={{ height: 'calc(100vh - 180px)', minHeight: '600px' }}>
+                  {/* Sidebar */}
+                  <aside className={`${sidebarOpen ? 'w-56' : 'w-16'} bg-card border-r flex flex-col transition-all duration-300`}>
+                    {/* Logo */}
+                    <div className="p-3 border-b">
+                      <motion.div 
+                        className="flex items-center gap-2"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/25">
+                          <MapPin className="w-4 h-4 text-white" />
+                        </div>
+                        {sidebarOpen && <span className="font-bold text-sm">FieldForce</span>}
+                      </motion.div>
+                    </div>
+
+                    {/* Navigation */}
+                    <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
+                      {navItems.map((item, index) => (
+                        <motion.button
+                          key={item.id}
+                          onClick={() => handleTabChange(item.id)}
+                          className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg transition-all duration-200 relative overflow-hidden text-sm ${
+                            activeTab === item.id 
+                              ? 'text-primary-foreground' 
+                              : 'hover:bg-muted text-muted-foreground hover:text-foreground'
+                          }`}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05, duration: 0.3 }}
+                          whileHover={{ x: 2 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          {activeTab === item.id && (
+                            <motion.div
+                              layoutId="activeTabBg"
+                              className="absolute inset-0 bg-primary rounded-lg"
+                              initial={false}
+                              transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                            />
+                          )}
+                          <item.icon className="w-4 h-4 relative z-10" />
+                          {sidebarOpen && <span className="relative z-10">{item.label}</span>}
+                        </motion.button>
+                      ))}
+                    </nav>
+
+                    {/* Bottom Section */}
+                    {sidebarOpen && (
+                      <div className="p-3 border-t">
+                        <Card className="bg-gradient-to-br from-violet-500/10 to-indigo-500/10 border-violet-500/30">
+                          <CardContent className="p-3">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Sparkles className="w-4 h-4 text-violet-400" />
+                              <span className="text-xs font-semibold text-violet-300">Demo Mode</span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mb-2">
+                              Unlock all features with a free trial
+                            </p>
+                            <Button 
+                              size="sm" 
+                              className="w-full bg-violet-500 hover:bg-violet-600 text-xs h-7"
+                              onClick={() => navigate('/register')}
+                            >
+                              Start Free Trial
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    )}
+                  </aside>
+
+                  {/* Main Content */}
+                  <main className="flex-1 flex flex-col overflow-hidden">
+                    {/* Header with animated title */}
+                    <div className="px-4 py-3 border-b bg-card/50">
+                      <div className="flex items-center justify-between">
+                        <div className="overflow-hidden">
+                          <AnimatePresence mode="wait">
+                            <motion.h1 
+                              key={activeTab}
+                              className="text-lg font-bold capitalize"
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -20 }}
+                              transition={{ duration: 0.3, ease: "easeOut" }}
+                            >
+                              {activeTab === 'map' ? 'GPS Map' : activeTab}
+                            </motion.h1>
+                          </AnimatePresence>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="outline" size="sm" disabled className="opacity-50 h-8">
+                                  <Bell className="w-3.5 h-3.5" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Sign up to enable notifications</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="outline" size="sm" disabled className="opacity-50 h-8">
+                                  <Settings className="w-3.5 h-3.5" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Sign up to access settings</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Tab Content with Enhanced Animations */}
+                    <div className="flex-1 overflow-y-auto p-4">
+                      <AnimatePresence mode="wait" custom={slideDirection}>
+                        <motion.div
+                          key={activeTab}
+                          custom={slideDirection}
+                          variants={tabVariants}
+                          initial="initial"
+                          animate="animate"
+                          exit="exit"
+                        >
+                          {activeTab === 'dashboard' && (
+                            <DashboardTab 
+                              onViewSubmissions={handleViewSubmissions}
+                              onViewTeam={handleViewTeam}
+                              onViewProject={setSelectedProject}
+                            />
+                          )}
+                          {activeTab === 'forms' && (
+                            <FormsTab onViewForm={setSelectedForm} />
+                          )}
+                          {activeTab === 'submissions' && (
+                            <SubmissionsTab onViewSubmission={setSelectedSubmission} />
+                          )}
+                          {activeTab === 'team' && (
+                            <TeamTab onViewMember={setSelectedTeamMember} />
+                          )}
+                          {activeTab === 'map' && <MapTab />}
+                          {activeTab === 'media' && <MediaTab />}
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  </main>
+                </div>
+              </div>
             </motion.div>
 
-            {/* Navigation */}
-            <nav className="space-y-1 relative">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.id}
-                  onClick={() => handleTabChange(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden ${
-                    activeTab === item.id 
-                      ? 'text-primary-foreground' 
-                      : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-                  }`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05, duration: 0.3 }}
-                  whileHover={{ x: 4 }}
-                  whileTap={{ scale: 0.98 }}
+            {/* Bottom info */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="mt-6 text-center"
+            >
+              <p className="text-sm text-slate-500">
+                This is a fully interactive preview with sample data. 
+                <button 
+                  onClick={() => navigate('/register')}
+                  className="text-sky-400 hover:text-sky-300 ml-1 underline underline-offset-2"
                 >
-                  {activeTab === item.id && (
-                    <motion.div
-                      layoutId="activeTabBg"
-                      className="absolute inset-0 bg-primary rounded-lg"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                    />
-                  )}
-                  <item.icon className="w-5 h-5 relative z-10" />
-                  {sidebarOpen && <span className="relative z-10">{item.label}</span>}
-                </motion.button>
-              ))}
-            </nav>
-
-            {/* Bottom Section */}
-            {sidebarOpen && (
-              <div className="absolute bottom-4 left-4 right-4">
+                  Start your free trial
+                </button>
+                {' '}to connect your own data.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+        
+        {/* Detail Modals */}
                 <Card className="bg-gradient-to-br from-violet-500/10 to-indigo-500/10 border-violet-500/20">
                   <CardContent className="p-4">
                     <div className="flex items-center gap-2 mb-2">
