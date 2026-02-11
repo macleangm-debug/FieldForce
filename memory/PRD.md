@@ -118,6 +118,17 @@ All interactive elements open detail modals. Locked features show "Sign up to un
 ## Changelog
 
 ### Feb 11, 2026
+- **Guided Tour Feature** - Added interactive tour like Survey360:
+  - 7-step guided tour auto-starts on first visit
+  - Welcome modal with emoji and friendly message
+  - Element highlighting with cyan border and spotlight effect
+  - Step-by-step tooltips pointing to Dashboard, Projects, Navigation, Forms, Team
+  - Completion modal with "Start Exploring" CTA
+  - "Take a Tour" button appears after completing tour
+  - Progress bar showing current step (Step X of 7)
+  - Skip Tour option and Back navigation
+  - Persists completion state in localStorage
+
 - **Customizable Industry Demo Data** - Added industry selector to personalize demo experience:
   - Healthcare: Health surveys, vaccination tracking, facility assessments
   - Agriculture: Crop surveys, livestock monitoring, farm assessments  
