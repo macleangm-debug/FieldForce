@@ -783,7 +783,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject }) => (
       <CardContent>
         <div className="space-y-4">
           {[
-            { icon: Upload, text: 'Jane Wanjiku synced 12 submissions', time: '2 mins ago', color: 'emerald' },
+            { icon: Upload, text: 'Sarah Johnson synced 12 submissions', time: '2 mins ago', color: 'emerald' },
             { icon: CheckCircle2, text: 'QA approved 45 submissions in batch', time: '15 mins ago', color: 'sky' },
             { icon: AlertCircle, text: '3 submissions flagged for review', time: '1 hour ago', color: 'amber' },
             { icon: Users, text: 'New team member added: Grace Njeri', time: '2 hours ago', color: 'violet' },
