@@ -264,30 +264,51 @@ const SAMPLE_PHOTOS = [
 // COMPONENTS
 // =============================================================================
 
-// Demo Banner Component
+// Demo Banner Component with pulse animation
 const DemoBanner = ({ onStartTrial }) => (
   <motion.div 
     initial={{ y: -50, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
-    className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white py-3 px-4"
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 bg-[length:200%_100%] animate-gradient text-white py-3 px-4 relative overflow-hidden"
   >
-    <div className="max-w-7xl mx-auto flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="p-1.5 bg-white/20 rounded-lg">
+    {/* Shimmer effect */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer" />
+    
+    <div className="max-w-7xl mx-auto flex items-center justify-between relative z-10">
+      <motion.div 
+        className="flex items-center gap-3"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        <motion.div 
+          className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm"
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+        >
           <Play className="w-4 h-4" />
-        </div>
+        </motion.div>
         <span className="text-sm font-medium">
           You're viewing an interactive demo with sample data
         </span>
-      </div>
-      <Button 
-        size="sm" 
-        onClick={onStartTrial}
-        className="bg-white text-violet-600 hover:bg-violet-50"
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
-        Start Free Trial
-        <ArrowRight className="w-4 h-4 ml-2" />
-      </Button>
+        <Button 
+          size="sm" 
+          onClick={onStartTrial}
+          className="bg-white text-violet-600 hover:bg-violet-50 shadow-lg shadow-black/20"
+        >
+          Start Free Trial
+          <ArrowRight className="w-4 h-4 ml-2" />
+        </Button>
+      </motion.div>
     </div>
   </motion.div>
 );
