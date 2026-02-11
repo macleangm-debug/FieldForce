@@ -31,7 +31,6 @@ import {
   CheckCheck,
   AlertCircle,
   RefreshCw,
-  Video,
   GripVertical,
   Trash2,
   Type,
@@ -49,7 +48,6 @@ import { Badge } from '../components/ui/badge';
 import { Progress } from '../components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { PublicHeader } from '../components/PublicHeader';
-import { VideoModal } from '../components/VideoModal';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
