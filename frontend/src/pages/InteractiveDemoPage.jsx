@@ -897,7 +897,7 @@ const FormsTab = ({ onViewForm, industryData }) => (
 );
 
 // Submissions Tab
-const SubmissionsTab = ({ onViewSubmission }) => {
+const SubmissionsTab = ({ onViewSubmission, industryData }) => {
   const [viewMode, setViewMode] = useState('table');
   
   return (
@@ -945,7 +945,7 @@ const SubmissionsTab = ({ onViewSubmission }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {SAMPLE_SUBMISSIONS.map((sub) => (
+            {industryData.submissions.map((sub) => (
               <TableRow 
                 key={sub.id} 
                 className="cursor-pointer hover:bg-muted/50"
