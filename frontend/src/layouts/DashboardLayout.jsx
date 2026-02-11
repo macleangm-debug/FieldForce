@@ -611,17 +611,20 @@ export function DashboardLayout({ children }) {
 
                 {/* Mobile User */}
                 <div className="p-4 border-t border-border mt-auto">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Avatar>
-                      <AvatarImage src={user?.avatar} />
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        {user?.name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium text-sm">{user?.name}</p>
-                      <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage src={user?.avatar} />
+                        <AvatarFallback className="bg-primary/10 text-primary">
+                          {user?.name?.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium text-sm">{user?.name}</p>
+                        <p className="text-xs text-muted-foreground">{user?.email}</p>
+                      </div>
                     </div>
+                    <ThemeSwitcher variant="icon" />
                   </div>
                   <Button
                     onClick={handleLogout}
