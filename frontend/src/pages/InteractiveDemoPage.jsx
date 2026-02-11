@@ -686,7 +686,7 @@ const TeamMemberDetail = ({ member }) => (
 const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject, industryData }) => (
   <div className="space-y-6">
     {/* Stats Row */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" data-tour="dashboard-stats">
       <StatCard 
         icon={FileText} 
         label="Total Submissions" 
@@ -726,7 +726,7 @@ const DashboardTab = ({ onViewSubmissions, onViewTeam, onViewProject, industryDa
     </div>
 
     {/* Projects Grid */}
-    <div>
+    <div data-tour="projects-grid">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Active Projects</h3>
         <LockedButton icon={Plus}>New Project</LockedButton>
