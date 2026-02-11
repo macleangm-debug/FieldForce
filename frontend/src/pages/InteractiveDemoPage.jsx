@@ -69,6 +69,7 @@ import { Input } from '../components/ui/input';
 import { DEMO_INDUSTRIES, getIndustryData, INDUSTRY_LIST } from '../data/demoData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Progress } from '../components/ui/progress';
+import { GuidedTour, useTour, TourButton } from '../components/GuidedTour';
 import {
   Table,
   TableBody,
