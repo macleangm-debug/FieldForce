@@ -118,6 +118,13 @@ All interactive elements open detail modals. Locked features show "Sign up to un
 ## Changelog
 
 ### Feb 11, 2026
+- **Animated Tab Transitions** - Added polished animations to the interactive demo:
+  - Spring-animated sidebar navigation with sliding active tab indicator
+  - Directional slide animations for tab content (context-aware left/right)
+  - Animated header title transitions
+  - Enhanced demo banner with shimmer effect and pulsing icon
+  - Hover animations on navigation items and buttons
+
 - **Interactive Demo Clickability** - Added full click functionality to all UI elements:
   - Project cards open ProjectDetail modal
   - Form cards open FormDetail modal with sample questions
