@@ -57,12 +57,16 @@ import {
   MapPinned,
   X,
   ChevronLeft,
-  Sparkles
+  Sparkles,
+  Heart,
+  Wheat,
+  GraduationCap
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
+import { DEMO_INDUSTRIES, getIndustryData, INDUSTRY_LIST } from '../data/demoData';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Progress } from '../components/ui/progress';
 import {
