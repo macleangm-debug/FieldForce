@@ -735,7 +735,7 @@ const FormsTab = () => (
 );
 
 // Submissions Tab
-const SubmissionsTab = () => {
+const SubmissionsTab = ({ onViewSubmission }) => {
   const [viewMode, setViewMode] = useState('table');
   
   return (
@@ -784,7 +784,11 @@ const SubmissionsTab = () => {
           </TableHeader>
           <TableBody>
             {SAMPLE_SUBMISSIONS.map((sub) => (
-              <TableRow key={sub.id}>
+              <TableRow 
+                key={sub.id} 
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => onViewSubmission(sub)}
+              >
                 <TableCell className="font-medium">{sub.form}</TableCell>
                 <TableCell className="font-mono text-sm">{sub.respondent}</TableCell>
                 <TableCell>{sub.enumerator}</TableCell>
@@ -812,7 +816,11 @@ const SubmissionsTab = () => {
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">{sub.timestamp}</TableCell>
                 <TableCell>
-                  <Button variant="ghost" size="icon">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={(e) => { e.stopPropagation(); onViewSubmission(sub); }}
+                  >
                     <Eye className="w-4 h-4" />
                   </Button>
                 </TableCell>
