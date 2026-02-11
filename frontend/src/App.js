@@ -216,6 +216,9 @@ function App() {
           {/* Demo Page - Public */}
           <Route path="/demo" element={<DemoPage />} />
           
+          {/* Interactive Demo - Full Product Experience */}
+          <Route path="/demo/sandbox" element={<InteractiveDemoPage />} />
+          
           <Route path="/organizations/new" element={
             <ProtectedRoute>
               <CreateOrganizationPage />
