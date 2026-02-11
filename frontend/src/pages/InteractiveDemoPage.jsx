@@ -981,7 +981,7 @@ const SubmissionsTab = ({ onViewSubmission }) => {
 };
 
 // Team Tab
-const TeamTab = () => (
+const TeamTab = ({ onViewMember }) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <Input placeholder="Search team members..." className="w-64" />
@@ -990,7 +990,12 @@ const TeamTab = () => (
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {SAMPLE_TEAM.map((member) => (
-        <Card key={member.id}>
+        <Card 
+          key={member.id}
+          className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+          onClick={() => onViewMember(member)}
+          data-testid={`team-member-${member.id}`}
+        >
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
@@ -1011,12 +1016,12 @@ const TeamTab = () => (
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" onClick={(e) => e.stopPropagation()}>
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>View Profile</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onViewMember(member)}>View Profile</DropdownMenuItem>
                   <DropdownMenuItem disabled>
                     Edit Permissions <Lock className="w-3 h-3 ml-auto" />
                   </DropdownMenuItem>
