@@ -1309,30 +1309,48 @@ export function InteractiveDemoPage() {
         {/* Main Layout */}
         <div className="flex">
           {/* Sidebar */}
-          <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-card border-r min-h-[calc(100vh-48px)] p-4 transition-all`}>
+          <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-card border-r min-h-[calc(100vh-48px)] p-4 transition-all duration-300`}>
             {/* Logo */}
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center">
+            <motion.div 
+              className="flex items-center gap-3 mb-8"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-sky-500/25">
                 <MapPin className="w-5 h-5 text-white" />
               </div>
               {sidebarOpen && <span className="font-bold text-lg">FieldForce</span>}
-            </div>
+            </motion.div>
 
             {/* Navigation */}
-            <nav className="space-y-1">
-              {navItems.map((item) => (
-                <button
+            <nav className="space-y-1 relative">
+              {navItems.map((item, index) => (
+                <motion.button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                  onClick={() => handleTabChange(item.id)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden ${
                     activeTab === item.id 
-                      ? 'bg-primary text-primary-foreground' 
+                      ? 'text-primary-foreground' 
                       : 'hover:bg-muted text-muted-foreground hover:text-foreground'
                   }`}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <item.icon className="w-5 h-5" />
-                  {sidebarOpen && <span>{item.label}</span>}
-                </button>
+                  {activeTab === item.id && (
+                    <motion.div
+                      layoutId="activeTabBg"
+                      className="absolute inset-0 bg-primary rounded-lg"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <item.icon className="w-5 h-5 relative z-10" />
+                  {sidebarOpen && <span className="relative z-10">{item.label}</span>}
+                </motion.button>
               ))}
             </nav>
 
