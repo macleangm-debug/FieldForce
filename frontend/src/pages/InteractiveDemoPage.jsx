@@ -91,6 +91,7 @@ import {
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
 import { PublicHeader } from '../components/PublicHeader';
+import { ThemeSwitcher } from '../components/ThemeSwitcher';
 
 // =============================================================================
 // SAMPLE DATA
@@ -1424,6 +1425,8 @@ export function InteractiveDemoPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
+              {/* Theme Switcher */}
+              <ThemeSwitcher variant="header" />
               {/* Tour Button - show when tour has been completed */}
               {tourState.hasSeenTour && (
                 <TourButton 
