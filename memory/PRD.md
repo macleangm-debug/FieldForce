@@ -118,6 +118,14 @@ All interactive elements open detail modals. Locked features show "Sign up to un
 ## Changelog
 
 ### Feb 11, 2026
+- **Demo Page Redesign** - Complete overhaul to match landing page styling:
+  - Hero section with animated floating icons (BarChart3, FileText, MapPin, Users, Camera)
+  - Gradient headline "Experience FieldForce Before You Sign Up"
+  - Feature preview cards (6 clickable cards linking to interactive demo)
+  - Removed Video Walkthrough, replaced with Interactive Demo focus
+  - Enhanced tab styling with gradient active states
+  - Polished final CTA section with gradient text
+
 - **Animated Tab Transitions** - Added polished animations to the interactive demo:
   - Spring-animated sidebar navigation with sliding active tab indicator
   - Directional slide animations for tab content (context-aware left/right)
