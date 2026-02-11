@@ -1629,16 +1629,17 @@ export function InteractiveDemoPage() {
                               onViewSubmissions={handleViewSubmissions}
                               onViewTeam={handleViewTeam}
                               onViewProject={setSelectedProject}
+                              industryData={industryData}
                             />
                           )}
                           {activeTab === 'forms' && (
-                            <FormsTab onViewForm={setSelectedForm} />
+                            <FormsTab onViewForm={setSelectedForm} industryData={industryData} />
                           )}
                           {activeTab === 'submissions' && (
-                            <SubmissionsTab onViewSubmission={setSelectedSubmission} />
+                            <SubmissionsTab onViewSubmission={setSelectedSubmission} industryData={industryData} />
                           )}
                           {activeTab === 'team' && (
-                            <TeamTab onViewMember={setSelectedTeamMember} />
+                            <TeamTab onViewMember={setSelectedTeamMember} industryData={industryData} />
                           )}
                           {activeTab === 'map' && <MapTab />}
                           {activeTab === 'media' && <MediaTab />}
