@@ -531,7 +531,7 @@ const ProjectDetail = ({ project }) => (
       <p className="text-sm text-muted-foreground mb-2">Recent Activity</p>
       <div className="space-y-2">
         {[
-          { action: '12 submissions synced', user: 'Jane Wanjiku', time: '2 mins ago' },
+          { action: '12 submissions synced', user: 'Sarah Johnson', time: '2 mins ago' },
           { action: 'Form updated', user: 'Admin', time: '1 hour ago' },
           { action: '45 submissions validated', user: 'QA Team', time: '3 hours ago' },
         ].map((item, i) => (
