@@ -928,6 +928,7 @@ const SubmissionsTab = ({ onViewSubmission }) => {
                 key={sub.id} 
                 className="cursor-pointer hover:bg-muted/50"
                 onClick={() => onViewSubmission(sub)}
+                data-testid={`submission-row-${sub.id}`}
               >
                 <TableCell className="font-medium">{sub.form}</TableCell>
                 <TableCell className="font-mono text-sm">{sub.respondent}</TableCell>
@@ -960,6 +961,7 @@ const SubmissionsTab = ({ onViewSubmission }) => {
                     variant="ghost" 
                     size="icon"
                     onClick={(e) => { e.stopPropagation(); onViewSubmission(sub); }}
+                    data-testid={`view-submission-${sub.id}`}
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
