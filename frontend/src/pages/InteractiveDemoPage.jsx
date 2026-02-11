@@ -1006,7 +1006,7 @@ const SubmissionsTab = ({ onViewSubmission, industryData }) => {
 };
 
 // Team Tab
-const TeamTab = ({ onViewMember }) => (
+const TeamTab = ({ onViewMember, industryData }) => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <Input placeholder="Search team members..." className="w-64" />
@@ -1014,7 +1014,7 @@ const TeamTab = ({ onViewMember }) => (
     </div>
 
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {SAMPLE_TEAM.map((member) => (
+      {industryData.team.map((member) => (
         <Card 
           key={member.id}
           className="hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
