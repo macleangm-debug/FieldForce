@@ -1262,6 +1262,9 @@ export function InteractiveDemoPage() {
   const [showIndustrySelector, setShowIndustrySelector] = useState(false);
   const industryData = getIndustryData(selectedIndustry);
   
+  // Guided tour state
+  const tourState = useTour();
+  
   // Icon mapping for industries
   const industryIcons = {
     healthcare: Heart,
