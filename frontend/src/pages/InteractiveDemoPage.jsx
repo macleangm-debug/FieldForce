@@ -1380,12 +1380,30 @@ export function InteractiveDemoPage() {
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 p-6">
-            {/* Header */}
+          <main className="flex-1 p-6 overflow-hidden">
+            {/* Header with animated title */}
             <div className="flex items-center justify-between mb-6">
-              <div>
-                <h1 className="text-2xl font-bold capitalize">{activeTab}</h1>
-                <p className="text-muted-foreground">Sample data from Kenya Health Survey 2026</p>
+              <div className="overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.h1 
+                    key={activeTab}
+                    className="text-2xl font-bold capitalize"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    {activeTab === 'map' ? 'GPS Map' : activeTab}
+                  </motion.h1>
+                </AnimatePresence>
+                <motion.p 
+                  className="text-muted-foreground"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  Sample data from Kenya Health Survey 2026
+                </motion.p>
               </div>
               <div className="flex items-center gap-3">
                 <TooltipProvider>
