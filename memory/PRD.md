@@ -104,4 +104,29 @@ FieldForce is a Mobile Data Collection Suite by DataVision International, derive
 ## Hidden Admin Pages
 - `/internal/cost-analyzer` - Pricing calculator (not linked publicly)
 
-## Date: Feb 10, 2026
+## Interactive Demo (/demo/sandbox)
+Comprehensive product demo with pre-populated sample data:
+- **Dashboard Tab**: Clickable project cards, stats cards that navigate to tabs
+- **Forms Tab**: Clickable form cards showing form details with questions
+- **Submissions Tab**: Clickable table rows showing submission details
+- **Team Tab**: Clickable team member cards showing profiles
+- **GPS Map Tab**: Visual map with submission clusters
+- **Media Tab**: Photo gallery from submissions
+
+All interactive elements open detail modals. Locked features show "Sign up to unlock" tooltips.
+
+## Changelog
+
+### Feb 11, 2026
+- **Interactive Demo Clickability** - Added full click functionality to all UI elements:
+  - Project cards open ProjectDetail modal
+  - Form cards open FormDetail modal with sample questions
+  - Submission table rows open SubmissionDetail modal
+  - Team member cards open TeamMemberDetail modal
+  - Stats cards navigate to appropriate tabs
+  - All detail modals include "Start Free Trial" CTA
+
+### Feb 10, 2026
+- Production infrastructure scaffolding (Redis, Celery, Nginx, S3)
+- Interactive Demo page created with sample data
+- Hidden pricing calculator at /internal/cost-analyzer
