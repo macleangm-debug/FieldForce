@@ -1229,6 +1229,39 @@ export function InteractiveDemoPage() {
             </AnimatePresence>
           </main>
         </div>
+        
+        {/* Detail Modals */}
+        <DetailModal 
+          isOpen={!!selectedSubmission} 
+          onClose={() => setSelectedSubmission(null)}
+          title="Submission Details"
+        >
+          {selectedSubmission && <SubmissionDetail submission={selectedSubmission} />}
+        </DetailModal>
+        
+        <DetailModal 
+          isOpen={!!selectedProject} 
+          onClose={() => setSelectedProject(null)}
+          title="Project Details"
+        >
+          {selectedProject && <ProjectDetail project={selectedProject} />}
+        </DetailModal>
+        
+        <DetailModal 
+          isOpen={!!selectedForm} 
+          onClose={() => setSelectedForm(null)}
+          title="Form Details"
+        >
+          {selectedForm && <FormDetail form={selectedForm} />}
+        </DetailModal>
+        
+        <DetailModal 
+          isOpen={!!selectedTeamMember} 
+          onClose={() => setSelectedTeamMember(null)}
+          title="Team Member"
+        >
+          {selectedTeamMember && <TeamMemberDetail member={selectedTeamMember} />}
+        </DetailModal>
       </div>
     </TooltipProvider>
   );
