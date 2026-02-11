@@ -118,6 +118,14 @@ All interactive elements open detail modals. Locked features show "Sign up to un
 ## Changelog
 
 ### Feb 11, 2026
+- **Interactive Demo Presentation Redesign** - Wrapped the demo in an elegant browser window frame:
+  - Page header with "Back to Demo" navigation, FieldForce branding, and "Start Free Trial" CTA
+  - macOS-style browser window frame with red/yellow/green window controls
+  - Fake URL bar showing "app.fieldforce.io/dashboard" with lock icon
+  - "Live Demo" badge indicating interactive status
+  - Compact sidebar with Demo Mode upsell card
+  - Bottom text inviting users to start free trial
+
 - **Demo Page Redesign** - Complete overhaul to match landing page styling:
   - Hero section with animated floating icons (BarChart3, FileText, MapPin, Users, Camera)
   - Gradient headline "Experience FieldForce Before You Sign Up"
