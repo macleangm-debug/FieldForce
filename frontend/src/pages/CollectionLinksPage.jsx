@@ -270,6 +270,100 @@ export function CollectionLinksPage() {
     window.location.href = `sms:?body=${encodeURIComponent(message)}`;
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const validTypes = ['.csv', '.xlsx', '.xls'];
+      const isValid = validTypes.some(ext => file.name.toLowerCase().endsWith(ext));
+      if (!isValid) {
+        toast.error('Please upload a CSV or Excel file');
+        return;
+      }
+      setImportFile(file);
+    }
+  };
+
+  const handleBulkImport = async () => {
+    if (!importFile) {
+      toast.error('Please select a file to import');
+      return;
+    }
+    if (importFormIds.length === 0) {
+      toast.error('Please select at least one form to assign');
+      return;
+    }
+
+    setImporting(true);
+    setImportResults(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', importFile);
+
+      const params = new URLSearchParams({
+        form_ids: importFormIds.join(','),
+        expires_days: importExpiresDays.toString()
+      });
+      if (importMaxSubmissions) {
+        params.append('max_submissions', importMaxSubmissions);
+      }
+
+      const res = await fetch(`${API_URL}/api/collect/tokens/bulk-import?${params.toString()}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setImportResults(data);
+        
+        // Store tokens in localStorage for later sharing
+        if (data.created_tokens && data.created_tokens.length > 0) {
+          const storedTokens = JSON.parse(localStorage.getItem('collection_tokens') || '{}');
+          data.created_tokens.forEach(t => {
+            storedTokens[t.id] = t.token;
+          });
+          localStorage.setItem('collection_tokens', JSON.stringify(storedTokens));
+        }
+        
+        loadData();
+        toast.success(`Successfully imported ${data.success_count} enumerators`);
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to import enumerators');
+      }
+    } catch (error) {
+      console.error('Import error:', error);
+      toast.error('Failed to import enumerators');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const downloadTemplate = () => {
+    const csvContent = "name,email\nJohn Smith,john@example.com\nJane Doe,jane@example.com\nMike Johnson,";
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'enumerator_import_template.csv';
+    link.click();
+    toast.success('Template downloaded');
+  };
+
+  const resetImportDialog = () => {
+    setImportFile(null);
+    setImportFormIds([]);
+    setImportExpiresDays(30);
+    setImportMaxSubmissions('');
+    setImportResults(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const getProjectForForm = (formId) => {
     const form = forms.find(f => f.id === formId);
     if (form && form.project_id) {
