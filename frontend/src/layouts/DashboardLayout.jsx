@@ -143,6 +143,7 @@ export function DashboardLayout({ children }) {
   const [activeGroup, setActiveGroup] = useState('home');
   const [panelOpen, setPanelOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
   // Update active group based on route
   useEffect(() => {
