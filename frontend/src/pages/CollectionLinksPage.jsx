@@ -420,10 +420,23 @@ export function CollectionLinksPage() {
               Generate shareable links for field enumerators to collect data
             </p>
           </div>
-          <Button onClick={() => setShowCreateDialog(true)} data-testid="create-link-btn">
-            <Plus className="w-4 h-4 mr-2" />
-            Create Link
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                resetImportDialog();
+                setShowImportDialog(true);
+              }}
+              data-testid="import-enumerators-btn"
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Import
+            </Button>
+            <Button onClick={() => setShowCreateDialog(true)} data-testid="create-link-btn">
+              <Plus className="w-4 h-4 mr-2" />
+              Create Link
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
