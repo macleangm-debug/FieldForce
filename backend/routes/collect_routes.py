@@ -21,6 +21,9 @@ class CollectionTokenCreate(BaseModel):
     form_ids: List[str]  # Forms this token can access
     expires_days: int = 30  # Token validity in days
     max_submissions: Optional[int] = None  # Optional limit
+    security_mode: str = "standard"  # 'standard' | 'device_locked' | 'pin_protected'
+    require_pin: bool = False
+    pin_code: Optional[str] = None
 
 
 class CollectionTokenOut(BaseModel):
