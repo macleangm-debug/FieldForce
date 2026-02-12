@@ -990,14 +990,51 @@ export function CollectionLinksPage() {
                   </Button>
                 </div>
               </div>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => window.open(selectedToken?.link, '_blank')}
-              >
-                <ExternalLink className="w-4 h-4 mr-2" />
-                Open Link in New Tab
-              </Button>
+              
+              {/* Shortened Link */}
+              {shortenedLinks[selectedToken?.link] && (
+                <div className="space-y-2">
+                  <Label>Shortened Link</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={shortenedLinks[selectedToken?.link]}
+                      readOnly
+                      className="font-mono text-sm bg-green-500/10 border-green-500/30"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      onClick={() => copyToClipboard(shortenedLinks[selectedToken?.link])}
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => shortenLink(selectedToken?.link)}
+                  disabled={shorteningUrl === selectedToken?.link}
+                >
+                  {shorteningUrl === selectedToken?.link ? (
+                    <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Link2 className="w-4 h-4 mr-2" />
+                  )}
+                  {shortenedLinks[selectedToken?.link] ? 'Copy Short Link' : 'Shorten & Copy'}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => window.open(selectedToken?.link, '_blank')}
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Open Link
+                </Button>
+              </div>
             </TabsContent>
 
             <TabsContent value="qr" className="space-y-4 mt-4">
