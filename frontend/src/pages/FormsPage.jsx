@@ -12,7 +12,9 @@ import {
   Eye,
   Database,
   Calendar,
-  Edit3
+  Edit3,
+  Link,
+  Share2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
