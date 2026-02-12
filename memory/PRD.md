@@ -13,7 +13,7 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 
 ## User Personas
 1. **Survey Administrators** - Create and manage surveys, view analytics
-2. **Data Collectors** - Fill out surveys in the field
+2. **Data Collectors/Enumerators** - Fill out surveys in the field
 3. **Respondents** - Complete public surveys via shared links
 
 ---
@@ -30,7 +30,7 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - Form publishing and versioning
 - Form duplication
 
-### Survey Settings & Branding (Dec 2025) ✅
+### Survey Settings & Branding ✅
 - **SurveySettingsSidebar component** with:
   - Survey name and description
   - Logo upload
@@ -43,7 +43,7 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
   - Multiple submissions toggle
   - Require login toggle
 
-### Survey Sharing (Dec 2025) ✅
+### Survey Sharing ✅
 - **ShareSurveyDialog** with three tabs:
   - Direct link (copy to clipboard)
   - QR code (downloadable)
@@ -53,8 +53,26 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - Multi-page navigation
 - Auto-save and progress restoration
 - Offline support
-- **Dynamic theming based on primary color setting**
+- Dynamic theming based on primary color setting
 - Custom thank you message on completion
+
+### Mobile Data Collection (PWA) ✅ - NEW
+- **PWA Infrastructure:**
+  - manifest.json with app icons
+  - Service worker for offline caching
+  - App installable on mobile devices
+
+- **Option A: Login-Based Collection (`/collect`):**
+  - Mobile-optimized login screen
+  - Form list showing assigned forms
+  - Online/offline status indicator
+  - Sync status for pending submissions
+
+- **Option B: Token-Based Collection (`/collect/t/{token}`):**
+  - No login required
+  - Token identifies enumerator
+  - Supervisor-generated collection links
+  - Submission limits and expiry tracking
 
 ### Light/Dark Mode ✅
 - Theme switcher in all headers
@@ -74,10 +92,19 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - `GET /api/forms/{id}` - Get form details
 - `PUT /api/forms/{id}` - Update form
 - `PATCH /api/forms/{id}/fields` - Update fields
-- `PATCH /api/forms/{id}/settings` - Update survey settings (NEW)
-- `GET /api/forms/{id}/public` - Get public form with settings (NEW)
+- `PATCH /api/forms/{id}/settings` - Update survey settings
+- `GET /api/forms/{id}/public` - Get public form with settings
 - `POST /api/forms/{id}/publish` - Publish form
 - `POST /api/forms/{id}/duplicate` - Duplicate form
+
+### Data Collection (NEW)
+- `POST /api/collect/tokens` - Create collection token
+- `GET /api/collect/tokens` - List tokens
+- `DELETE /api/collect/tokens/{id}` - Revoke token
+- `GET /api/collect/verify/{token}` - Verify token & get forms
+- `GET /api/collect/forms/{token}/{form_id}` - Get form for collection
+- `POST /api/collect/submit/{token}` - Submit via token
+- `GET /api/collect/my-forms` - Get forms for logged-in enumerator
 
 ### Submissions
 - `POST /api/submissions` - Submit survey response
@@ -92,6 +119,7 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - Tailwind CSS + Shadcn/UI components
 - Zustand for state management
 - Framer Motion for animations
+- PWA with Service Worker
 
 ### Backend
 - FastAPI (Python)
@@ -99,10 +127,12 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - JWT authentication
 
 ### Key Files
-- `/frontend/src/components/SurveySettingsSidebar.jsx` - Survey config panel
-- `/frontend/src/components/ShareSurveyDialog.jsx` - Share modal
-- `/frontend/src/pages/CAWISurveyPage.jsx` - Public survey page
-- `/backend/routes/form_routes.py` - Form API endpoints
+- `/frontend/src/pages/CollectPage.jsx` - Login-based mobile collection
+- `/frontend/src/pages/TokenCollectPage.jsx` - Token-based collection
+- `/frontend/src/pages/MobileFormPage.jsx` - Mobile form filling
+- `/frontend/public/manifest.json` - PWA manifest
+- `/frontend/public/sw.js` - Service worker
+- `/backend/routes/collect_routes.py` - Collection APIs
 
 ---
 
@@ -112,15 +142,18 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - None currently
 
 ### P1 (High Priority)
-- Wire up Save Settings button to persist to backend API
-- Test full survey flow with primary color applied
+- Create UI for supervisors to generate collection tokens
+- Add "Share Collection Link" button in admin dashboard
+- Test full mobile form filling flow
 
 ### P2 (Medium Priority)
+- Photo/audio capture in mobile form
+- GPS auto-capture during collection
+- Background sync improvements
 - Refactor Landing/Demo pages for full light/dark mode support
-- Extract inline components from InteractiveDemoPage
-- Add preset color palette options
 
 ### P3 (Low Priority/Future)
 - Custom branding fonts
 - Email notifications for submissions
 - Advanced analytics dashboard
+- Extract inline components from InteractiveDemoPage
