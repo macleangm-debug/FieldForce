@@ -494,10 +494,7 @@ export function DashboardLayout({ children }) {
               </Button>
 
               {/* Notifications */}
-              <button className="p-2 rounded-lg hover:bg-muted text-muted-foreground relative">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
-              </button>
+              <NotificationsPanel />
 
               {/* Desktop Profile */}
               <DropdownMenu>
