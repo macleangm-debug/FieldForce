@@ -370,8 +370,8 @@ export function TokenCollectPage() {
         )}
       </main>
 
-      {/* Floating Sync Status */}
-      <FloatingSyncStatus isOnline={isOnline} />
+      {/* Data Vault - Floating Sync Status */}
+      <DataVault isOnline={isOnline} pendingCount={pendingCount} />
 
       {/* Bottom Safe Area */}
       <div className="h-24" />
