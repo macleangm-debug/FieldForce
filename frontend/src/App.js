@@ -210,6 +210,14 @@ function App() {
           <Route path="/survey/:formId" element={<CAWISurveyPage />} />
           <Route path="/survey/complete" element={<SurveyCompletePage />} />
           
+          {/* Mobile Data Collection Routes (Option A - Login Based) */}
+          <Route path="/collect" element={<CollectPage />} />
+          <Route path="/collect/form/:formId" element={<MobileFormPage />} />
+          
+          {/* Token-Based Collection Routes (Option B - No Login) */}
+          <Route path="/collect/t/:token" element={<TokenCollectPage />} />
+          <Route path="/collect/t/:token/form/:formId" element={<MobileFormPage />} />
+          
           {/* Pricing Page - Public and Protected */}
           <Route path="/pricing" element={<PricingPage />} />
           
