@@ -164,6 +164,11 @@ export function CollectionLinksPage() {
         setShowCreateDialog(false);
         setShowLinkDialog(true);
         
+        // Store token in localStorage for later sharing (encrypted would be better in production)
+        const storedTokens = JSON.parse(localStorage.getItem('collection_tokens') || '{}');
+        storedTokens[data.id] = data.token;
+        localStorage.setItem('collection_tokens', JSON.stringify(storedTokens));
+        
         // Reset form
         setNewToken({
           enumerator_name: '',
