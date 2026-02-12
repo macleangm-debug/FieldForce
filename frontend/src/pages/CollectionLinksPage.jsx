@@ -55,12 +55,13 @@ import {
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
 import { toast } from 'sonner';
-import { useOrgStore } from '../store';
+import { useOrgStore, useAuthStore } from '../store';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export function CollectionLinksPage() {
   const { currentOrg } = useOrgStore();
+  const authToken = useAuthStore((state) => state.token);
   const [tokens, setTokens] = useState([]);
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
