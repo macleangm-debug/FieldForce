@@ -871,6 +871,41 @@ export function CollectionLinksPage() {
               </div>
             </div>
 
+            {/* Shortened Link Option */}
+            {shortenedLinks[generatedLink] ? (
+              <div className="space-y-2">
+                <Label>Shortened Link</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={shortenedLinks[generatedLink]}
+                    readOnly
+                    className="font-mono text-sm bg-green-500/10 border-green-500/30"
+                  />
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={() => copyToClipboard(shortenedLinks[generatedLink])}
+                  >
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => shortenLink(generatedLink)}
+                disabled={shorteningUrl === generatedLink}
+              >
+                {shorteningUrl === generatedLink ? (
+                  <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <Link2 className="w-4 h-4 mr-2" />
+                )}
+                Create Shortened Link
+              </Button>
+            )}
+
             {/* Share Options */}
             <div className="flex gap-2">
               <Button
