@@ -174,10 +174,9 @@ export function CollectionLinksPage() {
     }
 
     try {
-      const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/api/collect/tokens/${tokenId}`, {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { 'Authorization': `Bearer ${authToken}` }
       });
 
       if (res.ok) {
