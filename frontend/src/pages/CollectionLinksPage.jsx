@@ -326,19 +326,43 @@ export function CollectionLinksPage() {
     }
   };
 
-  const shareViaWhatsApp = (link, enumeratorName) => {
-    const message = `Hi ${enumeratorName}! Here's your data collection link for FieldForce:\n\n${link}\n\nOpen this link on your phone to start collecting data.`;
+  const shareViaWhatsApp = (link, enumeratorName, pin = null, expiryDate = null) => {
+    // Try to use selected template first
+    const whatsappTemplate = selectedTemplate?.type === 'whatsapp' 
+      ? selectedTemplate 
+      : messageTemplates.find(t => t.type === 'whatsapp' && t.scope === 'system');
+    
+    const message = whatsappTemplate 
+      ? applyTemplate(whatsappTemplate, enumeratorName, link, pin, expiryDate)
+      : `Hi ${enumeratorName}! Here's your data collection link for FieldForce:\n\n${link}\n\nOpen this link on your phone to start collecting data.`;
+    
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const shareViaEmail = (link, enumeratorName, email) => {
-    const subject = `FieldForce Data Collection Link`;
-    const body = `Hi ${enumeratorName},\n\nHere's your data collection link:\n\n${link}\n\nOpen this link on your phone or tablet to start collecting data.\n\nBest regards`;
+  const shareViaEmail = (link, enumeratorName, email, pin = null, expiryDate = null) => {
+    // Try to use selected template first
+    const emailTemplate = selectedTemplate?.type === 'email'
+      ? selectedTemplate
+      : messageTemplates.find(t => t.type === 'email' && t.scope === 'system');
+    
+    const subject = emailTemplate?.subject || 'FieldForce Data Collection Link';
+    const body = emailTemplate 
+      ? applyTemplate(emailTemplate, enumeratorName, link, pin, expiryDate)
+      : `Hi ${enumeratorName},\n\nHere's your data collection link:\n\n${link}\n\nOpen this link on your phone or tablet to start collecting data.\n\nBest regards`;
+    
     window.location.href = `mailto:${email || ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
-  const shareViaSMS = (link, enumeratorName) => {
-    const message = `Hi ${enumeratorName}! Your FieldForce collection link: ${link}`;
+  const shareViaSMS = (link, enumeratorName, pin = null, expiryDate = null) => {
+    // Try to use selected template first
+    const smsTemplate = selectedTemplate?.type === 'sms'
+      ? selectedTemplate
+      : messageTemplates.find(t => t.type === 'sms' && t.scope === 'system');
+    
+    const message = smsTemplate
+      ? applyTemplate(smsTemplate, enumeratorName, link, pin, expiryDate)
+      : `Hi ${enumeratorName}! Your FieldForce collection link: ${link}`;
+    
     window.location.href = `sms:?body=${encodeURIComponent(message)}`;
   };
 
