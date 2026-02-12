@@ -132,6 +132,7 @@ export function CollectionLinksPage() {
 
   useEffect(() => {
     loadData();
+    loadMessageTemplates();
   }, [currentOrg]);
 
   const loadData = async () => {
@@ -168,6 +169,37 @@ export function CollectionLinksPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadMessageTemplates = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/message-templates`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMessageTemplates(data);
+      }
+    } catch (error) {
+      console.error('Failed to load templates:', error);
+    }
+  };
+
+  // Apply template to generate custom message
+  const applyTemplate = (template, enumeratorName, link, pin = null, expiryDate = null) => {
+    if (!template) return '';
+    
+    let message = template.body;
+    const pinSection = pin ? `Your PIN: ${pin}\n\n` : '';
+    const expiry = expiryDate || 'N/A';
+    
+    message = message.replace(/{name}/g, enumeratorName || 'there');
+    message = message.replace(/{link}/g, link);
+    message = message.replace(/{pin_section}/g, pinSection);
+    message = message.replace(/{pin}/g, pin || '');
+    message = message.replace(/{expiry}/g, expiry);
+    
+    return message;
   };
 
   const handleCreateToken = async () => {
