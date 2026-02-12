@@ -17,7 +17,13 @@ import {
   Share2,
   Download,
   Clock,
-  User
+  User,
+  MoreVertical,
+  MessageCircle,
+  Mail,
+  Smartphone,
+  Check,
+  Folder
 } from 'lucide-react';
 import { DashboardLayout } from '../layouts/DashboardLayout';
 import { Button } from '../components/ui/button';
@@ -52,8 +58,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from 'sonner';
 import { useOrgStore, useAuthStore } from '../store';
 
