@@ -1062,6 +1062,328 @@ export function SettingsPage() {
           </div>
         );
 
+      case 'templates':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold">Message Templates</h2>
+              <p className="text-muted-foreground mt-1">
+                Create reusable message templates for sharing collection links
+              </p>
+            </div>
+
+            {/* Template Editor Dialog */}
+            {showTemplateEditor && (
+              <Card className="border-primary">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">
+                      {editingTemplate ? 'Edit Template' : 'Create Template'}
+                    </CardTitle>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setShowTemplateEditor(false);
+                        setEditingTemplate(null);
+                      }}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Template Name</Label>
+                      <Input
+                        value={templateForm.name}
+                        onChange={(e) => setTemplateForm(prev => ({ ...prev, name: e.target.value }))}
+                        placeholder="e.g., Friendly WhatsApp"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Type</Label>
+                      <Select
+                        value={templateForm.type}
+                        onValueChange={(val) => setTemplateForm(prev => ({ ...prev, type: val }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="sms">SMS</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Scope</Label>
+                      <Select
+                        value={templateForm.scope}
+                        onValueChange={(val) => setTemplateForm(prev => ({ ...prev, scope: val }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="user">Personal (only me)</SelectItem>
+                          <SelectItem value="organization">Organization (team shared)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {templateForm.type === 'email' && (
+                      <div className="space-y-2">
+                        <Label>Subject Line</Label>
+                        <Input
+                          value={templateForm.subject}
+                          onChange={(e) => setTemplateForm(prev => ({ ...prev, subject: e.target.value }))}
+                          placeholder="Your Data Collection Link"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label>Message Body</Label>
+                      <div className="flex gap-1">
+                        {['{name}', '{link}', '{pin_section}', '{expiry}'].map((variable) => (
+                          <Button
+                            key={variable}
+                            variant="outline"
+                            size="sm"
+                            className="text-xs h-6 px-2"
+                            onClick={() => {
+                              setTemplateForm(prev => ({
+                                ...prev,
+                                body: prev.body + variable
+                              }));
+                            }}
+                          >
+                            {variable}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                    <textarea
+                      value={templateForm.body}
+                      onChange={(e) => setTemplateForm(prev => ({ ...prev, body: e.target.value }))}
+                      placeholder="Hi {name}! Here's your collection link: {link}"
+                      className="w-full min-h-[150px] p-3 rounded-lg bg-background border border-input text-sm resize-none"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Available variables: {'{name}'} (enumerator name), {'{link}'} (collection URL), {'{pin_section}'} (PIN if applicable), {'{expiry}'} (expiration date)
+                    </p>
+                  </div>
+
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowTemplateEditor(false);
+                        setEditingTemplate(null);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSaveTemplate}>
+                      <Save className="w-4 h-4 mr-2" />
+                      {editingTemplate ? 'Update' : 'Create'} Template
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Create Button */}
+            {!showTemplateEditor && (
+              <Button onClick={() => openTemplateEditor()}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create Template
+              </Button>
+            )}
+
+            {/* Templates List */}
+            <div className="space-y-4">
+              {/* System Templates */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Badge variant="secondary">Default</Badge>
+                    System Templates
+                  </CardTitle>
+                  <CardDescription>Pre-built templates you can use right away</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingTemplates ? (
+                    <div className="flex items-center justify-center py-8">
+                      <RefreshCw className="w-5 h-5 animate-spin" />
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {templates.filter(t => t.scope === 'system').map((template) => (
+                        <div
+                          key={template.id}
+                          className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg ${
+                              template.type === 'whatsapp' ? 'bg-green-500/20 text-green-500' :
+                              template.type === 'email' ? 'bg-blue-500/20 text-blue-500' :
+                              'bg-purple-500/20 text-purple-500'
+                            }`}>
+                              {template.type === 'whatsapp' ? <MessageSquare className="w-4 h-4" /> :
+                               template.type === 'email' ? <Mail className="w-4 h-4" /> :
+                               <Smartphone className="w-4 h-4" />}
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{template.name}</p>
+                              <p className="text-xs text-muted-foreground capitalize">{template.type}</p>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-xs">Default</Badge>
+                        </div>
+                      ))}
+                      {templates.filter(t => t.scope === 'system').length === 0 && (
+                        <p className="text-sm text-muted-foreground text-center py-4">
+                          No system templates available
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Personal Templates */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    My Templates
+                  </CardTitle>
+                  <CardDescription>Your personal message templates</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {templates.filter(t => t.scope === 'user').map((template) => (
+                      <div
+                        key={template.id}
+                        className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-lg ${
+                            template.type === 'whatsapp' ? 'bg-green-500/20 text-green-500' :
+                            template.type === 'email' ? 'bg-blue-500/20 text-blue-500' :
+                            'bg-purple-500/20 text-purple-500'
+                          }`}>
+                            {template.type === 'whatsapp' ? <MessageSquare className="w-4 h-4" /> :
+                             template.type === 'email' ? <Mail className="w-4 h-4" /> :
+                             <Smartphone className="w-4 h-4" />}
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm">{template.name}</p>
+                            <p className="text-xs text-muted-foreground capitalize">{template.type}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => openTemplateEditor(template)}
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-destructive hover:text-destructive"
+                            onClick={() => handleDeleteTemplate(template.id)}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    {templates.filter(t => t.scope === 'user').length === 0 && (
+                      <p className="text-sm text-muted-foreground text-center py-4">
+                        No personal templates yet. Create one above!
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Organization Templates */}
+              {currentOrg && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Building2 className="w-4 h-4" />
+                      Organization Templates
+                    </CardTitle>
+                    <CardDescription>Templates shared with your team at {currentOrg.name}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {templates.filter(t => t.scope === 'organization').map((template) => (
+                        <div
+                          key={template.id}
+                          className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg ${
+                              template.type === 'whatsapp' ? 'bg-green-500/20 text-green-500' :
+                              template.type === 'email' ? 'bg-blue-500/20 text-blue-500' :
+                              'bg-purple-500/20 text-purple-500'
+                            }`}>
+                              {template.type === 'whatsapp' ? <MessageSquare className="w-4 h-4" /> :
+                               template.type === 'email' ? <Mail className="w-4 h-4" /> :
+                               <Smartphone className="w-4 h-4" />}
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{template.name}</p>
+                              <p className="text-xs text-muted-foreground capitalize">{template.type}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                              onClick={() => openTemplateEditor(template)}
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-destructive hover:text-destructive"
+                              onClick={() => handleDeleteTemplate(template.id)}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      {templates.filter(t => t.scope === 'organization').length === 0 && (
+                        <p className="text-sm text-muted-foreground text-center py-4">
+                          No organization templates yet
+                        </p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
