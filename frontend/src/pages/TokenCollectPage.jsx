@@ -53,8 +53,17 @@ export function TokenCollectPage() {
 
   // Track online status
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+    const handleOnline = () => {
+      setIsOnline(true);
+      if (wasOffline) {
+        setShowConnectionRestored(true);
+        setTimeout(() => setShowConnectionRestored(false), 5000);
+      }
+    };
+    const handleOffline = () => {
+      setIsOnline(false);
+      setWasOffline(true);
+    };
     
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -63,7 +72,7 @@ export function TokenCollectPage() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
+  }, [wasOffline]);
 
   // PWA Install prompt
   useEffect(() => {
