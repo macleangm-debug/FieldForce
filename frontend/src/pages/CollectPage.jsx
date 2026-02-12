@@ -295,18 +295,8 @@ export function CollectPage() {
           </Card>
 
           {/* Connection Status */}
-          <div className="mt-6 flex items-center justify-center gap-2 text-sm">
-            {isOnline ? (
-              <>
-                <Wifi className="w-4 h-4 text-green-400" />
-                <span className="text-green-400">Online</span>
-              </>
-            ) : (
-              <>
-                <WifiOff className="w-4 h-4 text-red-400" />
-                <span className="text-red-400">Offline</span>
-              </>
-            )}
+          <div className="mt-6 flex items-center justify-center">
+            <ConnectionStatusPill isOnline={isOnline} />
           </div>
         </div>
       </div>
@@ -316,6 +306,11 @@ export function CollectPage() {
   // Main Collection Interface
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Offline Banner - Prominent */}
+      <AnimatePresence>
+        <OfflineBanner isOnline={isOnline} />
+      </AnimatePresence>
+
       {/* Install Banner */}
       <AnimatePresence>
         {showInstallBanner && (
@@ -337,7 +332,7 @@ export function CollectPage() {
       </AnimatePresence>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur border-b border-slate-700">
+      <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur border-b border-slate-700">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
