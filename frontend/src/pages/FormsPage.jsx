@@ -14,7 +14,12 @@ import {
   Calendar,
   Edit3,
   Link,
-  Share2
+  Share2,
+  MessageCircle,
+  Mail,
+  Smartphone,
+  QrCode,
+  ExternalLink
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -38,6 +43,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuPortal,
 } from '../components/ui/dropdown-menu';
 import {
   Select,
