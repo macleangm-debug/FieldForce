@@ -89,21 +89,21 @@ export function CollectionLinksPage() {
       const token = localStorage.getItem('token');
       const headers = { 'Authorization': `Bearer ${token}` };
 
-      // Load tokens and forms in parallel
-      const [tokensRes, formsRes] = await Promise.all([
-        fetch(`${API_URL}/api/collect/tokens`, { headers }),
-        fetch(`${API_URL}/api/forms`, { headers })
-      ]);
-
+      // Load tokens
+      const tokensRes = await fetch(`${API_URL}/api/collect/tokens`, { headers });
       if (tokensRes.ok) {
         const data = await tokensRes.json();
         setTokens(data);
       }
 
-      if (formsRes.ok) {
-        const data = await formsRes.json();
-        // Filter to only published forms
-        setForms(data.filter(f => f.status === 'published'));
+      // Load forms (need org_id)
+      if (currentOrg?.id) {
+        const formsRes = await fetch(`${API_URL}/api/forms?org_id=${currentOrg.id}`, { headers });
+        if (formsRes.ok) {
+          const data = await formsRes.json();
+          // Filter to only published forms
+          setForms(data.filter(f => f.status === 'published'));
+        }
       }
     } catch (error) {
       console.error('Failed to load data:', error);
