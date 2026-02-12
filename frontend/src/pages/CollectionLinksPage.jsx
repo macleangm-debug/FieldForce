@@ -1026,6 +1026,248 @@ export function CollectionLinksPage() {
           </Tabs>
         </DialogContent>
       </Dialog>
+
+      {/* Bulk Import Dialog */}
+      <Dialog open={showImportDialog} onOpenChange={(open) => {
+        if (!open) resetImportDialog();
+        setShowImportDialog(open);
+      }}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileSpreadsheet className="w-5 h-5 text-primary" />
+              Import Enumerators
+            </DialogTitle>
+            <DialogDescription>
+              Upload a CSV or Excel file to create collection links for multiple enumerators at once
+            </DialogDescription>
+          </DialogHeader>
+
+          {!importResults ? (
+            <div className="space-y-4 py-4">
+              {/* File Upload */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label>Upload File *</Label>
+                  <Button variant="link" size="sm" onClick={downloadTemplate} className="h-auto p-0">
+                    <Download className="w-3 h-3 mr-1" />
+                    Download Template
+                  </Button>
+                </div>
+                <div 
+                  className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+                    importFile 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-slate-700 hover:border-slate-500'
+                  }`}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv,.xlsx,.xls"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    data-testid="import-file-input"
+                  />
+                  {importFile ? (
+                    <div className="flex items-center justify-center gap-3">
+                      <FileSpreadsheet className="w-8 h-8 text-primary" />
+                      <div className="text-left">
+                        <p className="text-white font-medium">{importFile.name}</p>
+                        <p className="text-slate-400 text-sm">
+                          {(importFile.size / 1024).toFixed(1)} KB
+                        </p>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setImportFile(null);
+                          if (fileInputRef.current) fileInputRef.current.value = '';
+                        }}
+                      >
+                        <XCircle className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Upload className="w-8 h-8 mx-auto mb-2 text-slate-400" />
+                      <p className="text-white">Click to upload or drag and drop</p>
+                      <p className="text-slate-400 text-sm mt-1">CSV or Excel (.xlsx, .xls)</p>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-slate-500">
+                  Required column: <code className="bg-slate-800 px-1 rounded">name</code> • 
+                  Optional: <code className="bg-slate-800 px-1 rounded">email</code>
+                </p>
+              </div>
+
+              {/* Select Forms */}
+              <div className="space-y-2">
+                <Label>Assign Forms *</Label>
+                {forms.length === 0 ? (
+                  <p className="text-sm text-slate-400">No published forms available</p>
+                ) : (
+                  <div className="space-y-2 max-h-40 overflow-y-auto border border-slate-700 rounded-lg p-2">
+                    {forms.map((form) => (
+                      <label
+                        key={form.id}
+                        className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${
+                          importFormIds.includes(form.id)
+                            ? 'bg-primary/20 border border-primary/50'
+                            : 'hover:bg-slate-700/50'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={importFormIds.includes(form.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setImportFormIds(prev => [...prev, form.id]);
+                            } else {
+                              setImportFormIds(prev => prev.filter(id => id !== form.id));
+                            }
+                          }}
+                          className="w-4 h-4 rounded"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white text-sm font-medium truncate">{form.name}</p>
+                          <p className="text-slate-400 text-xs">{form.field_count} fields</p>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Options */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Link Expires In</Label>
+                  <Select
+                    value={String(importExpiresDays)}
+                    onValueChange={(val) => setImportExpiresDays(parseInt(val))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="7">7 days</SelectItem>
+                      <SelectItem value="14">14 days</SelectItem>
+                      <SelectItem value="30">30 days</SelectItem>
+                      <SelectItem value="60">60 days</SelectItem>
+                      <SelectItem value="90">90 days</SelectItem>
+                      <SelectItem value="365">1 year</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Max Submissions</Label>
+                  <Input
+                    type="number"
+                    value={importMaxSubmissions}
+                    onChange={(e) => setImportMaxSubmissions(e.target.value)}
+                    placeholder="Unlimited"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Import Results */
+            <div className="space-y-4 py-4">
+              <div className="flex items-center gap-4 p-4 rounded-lg bg-slate-800/50">
+                <div className="flex-1 text-center">
+                  <p className="text-2xl font-bold text-green-400">{importResults.success_count}</p>
+                  <p className="text-slate-400 text-sm">Imported</p>
+                </div>
+                {importResults.error_count > 0 && (
+                  <div className="flex-1 text-center">
+                    <p className="text-2xl font-bold text-red-400">{importResults.error_count}</p>
+                    <p className="text-slate-400 text-sm">Failed</p>
+                  </div>
+                )}
+              </div>
+
+              {importResults.error_count > 0 && (
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertCircle className="w-4 h-4 text-red-400" />
+                    <p className="text-red-400 text-sm font-medium">Import Errors</p>
+                  </div>
+                  <div className="max-h-32 overflow-y-auto text-sm text-slate-400">
+                    {importResults.errors.map((err, idx) => (
+                      <p key={idx}>Row {err.row}: {err.error}</p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {importResults.created_tokens.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-sm text-slate-400">
+                    Links have been created and saved. You can share them from the table below.
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      // Export created tokens as CSV for reference
+                      const csvContent = [
+                        'name,email,link',
+                        ...importResults.created_tokens.map(t => 
+                          `"${t.name}","${t.email || ''}","${window.location.origin}/collect/t/${t.token}"`
+                        )
+                      ].join('\n');
+                      const blob = new Blob([csvContent], { type: 'text/csv' });
+                      const link = document.createElement('a');
+                      link.href = URL.createObjectURL(blob);
+                      link.download = 'imported_collection_links.csv';
+                      link.click();
+                      toast.success('Links exported');
+                    }}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Export Links as CSV
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            {!importResults ? (
+              <>
+                <Button variant="outline" onClick={() => setShowImportDialog(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleBulkImport} 
+                  disabled={importing || !importFile || importFormIds.length === 0}
+                  data-testid="start-import-btn"
+                >
+                  {importing ? (
+                    <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Upload className="w-4 h-4 mr-2" />
+                  )}
+                  Import Enumerators
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => {
+                resetImportDialog();
+                setShowImportDialog(false);
+              }}>
+                Done
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </DashboardLayout>
   );
 }
