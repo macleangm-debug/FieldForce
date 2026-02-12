@@ -661,6 +661,9 @@ export function FormBuilderPage() {
   const [showSaveVersion, setShowSaveVersion] = useState(false);
   const [showDuplicateRules, setShowDuplicateRules] = useState(false);
   const [showLogicVisualization, setShowLogicVisualization] = useState(false);
+  const [showSurveySettings, setShowSurveySettings] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [surveySettings, setSurveySettings] = useState({});
   const [selectedVersion, setSelectedVersion] = useState(null);
 
   const loadForm = useCallback(async () => {
