@@ -368,6 +368,44 @@ export function CollectionLinksPage() {
     }
   };
 
+  const shortenLink = async (url) => {
+    // Check if we already have this shortened
+    if (shortenedLinks[url]) {
+      copyToClipboard(shortenedLinks[url]);
+      return;
+    }
+
+    setShorteningUrl(url);
+    try {
+      const res = await fetch(`${API_URL}/api/collect/shorten-url`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.short_url) {
+          setShortenedLinks(prev => ({ ...prev, [url]: data.short_url }));
+          copyToClipboard(data.short_url);
+          toast.success('Short link copied to clipboard!');
+        } else {
+          toast.error(data.error || 'Failed to shorten link');
+        }
+      } else {
+        toast.error('Failed to shorten link');
+      }
+    } catch (error) {
+      console.error('Shortening error:', error);
+      toast.error('Failed to shorten link');
+    } finally {
+      setShorteningUrl(null);
+    }
+  };
+
   const getProjectForForm = (formId) => {
     const form = forms.find(f => f.id === formId);
     if (form && form.project_id) {
