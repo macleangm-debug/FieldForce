@@ -347,12 +347,7 @@ export function CollectPage() {
             
             <div className="flex items-center gap-2">
               {/* Connection Status */}
-              <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                isOnline ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-              }`}>
-                {isOnline ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-                {isOnline ? 'Online' : 'Offline'}
-              </div>
+              <ConnectionStatusPill isOnline={isOnline} />
               
               {/* Logout */}
               <Button variant="ghost" size="icon" onClick={handleLogout}>
@@ -363,31 +358,17 @@ export function CollectPage() {
         </div>
       </header>
 
-      {/* Sync Bar */}
-      {pendingCount > 0 && (
-        <div className="px-4 py-2 bg-amber-500/20 border-b border-amber-500/30">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-amber-400">
-              <CloudOff className="w-4 h-4" />
-              <span className="text-sm">{pendingCount} pending submission{pendingCount > 1 ? 's' : ''}</span>
-            </div>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              onClick={handleSync}
-              disabled={syncing || !isOnline}
-              className="border-amber-500 text-amber-400 hover:bg-amber-500/20"
-            >
-              {syncing ? (
-                <RefreshCw className="w-4 h-4 animate-spin mr-1" />
-              ) : (
-                <Cloud className="w-4 h-4 mr-1" />
-              )}
-              Sync Now
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Offline Explainer - First Time */}
+      <AnimatePresence>
+        {showOfflineExplainer && (
+          <OfflineExplainerCard 
+            onDismiss={() => {
+              setShowOfflineExplainer(false);
+              localStorage.setItem('fieldforce_seen_offline_explainer', 'true');
+            }} 
+          />
+        )}
+      </AnimatePresence>
 
       {/* Forms List */}
       <main className="p-4 space-y-4">
