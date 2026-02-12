@@ -704,9 +704,40 @@ export function CollectionLinksPage() {
                   size="icon"
                   onClick={() => copyToClipboard(generatedLink)}
                 >
-                  <Copy className="w-4 h-4" />
+                  {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                 </Button>
               </div>
+            </div>
+
+            {/* Share Options */}
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => shareViaWhatsApp(generatedLink, newToken.enumerator_name || 'there')}
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                WhatsApp
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => shareViaEmail(generatedLink, newToken.enumerator_name || 'Enumerator', newToken.enumerator_email)}
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Email
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => shareViaSMS(generatedLink, newToken.enumerator_name || 'there')}
+              >
+                <Smartphone className="w-4 h-4 mr-2" />
+                SMS
+              </Button>
             </div>
 
             {/* QR Code */}
@@ -737,7 +768,7 @@ export function CollectionLinksPage() {
             {/* Warning */}
             <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
               <p className="text-amber-400 text-sm">
-                ⚠️ Save this link now! For security, it won't be shown again.
+                ⚠️ Save this link now! You can share it later from the actions menu.
               </p>
             </div>
           </div>
@@ -747,6 +778,132 @@ export function CollectionLinksPage() {
               Done
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Share Dialog (for existing tokens) */}
+      <Dialog open={showShareDialog} onOpenChange={setShowShareDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Share2 className="w-5 h-5 text-primary" />
+              Share Collection Link
+            </DialogTitle>
+            <DialogDescription>
+              {selectedToken?.enumerator_name}
+            </DialogDescription>
+          </DialogHeader>
+
+          <Tabs defaultValue="link" className="mt-4">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="link" className="flex items-center gap-2">
+                <Link2 className="w-4 h-4" />
+                Link
+              </TabsTrigger>
+              <TabsTrigger value="qr" className="flex items-center gap-2">
+                <QrCode className="w-4 h-4" />
+                QR Code
+              </TabsTrigger>
+              <TabsTrigger value="share" className="flex items-center gap-2">
+                <Share2 className="w-4 h-4" />
+                Share
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="link" className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label>Collection Link</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={selectedToken?.link || ''}
+                    readOnly
+                    className="font-mono text-sm"
+                  />
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    onClick={() => copyToClipboard(selectedToken?.link)}
+                  >
+                    {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                  </Button>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => window.open(selectedToken?.link, '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Open Link in New Tab
+              </Button>
+            </TabsContent>
+
+            <TabsContent value="qr" className="space-y-4 mt-4">
+              <div className="flex flex-col items-center gap-4">
+                <div className="bg-white p-4 rounded-lg">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(selectedToken?.link || '')}`}
+                    alt="QR Code"
+                    className="w-48 h-48"
+                  />
+                </div>
+                <Button
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(selectedToken?.link || '')}`;
+                    link.download = `collection-${selectedToken?.enumerator_name?.replace(/\s+/g, '-')}-qr.png`;
+                    link.click();
+                    toast.success('QR code downloaded');
+                  }}
+                  className="w-full"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download QR Code
+                </Button>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="share" className="space-y-4 mt-4">
+              <div className="space-y-3">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    shareViaWhatsApp(selectedToken?.link, selectedToken?.enumerator_name);
+                    setShowShareDialog(false);
+                  }}
+                >
+                  <MessageCircle className="w-5 h-5 mr-3 text-green-500" />
+                  Share via WhatsApp
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    shareViaEmail(selectedToken?.link, selectedToken?.enumerator_name, selectedToken?.enumerator_email);
+                    setShowShareDialog(false);
+                  }}
+                >
+                  <Mail className="w-5 h-5 mr-3 text-blue-500" />
+                  Share via Email
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => {
+                    shareViaSMS(selectedToken?.link, selectedToken?.enumerator_name);
+                    setShowShareDialog(false);
+                  }}
+                >
+                  <Smartphone className="w-5 h-5 mr-3 text-purple-500" />
+                  Share via SMS
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                These options will open the respective app with a pre-filled message
+              </p>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
     </DashboardLayout>
