@@ -87,8 +87,10 @@ const settingsNav = [
   { id: 'api', label: 'API & Integrations', icon: Key, description: 'API keys and webhooks' },
 ];
 
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
 export function SettingsPage() {
-  const { user, logout } = useAuthStore();
+  const { user, token, logout } = useAuthStore();
   const { currentOrg } = useOrgStore();
   const { theme, setTheme, language, setLanguage } = useUIStore();
   
