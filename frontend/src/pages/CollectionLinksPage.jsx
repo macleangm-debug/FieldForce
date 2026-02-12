@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
   Link2,
@@ -23,7 +23,10 @@ import {
   Mail,
   Smartphone,
   Check,
-  Folder
+  Folder,
+  Upload,
+  FileSpreadsheet,
+  AlertCircle
 } from 'lucide-react';
 import { DashboardLayout } from '../layouts/DashboardLayout';
 import { Button } from '../components/ui/button';
