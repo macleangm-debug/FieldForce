@@ -1738,61 +1738,6 @@ export function CollectionLinksPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-                    className="w-full"
-                    onClick={() => {
-                      // Export created tokens as CSV for reference
-                      const csvContent = [
-                        'name,email,link',
-                        ...importResults.created_tokens.map(t => 
-                          `"${t.name}","${t.email || ''}","${window.location.origin}/collect/t/${t.token}"`
-                        )
-                      ].join('\n');
-                      const blob = new Blob([csvContent], { type: 'text/csv' });
-                      const link = document.createElement('a');
-                      link.href = URL.createObjectURL(blob);
-                      link.download = 'imported_collection_links.csv';
-                      link.click();
-                      toast.success('Links exported');
-                    }}
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Export Links as CSV
-                  </Button>
-                </div>
-              )}
-            </div>
-          )}
-
-          <DialogFooter>
-            {!importResults ? (
-              <>
-                <Button variant="outline" onClick={() => setShowImportDialog(false)}>
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleBulkImport} 
-                  disabled={importing || !importFile || importFormIds.length === 0}
-                  data-testid="start-import-btn"
-                >
-                  {importing ? (
-                    <RefreshCw className="w-4 h-4 animate-spin mr-2" />
-                  ) : (
-                    <Upload className="w-4 h-4 mr-2" />
-                  )}
-                  Import Enumerators
-                </Button>
-              </>
-            ) : (
-              <Button onClick={() => {
-                resetImportDialog();
-                setShowImportDialog(false);
-              }}>
-                Done
-              </Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </DashboardLayout>
   );
 }
