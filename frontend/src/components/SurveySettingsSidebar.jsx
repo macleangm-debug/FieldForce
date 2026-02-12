@@ -4,19 +4,23 @@ import {
   X,
   Settings2,
   Image,
-  Calendar,
+  Calendar as CalendarIcon,
   Hash,
   MessageSquare,
   Upload,
   Palette,
-  ToggleLeft
+  ToggleLeft,
+  Clock
 } from 'lucide-react';
+import { format } from 'date-fns';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Switch } from './ui/switch';
 import { Separator } from './ui/separator';
+import { Calendar } from './ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import {
   Select,
   SelectContent,
@@ -24,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { cn } from '../lib/utils';
 
 export function SurveySettingsSidebar({ 
   isOpen, 
