@@ -998,7 +998,7 @@ export function CollectionLinksPage() {
             </div>
 
             {/* Security Mode - Dropdown style */}
-            <div className="space-y-1">
+            <div className="space-y-2">
               <Label className="text-xs flex items-center gap-1.5">
                 <Shield className="w-3 h-3" />
                 Security Mode
@@ -1026,7 +1026,7 @@ export function CollectionLinksPage() {
                     <div className="flex items-center gap-2">
                       <Smartphone className="w-3.5 h-3.5 text-orange-500" />
                       <span>Device Locked</span>
-                      <span className="text-xs text-muted-foreground ml-1">- One device only</span>
+                      <span className="text-xs text-muted-foreground ml-1">- Track on map</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="pin_protected">
@@ -1039,12 +1039,31 @@ export function CollectionLinksPage() {
                 </SelectContent>
               </Select>
               
-              {/* Security mode description */}
-              <p className="text-xs text-muted-foreground">
-                {newToken.security_mode === 'standard' && 'Simple link. Good for public surveys or trusted teams.'}
-                {newToken.security_mode === 'device_locked' && 'Link locks to first device. Prevents unauthorized sharing.'}
-                {newToken.security_mode === 'pin_protected' && 'Requires PIN + locks to device. Maximum control.'}
-              </p>
+              {/* Security mode detailed description */}
+              <div className={`p-2.5 rounded-lg text-xs ${
+                newToken.security_mode === 'standard' ? 'bg-blue-500/10 border border-blue-500/20' :
+                newToken.security_mode === 'device_locked' ? 'bg-orange-500/10 border border-orange-500/20' :
+                'bg-green-500/10 border border-green-500/20'
+              }`}>
+                {newToken.security_mode === 'standard' && (
+                  <div className="space-y-1">
+                    <p className="font-medium text-blue-400">Open Access</p>
+                    <p className="text-muted-foreground">Link can be opened on any device, any number of times. Best for public surveys or when you fully trust your team. No device tracking available.</p>
+                  </div>
+                )}
+                {newToken.security_mode === 'device_locked' && (
+                  <div className="space-y-1">
+                    <p className="font-medium text-orange-400">Device Registration Required</p>
+                    <p className="text-muted-foreground">Link locks to the first device that opens it. Enables <strong>GPS tracking on the map</strong> - see exactly where each enumerator is collecting data in real-time. Prevents link sharing between team members.</p>
+                  </div>
+                )}
+                {newToken.security_mode === 'pin_protected' && (
+                  <div className="space-y-1">
+                    <p className="font-medium text-green-400">Maximum Security</p>
+                    <p className="text-muted-foreground">Requires 4-digit PIN + device lock. Enables <strong>GPS tracking on the map</strong> with verified identity. Even if someone gets the link, they can't access without the PIN. Ideal for sensitive data collection.</p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* PIN Input (shown when PIN mode selected) */}
