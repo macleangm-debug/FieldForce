@@ -215,8 +215,64 @@ export function CollectionLinksPage() {
   };
 
   const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    toast.success('Copied to clipboard!');
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      toast.success('Copied to clipboard!');
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const getTokenLink = (tokenId) => {
+    const storedTokens = JSON.parse(localStorage.getItem('collection_tokens') || '{}');
+    const token = storedTokens[tokenId];
+    if (token) {
+      return `${window.location.origin}/collect/t/${token}`;
+    }
+    return null;
+  };
+
+  const handleShare = (tokenData) => {
+    const link = getTokenLink(tokenData.id);
+    if (link) {
+      setSelectedToken({ ...tokenData, link });
+      setShowShareDialog(true);
+    } else {
+      toast.error('Link not available. Token was created in a previous session.');
+    }
+  };
+
+  const shareViaWhatsApp = (link, enumeratorName) => {
+    const message = `Hi ${enumeratorName}! Here's your data collection link for FieldForce:\n\n${link}\n\nOpen this link on your phone to start collecting data.`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  const shareViaEmail = (link, enumeratorName, email) => {
+    const subject = `FieldForce Data Collection Link`;
+    const body = `Hi ${enumeratorName},\n\nHere's your data collection link:\n\n${link}\n\nOpen this link on your phone or tablet to start collecting data.\n\nBest regards`;
+    window.location.href = `mailto:${email || ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const shareViaSMS = (link, enumeratorName) => {
+    const message = `Hi ${enumeratorName}! Your FieldForce collection link: ${link}`;
+    window.location.href = `sms:?body=${encodeURIComponent(message)}`;
+  };
+
+  const getProjectForForm = (formId) => {
+    const form = forms.find(f => f.id === formId);
+    if (form && form.project_id) {
+      const project = projects.find(p => p.id === form.project_id);
+      return project?.name || 'Unknown Project';
+    }
+    return null;
+  };
+
+  const getProjectsForToken = (formIds) => {
+    const projectNames = new Set();
+    formIds?.forEach(formId => {
+      const projectName = getProjectForForm(formId);
+      if (projectName) projectNames.add(projectName);
+    });
+    return Array.from(projectNames);
   };
 
   const getQRCodeUrl = (token) => {
