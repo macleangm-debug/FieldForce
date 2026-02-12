@@ -45,6 +45,14 @@ class EnumeratorFormOut(BaseModel):
     status: str
 
 
+class BulkImportResult(BaseModel):
+    """Result of bulk enumerator import"""
+    success_count: int
+    error_count: int
+    errors: List[Dict[str, Any]]
+    created_tokens: List[Dict[str, Any]]
+
+
 def generate_token() -> str:
     """Generate a secure random token"""
     return secrets.token_urlsafe(32)
