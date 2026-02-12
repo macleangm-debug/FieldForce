@@ -96,6 +96,10 @@ export function CollectionLinksPage() {
   const [importing, setImporting] = useState(false);
   const [importResults, setImportResults] = useState(null);
   
+  // Link shortening state
+  const [shortenedLinks, setShortenedLinks] = useState({}); // Maps original URL to shortened URL
+  const [shorteningUrl, setShorteningUrl] = useState(null); // URL currently being shortened
+  
   // Form state for creating new token
   const [newToken, setNewToken] = useState({
     enumerator_name: '',
