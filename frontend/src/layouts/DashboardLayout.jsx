@@ -449,20 +449,27 @@ export function DashboardLayout({ children }) {
               </DropdownMenu>
             )}
 
-            {/* Search */}
+            {/* Search - Triggers Command Palette */}
             <div className="flex-1 max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full pl-9 pr-4 py-2 text-sm bg-muted border-0 rounded-lg focus:bg-background focus:ring-2 focus:ring-ring transition-all text-foreground placeholder:text-muted-foreground"
-                />
-              </div>
+              <button
+                onClick={() => setCommandPaletteOpen(true)}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm bg-muted border-0 rounded-lg hover:bg-muted/80 transition-colors text-muted-foreground"
+                data-testid="search-trigger"
+              >
+                <Search className="w-4 h-4" />
+                <span className="flex-1 text-left">Search...</span>
+                <div className="flex items-center gap-0.5 text-xs bg-background/50 px-1.5 py-0.5 rounded">
+                  <Command className="w-3 h-3" />
+                  <span>K</span>
+                </div>
+              </button>
             </div>
 
             {/* Right side actions */}
             <div className="flex items-center gap-2 ml-auto">
+              {/* Language Selector */}
+              <LanguageSelector variant="compact" />
+
               {/* Theme Toggle */}
               <ThemeSwitcher variant="icon" />
 
