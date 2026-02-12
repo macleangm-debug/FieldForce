@@ -37,7 +37,10 @@ import {
   CreditCard,
   Mail,
   Phone,
-  Camera
+  Camera,
+  MessageSquare,
+  Edit2,
+  X
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
