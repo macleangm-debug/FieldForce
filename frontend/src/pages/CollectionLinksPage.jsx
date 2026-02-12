@@ -1263,11 +1263,12 @@ export function CollectionLinksPage() {
                 <div className="space-y-2">
                   <Label>Link Expires In</Label>
                   <Select
+                    defaultValue="30"
                     value={String(importExpiresDays)}
                     onValueChange={(val) => setImportExpiresDays(parseInt(val))}
                   >
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="30 days" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="7">7 days</SelectItem>
