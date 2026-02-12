@@ -180,13 +180,50 @@ export function TokenCollectPage() {
       
       const data = await res.json();
       setTokenData(data);
-      setForms(data.forms || []);
+      setSecurityMode(data.security_mode || 'standard');
+      
+      // Check if this token is already verified on this device
+      const verifiedTokens = JSON.parse(localStorage.getItem('fieldforce_verified_tokens') || '{}');
+      const isAlreadyVerified = verifiedTokens[data.token_id] === getOrCreateDeviceId();
+      
+      // Determine if verification is needed
+      if (data.security_mode === 'standard') {
+        // Standard mode - no verification needed
+        setIsVerified(true);
+        setNeedsVerification(false);
+        setForms(data.forms || []);
+      } else if (data.security_mode === 'device_locked') {
+        // Device locked mode - check if already locked to this device or needs registration
+        if (data.device_locked && isAlreadyVerified) {
+          setIsVerified(true);
+          setNeedsVerification(false);
+          setForms(data.forms || []);
+        } else if (!data.device_locked) {
+          // Not locked yet - will lock on first access
+          setNeedsVerification(true);
+          setIsVerified(false);
+        } else {
+          // Locked to another device
+          setError('This link is locked to another device. Contact your supervisor.');
+          return;
+        }
+      } else if (data.security_mode === 'pin_protected') {
+        // PIN protected - need PIN entry
+        if (isAlreadyVerified) {
+          setIsVerified(true);
+          setNeedsVerification(false);
+          setForms(data.forms || []);
+        } else {
+          setNeedsVerification(true);
+          setIsVerified(false);
+        }
+      }
       
       // Store token for later use
       localStorage.setItem('collection_token', token);
       
-      // Cache forms for offline
-      if (offlineStorage.isReady) {
+      // Cache forms for offline (only if verified)
+      if (isAlreadyVerified && offlineStorage.isReady) {
         for (const form of data.forms) {
           await offlineStorage.cacheForm(form);
         }
@@ -200,6 +237,7 @@ export function TokenCollectPage() {
         if (cachedForms.length > 0) {
           setForms(cachedForms);
           setTokenData({ enumerator_name: 'Offline Mode' });
+          setIsVerified(true);
           toast.info('Working offline with cached forms');
         } else {
           setError('Cannot verify token offline. Please connect to the internet.');
@@ -209,6 +247,92 @@ export function TokenCollectPage() {
       }
     } finally {
       setLoading(false);
+    }
+  };
+  
+  // Handle PIN input
+  const handlePinChange = (index, value) => {
+    if (!/^\d*$/.test(value)) return; // Only allow digits
+    
+    const newPin = [...pin];
+    newPin[index] = value.slice(-1); // Only take last digit
+    setPin(newPin);
+    setPinError('');
+    
+    // Auto-focus next input
+    if (value && index < 3) {
+      pinInputRefs[index + 1].current?.focus();
+    }
+  };
+  
+  const handlePinKeyDown = (index, e) => {
+    if (e.key === 'Backspace' && !pin[index] && index > 0) {
+      pinInputRefs[index - 1].current?.focus();
+    }
+  };
+  
+  // Register device / verify PIN
+  const handleVerification = async () => {
+    setVerifying(true);
+    setPinError('');
+    
+    try {
+      const deviceInfo = getDeviceInfo();
+      
+      // Add PIN if required
+      if (securityMode === 'pin_protected') {
+        const pinCode = pin.join('');
+        if (pinCode.length !== 4) {
+          setPinError('Please enter a 4-digit PIN');
+          setVerifying(false);
+          return;
+        }
+        deviceInfo.pin = pinCode;
+      }
+      
+      const res = await fetch(`${API_URL}/api/collect/register-device/${token}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(deviceInfo)
+      });
+      
+      if (!res.ok) {
+        const err = await res.json();
+        if (err.detail?.includes('PIN')) {
+          setPinError('Invalid PIN. Please try again.');
+        } else if (err.detail?.includes('locked')) {
+          setError('This link is locked to another device. Contact your supervisor.');
+        } else {
+          setPinError(err.detail || 'Verification failed');
+        }
+        return;
+      }
+      
+      const result = await res.json();
+      
+      // Store verification for this token
+      const verifiedTokens = JSON.parse(localStorage.getItem('fieldforce_verified_tokens') || '{}');
+      verifiedTokens[tokenData.token_id] = getOrCreateDeviceId();
+      localStorage.setItem('fieldforce_verified_tokens', JSON.stringify(verifiedTokens));
+      
+      setIsVerified(true);
+      setNeedsVerification(false);
+      setDeviceLocked(result.device_locked);
+      setForms(tokenData.forms || []);
+      
+      // Cache forms for offline
+      if (offlineStorage.isReady && tokenData.forms) {
+        for (const form of tokenData.forms) {
+          await offlineStorage.cacheForm(form);
+        }
+      }
+      
+      toast.success('Access granted!');
+    } catch (err) {
+      console.error('Verification failed:', err);
+      setPinError('Connection error. Please try again.');
+    } finally {
+      setVerifying(false);
     }
   };
 
