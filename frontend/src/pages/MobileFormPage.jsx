@@ -27,6 +27,16 @@ import { offlineStorage } from '../lib/offlineStorage';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 /**
+ * Haptic Feedback Utility
+ */
+const haptic = {
+  light: () => navigator.vibrate?.(10),
+  medium: () => navigator.vibrate?.(25),
+  success: () => navigator.vibrate?.([30, 50, 30, 50, 50]),
+  warning: () => navigator.vibrate?.([50, 30, 50]),
+};
+
+/**
  * Mobile Form Filling Page
  * Optimized for field data collection
  */
