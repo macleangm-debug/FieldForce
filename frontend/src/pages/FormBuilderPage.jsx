@@ -786,6 +786,39 @@ export function FormBuilderPage() {
             </div>
           </div>
           <div className="flex gap-2">
+            {/* Settings Button */}
+            <Button 
+              variant="outline" 
+              onClick={() => setShowSurveySettings(true)}
+              data-testid="survey-settings-btn"
+            >
+              <Settings2 className="w-4 h-4 mr-2" />
+              Settings
+            </Button>
+
+            {/* Share Button (only for published forms) */}
+            {currentForm?.status === 'published' && (
+              <Button 
+                variant="outline" 
+                onClick={() => setShowShareDialog(true)}
+                data-testid="share-survey-btn"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+            )}
+
+            {/* View Live (only for published forms) */}
+            {currentForm?.status === 'published' && (
+              <Button 
+                variant="outline" 
+                onClick={() => window.open(`/survey/${formId}`, '_blank')}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                View Live
+              </Button>
+            )}
+
             {/* More Options Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
