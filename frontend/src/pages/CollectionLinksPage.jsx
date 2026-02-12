@@ -106,7 +106,10 @@ export function CollectionLinksPage() {
     enumerator_email: '',
     form_ids: [],
     expires_days: 30,
-    max_submissions: ''
+    max_submissions: '',
+    security_mode: 'standard', // 'standard' | 'device_locked' | 'pin_protected'
+    require_pin: false,
+    pin_code: ''
   });
 
   useEffect(() => {
