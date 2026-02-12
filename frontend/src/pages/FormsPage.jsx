@@ -65,6 +65,38 @@ import { toast } from 'sonner';
 const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
   const navigate = useNavigate();
   
+  const surveyUrl = `${window.location.origin}/survey/${form.id}`;
+  
+  const copyLink = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(surveyUrl);
+    toast.success('Survey link copied!');
+  };
+  
+  const shareViaWhatsApp = (e) => {
+    e.stopPropagation();
+    const message = `Please fill out this survey: ${form.name}\n\n${surveyUrl}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  };
+  
+  const shareViaEmail = (e) => {
+    e.stopPropagation();
+    const subject = `Survey: ${form.name}`;
+    const body = `Hi,\n\nPlease take a moment to fill out this survey:\n\n${surveyUrl}\n\nThank you!`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+  
+  const shareViaSMS = (e) => {
+    e.stopPropagation();
+    const message = `Please fill out this survey: ${surveyUrl}`;
+    window.location.href = `sms:?body=${encodeURIComponent(message)}`;
+  };
+  
+  const openSurvey = (e) => {
+    e.stopPropagation();
+    window.open(surveyUrl, '_blank');
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -101,7 +133,7 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="w-52">
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/forms/${form.id}/edit`); }}>
                   <Edit3 className="w-4 h-4 mr-2" />
                   Edit Form
@@ -118,10 +150,44 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
                   </DropdownMenuItem>
                 )}
                 {form.status === 'published' && (
-                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onShare(form.id, form.name); }}>
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share (Link, QR, Embed)
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger onClick={(e) => e.stopPropagation()}>
+                        <Share2 className="w-4 h-4 mr-2" />
+                        Share Survey
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent className="w-48">
+                          <DropdownMenuItem onClick={copyLink}>
+                            <Copy className="w-4 h-4 mr-2" />
+                            Copy Link
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onShare(form.id, form.name); }}>
+                            <QrCode className="w-4 h-4 mr-2" />
+                            QR Code & Embed...
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={shareViaWhatsApp}>
+                            <MessageCircle className="w-4 h-4 mr-2 text-green-500" />
+                            Share via WhatsApp
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={shareViaEmail}>
+                            <Mail className="w-4 h-4 mr-2 text-blue-500" />
+                            Share via Email
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={shareViaSMS}>
+                            <Smartphone className="w-4 h-4 mr-2 text-purple-500" />
+                            Share via SMS
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={openSurvey}>
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Open Survey
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+                  </>
                 )}
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDuplicate(form.id, form.name); }}>
                   <Copy className="w-4 h-4 mr-2" />
