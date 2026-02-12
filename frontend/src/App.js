@@ -73,6 +73,7 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   const { theme } = useUIStore();
+  const { showOnboarding, completeOnboarding, skipOnboarding } = useOnboarding();
 
   // Register service worker on mount
   useEffect(() => {
@@ -82,6 +83,14 @@ function App() {
   return (
     <div className={theme === 'dark' ? 'dark' : ''}>
       <BrowserRouter>
+        {/* Onboarding Wizard for new users */}
+        {showOnboarding && (
+          <OnboardingWizard
+            onComplete={completeOnboarding}
+            onSkip={skipOnboarding}
+          />
+        )}
+        
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={
