@@ -232,6 +232,7 @@ export function MobileFormPage() {
 
   const handleSubmit = async () => {
     if (!validateCurrentPage()) {
+      haptic.warning();
       toast.error('Please fill required fields');
       return;
     }
@@ -270,6 +271,7 @@ export function MobileFormPage() {
         });
         
         if (res.ok) {
+          haptic.success(); // Success haptic on submission!
           toast.success('Submitted successfully!');
           goBack();
         } else {
