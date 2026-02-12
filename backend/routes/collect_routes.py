@@ -509,10 +509,13 @@ async def bulk_import_enumerators(
     form_ids: str = None,  # Comma-separated form IDs
     expires_days: int = 30,
     max_submissions: Optional[int] = None,
+    security_mode: str = "standard",  # 'standard' | 'device_locked' | 'pin_protected'
+    pin_mode: str = "auto",  # 'auto' | 'shared' (for pin_protected mode)
+    shared_pin: Optional[str] = None,  # Used when pin_mode is 'shared'
     current_user: dict = Depends(get_current_user)
 ):
     """
-    Bulk import enumerators from CSV or Excel file.
+    Bulk import enumerators from CSV or Excel file with security options.
     
     Expected columns:
     - name (required): Enumerator name
@@ -522,6 +525,9 @@ async def bulk_import_enumerators(
     - form_ids: Comma-separated list of form IDs to assign
     - expires_days: Token validity in days (default: 30)
     - max_submissions: Max submissions per enumerator (optional)
+    - security_mode: 'standard', 'device_locked', or 'pin_protected'
+    - pin_mode: 'auto' (unique PINs) or 'shared' (same PIN for all)
+    - shared_pin: 4-digit PIN when pin_mode is 'shared'
     """
     db = request.app.state.db
     
@@ -546,6 +552,22 @@ async def bulk_import_enumerators(
             status_code=400,
             detail="Please provide at least one form ID"
         )
+    
+    # Validate security mode
+    valid_security_modes = ['standard', 'device_locked', 'pin_protected']
+    if security_mode not in valid_security_modes:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid security_mode. Must be one of: {', '.join(valid_security_modes)}"
+        )
+    
+    # Validate PIN settings
+    if security_mode == 'pin_protected':
+        if pin_mode == 'shared' and (not shared_pin or len(shared_pin) != 4):
+            raise HTTPException(
+                status_code=400,
+                detail="Shared PIN must be exactly 4 digits"
+            )
     
     # Read file content
     content = await file.read()
@@ -578,6 +600,11 @@ async def bulk_import_enumerators(
         now = datetime.now(timezone.utc)
         expires_at = now + timedelta(days=expires_days)
         
+        # Hash shared PIN once if applicable
+        shared_pin_hash = None
+        if security_mode == 'pin_protected' and pin_mode == 'shared' and shared_pin:
+            shared_pin_hash = hashlib.sha256(shared_pin.encode()).hexdigest()
+        
         for idx, row in df.iterrows():
             row_num = idx + 2  # Account for header and 0-indexing
             
@@ -600,6 +627,19 @@ async def bulk_import_enumerators(
             token = generate_token()
             token_hash = hashlib.sha256(token.encode()).hexdigest()
             
+            # Generate PIN if needed
+            pin_value = None
+            pin_hash_value = None
+            if security_mode == 'pin_protected':
+                if pin_mode == 'auto':
+                    # Generate unique 4-digit PIN
+                    pin_value = str(random.randint(1000, 9999))
+                    pin_hash_value = hashlib.sha256(pin_value.encode()).hexdigest()
+                else:
+                    # Use shared PIN
+                    pin_value = shared_pin
+                    pin_hash_value = shared_pin_hash
+            
             token_doc = {
                 "id": f"ct_{secrets.token_hex(8)}",
                 "token_hash": token_hash,
@@ -612,7 +652,11 @@ async def bulk_import_enumerators(
                 "submission_count": 0,
                 "max_submissions": max_submissions,
                 "is_active": True,
-                "source": "bulk_import"
+                "source": "bulk_import",
+                "security_mode": security_mode,
+                "pin_hash": pin_hash_value,
+                "locked_device_id": None,
+                "device_info": None
             }
             
             try:
@@ -623,7 +667,8 @@ async def bulk_import_enumerators(
                     "id": token_doc["id"],
                     "token": token,
                     "name": name,
-                    "email": email
+                    "email": email,
+                    "pin": pin_value  # Include PIN in response for distribution
                 })
             except Exception as e:
                 results["error_count"] += 1
