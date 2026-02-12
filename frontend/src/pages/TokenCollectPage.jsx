@@ -421,6 +421,152 @@ export function TokenCollectPage() {
       </div>
     );
   }
+  
+  // Security Verification Screen (PIN Entry / Device Lock)
+  if (needsVerification && !isVerified) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="w-full max-w-md"
+        >
+          <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent className="pt-8 pb-8">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+                  {securityMode === 'pin_protected' ? (
+                    <Key className="w-10 h-10 text-primary" />
+                  ) : (
+                    <Smartphone className="w-10 h-10 text-primary" />
+                  )}
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">
+                  {securityMode === 'pin_protected' ? 'Enter PIN' : 'Device Registration'}
+                </h2>
+                <p className="text-slate-400 text-sm">
+                  {securityMode === 'pin_protected' 
+                    ? 'Enter the 4-digit PIN provided by your supervisor'
+                    : 'This link will be locked to your device for security'
+                  }
+                </p>
+              </div>
+              
+              {/* Enumerator Info */}
+              {tokenData && (
+                <div className="mb-6 p-3 bg-slate-700/50 rounded-lg border border-slate-600">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                      <User className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">{tokenData.enumerator_name}</p>
+                      <p className="text-slate-400 text-xs">{tokenData.forms?.length || 0} forms assigned</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* PIN Entry (for PIN mode) */}
+              {securityMode === 'pin_protected' && (
+                <div className="mb-6">
+                  <div className="flex justify-center gap-3 mb-4">
+                    {[0, 1, 2, 3].map((index) => (
+                      <input
+                        key={index}
+                        ref={pinInputRefs[index]}
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={1}
+                        value={pin[index]}
+                        onChange={(e) => handlePinChange(index, e.target.value)}
+                        onKeyDown={(e) => handlePinKeyDown(index, e)}
+                        className={`w-14 h-14 text-center text-2xl font-bold rounded-lg border-2 bg-slate-700/50 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary ${
+                          pinError ? 'border-red-500' : 'border-slate-600 focus:border-primary'
+                        }`}
+                        data-testid={`pin-input-${index}`}
+                      />
+                    ))}
+                  </div>
+                  {pinError && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-400 text-sm text-center"
+                    >
+                      {pinError}
+                    </motion.p>
+                  )}
+                </div>
+              )}
+              
+              {/* Device Lock Notice (for device_locked mode) */}
+              {securityMode === 'device_locked' && (
+                <div className="mb-6 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+                  <div className="flex gap-3">
+                    <Lock className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-orange-400 text-sm font-medium">Device Lock Active</p>
+                      <p className="text-slate-400 text-xs mt-1">
+                        Once you continue, this link will only work on this device. 
+                        You won't be able to access it from another phone or computer.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Security Badge */}
+              <div className="flex justify-center mb-6">
+                <Badge 
+                  variant="outline" 
+                  className={`${
+                    securityMode === 'pin_protected' 
+                      ? 'border-green-500/50 text-green-400' 
+                      : 'border-orange-500/50 text-orange-400'
+                  }`}
+                >
+                  <ShieldCheck className="w-3 h-3 mr-1" />
+                  {securityMode === 'pin_protected' ? 'PIN Protected' : 'Device Locked'}
+                </Badge>
+              </div>
+              
+              {/* Submit Button */}
+              <Button 
+                className="w-full" 
+                size="lg"
+                onClick={handleVerification}
+                disabled={verifying || (securityMode === 'pin_protected' && pin.join('').length !== 4)}
+                data-testid="verify-access-btn"
+              >
+                {verifying ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck className="w-4 h-4 mr-2" />
+                    {securityMode === 'pin_protected' ? 'Verify PIN' : 'Register Device'}
+                  </>
+                )}
+              </Button>
+              
+              {/* Help Text */}
+              <p className="text-slate-500 text-xs text-center mt-4">
+                {securityMode === 'pin_protected' 
+                  ? "Didn't receive a PIN? Contact your supervisor."
+                  : "Having trouble? Contact your supervisor for a new link."
+                }
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
 
   // Main Interface
   return (
