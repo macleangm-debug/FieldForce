@@ -77,6 +77,7 @@ from routes.dataset_routes import router as dataset_router
 from routes.cawi_routes import router as cawi_router
 from routes.quality_ai_routes import router as quality_ai_router
 from routes.billing_routes import router as billing_router
+from routes.dashboard_routes import router as dashboard_router
 
 # Include core route modules
 api_router.include_router(auth_router)
