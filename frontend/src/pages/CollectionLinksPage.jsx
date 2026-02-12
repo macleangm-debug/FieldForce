@@ -116,6 +116,13 @@ export function CollectionLinksPage() {
           // Filter to only published forms
           setForms(data.filter(f => f.status === 'published'));
         }
+
+        // Load projects
+        const projectsRes = await fetch(`${API_URL}/api/projects?org_id=${currentOrg.id}`, { headers });
+        if (projectsRes.ok) {
+          const projectsData = await projectsRes.json();
+          setProjects(projectsData);
+        }
       }
     } catch (error) {
       console.error('Failed to load data:', error);
