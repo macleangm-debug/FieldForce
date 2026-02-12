@@ -304,31 +304,6 @@ export function TokenCollectPage() {
       {/* Forms List */}
       <main className="p-4 space-y-4">
         <h2 className="text-white font-medium">Available Forms</h2>
-            <div className="flex items-center gap-2 text-amber-400">
-              <CloudOff className="w-4 h-4" />
-              <span className="text-sm">{pendingCount} pending</span>
-            </div>
-            <Button 
-              size="sm" 
-              variant="outline" 
-              onClick={handleSync}
-              disabled={syncing || !isOnline}
-              className="border-amber-500 text-amber-400 hover:bg-amber-500/20"
-            >
-              {syncing ? (
-                <RefreshCw className="w-4 h-4 animate-spin mr-1" />
-              ) : (
-                <Cloud className="w-4 h-4 mr-1" />
-              )}
-              Sync
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Forms List */}
-      <main className="p-4 space-y-4">
-        <h2 className="text-white font-medium">Available Forms</h2>
 
         {forms.length === 0 ? (
           <Card className="bg-slate-800/50 border-slate-700">
@@ -376,8 +351,11 @@ export function TokenCollectPage() {
         )}
       </main>
 
+      {/* Floating Sync Status */}
+      <FloatingSyncStatus isOnline={isOnline} />
+
       {/* Bottom Safe Area */}
-      <div className="h-20" />
+      <div className="h-24" />
     </div>
   );
 }
