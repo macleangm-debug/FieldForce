@@ -142,7 +142,8 @@ export function CollectPage() {
       
       if (res.ok) {
         const data = await res.json();
-        login(data.token, data.user);
+        const token = data.access_token || data.token;
+        login(token, data.user);
         toast.success('Welcome back!');
       } else {
         const error = await res.json();
