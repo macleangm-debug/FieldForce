@@ -89,6 +89,9 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
 - [x] Bulk Import with Security Modes - supports Standard, Device Locked, PIN Protected
 - [x] PIN options for bulk import - Auto-generate unique PINs or Shared PIN
 - [x] Distribution options after bulk import - Export CSV, Email All, Copy for SMS
+- [x] **Non-blocking Onboarding Wizard** - Redesigned as floating card in bottom-right corner (Feb 12)
+- [x] **Button Rename** - "Create Link" → "Create Single Link", "Import" → "Bulk Links" (Feb 12)
+- [x] **CSV/Excel Support Verified** - Bulk import accepts .csv, .xlsx, .xls files (Feb 12)
 
 ## Backlog
 - [ ] Custom message templates for sharing
@@ -96,6 +99,7 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
 - [ ] Auto-open single-form surveys
 - [ ] Full light/dark theme consistency
 - [ ] Component refactoring for InteractiveDemoPage
+- [ ] Component refactoring for CollectionLinksPage.jsx (split into CreateLinkModal, BulkImportModal)
 
 ## Test Credentials
 - Email: `demo@fieldforce.io`
