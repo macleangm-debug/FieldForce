@@ -228,7 +228,126 @@ async def verify_collection_token(
             for f in forms
         ],
         "submission_count": token_doc.get("submission_count", 0),
-        "max_submissions": token_doc.get("max_submissions")
+        "max_submissions": token_doc.get("max_submissions"),
+        # Security info for frontend
+        "security_mode": token_doc.get("security_mode", "standard"),
+        "require_pin": token_doc.get("require_pin", False),
+        "device_locked": token_doc.get("locked_device_id") is not None,
+        "token_id": token_doc["id"]
+    }
+
+
+class DeviceRegistration(BaseModel):
+    """Device registration data from frontend"""
+    device_id: str  # Generated on frontend, stored in localStorage
+    device_type: str  # 'mobile' | 'tablet' | 'desktop'
+    browser: str
+    os: str
+    screen_width: int
+    screen_height: int
+    user_agent: str
+    pin: Optional[str] = None
+
+
+@router.post("/register-device/{token}")
+async def register_device(
+    request: Request,
+    token: str,
+    data: DeviceRegistration
+):
+    """
+    Register a device for a collection token.
+    Called when enumerator first opens the link.
+    """
+    db = request.app.state.db
+    
+    # Verify token
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    token_doc = await db.collection_tokens.find_one(
+        {"token_hash": token_hash, "is_active": True},
+        {"_id": 0}
+    )
+    
+    if not token_doc:
+        raise HTTPException(status_code=404, detail="Invalid token")
+    
+    security_mode = token_doc.get("security_mode", "standard")
+    
+    # Check PIN if required
+    if security_mode == "pin_protected" or token_doc.get("require_pin"):
+        if not data.pin:
+            raise HTTPException(status_code=403, detail="PIN required")
+        
+        pin_hash = hashlib.sha256(data.pin.encode()).hexdigest()
+        if pin_hash != token_doc.get("pin_hash"):
+            raise HTTPException(status_code=403, detail="Invalid PIN")
+    
+    # Check if device is already locked to another device
+    if security_mode in ["device_locked", "pin_protected"]:
+        locked_device = token_doc.get("locked_device_id")
+        if locked_device and locked_device != data.device_id:
+            raise HTTPException(
+                status_code=403, 
+                detail="This link is locked to another device. Contact your supervisor."
+            )
+    
+    # Register/update device info
+    now = datetime.now(timezone.utc)
+    device_info = {
+        "device_id": data.device_id,
+        "device_type": data.device_type,
+        "browser": data.browser,
+        "os": data.os,
+        "screen": f"{data.screen_width}x{data.screen_height}",
+        "user_agent": data.user_agent,
+        "registered_at": now.isoformat(),
+        "last_seen": now.isoformat()
+    }
+    
+    update_data = {
+        "device_info": device_info,
+        "device_registered_at": now.isoformat()
+    }
+    
+    # Lock device if mode requires it
+    if security_mode in ["device_locked", "pin_protected"]:
+        update_data["locked_device_id"] = data.device_id
+    
+    await db.collection_tokens.update_one(
+        {"token_hash": token_hash},
+        {"$set": update_data}
+    )
+    
+    # Also add to collection_devices for the Devices page
+    device_doc = {
+        "id": f"dev_{secrets.token_hex(8)}",
+        "device_id": data.device_id,
+        "token_id": token_doc["id"],
+        "enumerator_name": token_doc["enumerator_name"],
+        "device_type": data.device_type,
+        "device_name": f"{data.browser} on {data.os}",
+        "os_name": data.os,
+        "browser": data.browser,
+        "screen": f"{data.screen_width}x{data.screen_height}",
+        "user_agent": data.user_agent,
+        "status": "active",
+        "registered_at": now.isoformat(),
+        "last_seen": now.isoformat(),
+        "created_by": token_doc.get("created_by"),
+        "source": "token_collection"
+    }
+    
+    # Upsert - update if exists, insert if not
+    await db.collection_devices.update_one(
+        {"device_id": data.device_id, "token_id": token_doc["id"]},
+        {"$set": device_doc},
+        upsert=True
+    )
+    
+    return {
+        "success": True,
+        "message": "Device registered successfully",
+        "device_locked": security_mode in ["device_locked", "pin_protected"]
     }
 
 
