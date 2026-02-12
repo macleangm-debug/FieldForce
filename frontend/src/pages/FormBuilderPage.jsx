@@ -1012,6 +1012,30 @@ export function FormBuilderPage() {
           open={showLogicVisualization}
           onClose={() => setShowLogicVisualization(false)}
         />
+
+        {/* Survey Settings Sidebar */}
+        <SurveySettingsSidebar
+          isOpen={showSurveySettings}
+          onClose={() => setShowSurveySettings(false)}
+          settings={{
+            name: formName,
+            description: formDescription,
+            ...surveySettings
+          }}
+          onSettingsChange={(newSettings) => {
+            setSurveySettings(newSettings);
+            if (newSettings.name !== formName) setFormName(newSettings.name);
+            if (newSettings.description !== formDescription) setFormDescription(newSettings.description);
+          }}
+        />
+
+        {/* Share Survey Dialog */}
+        <ShareSurveyDialog
+          isOpen={showShareDialog}
+          onClose={() => setShowShareDialog(false)}
+          formId={formId}
+          formName={formName}
+        />
       </div>
     </DashboardLayout>
   );
