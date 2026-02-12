@@ -506,3 +506,53 @@ async def download_import_template():
         ],
         "instructions": "Upload a CSV or Excel file with 'name' column (required) and optional 'email' column."
     }
+
+
+
+class ShortenURLRequest(BaseModel):
+    """Request to shorten a URL"""
+    url: str
+
+
+class ShortenURLResponse(BaseModel):
+    """Response with shortened URL"""
+    original_url: str
+    short_url: Optional[str]
+    success: bool
+    error: Optional[str] = None
+
+
+@router.post("/shorten-url", response_model=ShortenURLResponse)
+async def shorten_collection_url(
+    data: ShortenURLRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Shorten a collection link URL using TinyURL.
+    
+    This is useful for creating shorter, more shareable links
+    for WhatsApp, SMS, or other channels with character limits.
+    """
+    original_url = data.url.strip()
+    
+    if not original_url.startswith(("http://", "https://")):
+        raise HTTPException(
+            status_code=400,
+            detail="URL must start with http:// or https://"
+        )
+    
+    short_url = await shorten_url(original_url)
+    
+    if short_url:
+        return ShortenURLResponse(
+            original_url=original_url,
+            short_url=short_url,
+            success=True
+        )
+    else:
+        return ShortenURLResponse(
+            original_url=original_url,
+            short_url=None,
+            success=False,
+            error="Failed to shorten URL. The link shortening service may be temporarily unavailable."
+        )
