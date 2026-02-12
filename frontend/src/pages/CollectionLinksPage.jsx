@@ -401,6 +401,7 @@ export function CollectionLinksPage() {
                 <TableHeader>
                   <TableRow className="border-slate-700">
                     <TableHead className="text-slate-400">Enumerator</TableHead>
+                    <TableHead className="text-slate-400">Project</TableHead>
                     <TableHead className="text-slate-400">Forms</TableHead>
                     <TableHead className="text-slate-400">Submissions</TableHead>
                     <TableHead className="text-slate-400">Expires</TableHead>
@@ -412,6 +413,8 @@ export function CollectionLinksPage() {
                   {tokens.map((tokenData) => {
                     const expired = isExpired(tokenData.expires_at);
                     const active = tokenData.is_active && !expired;
+                    const tokenProjects = getProjectsForToken(tokenData.form_ids);
+                    const hasStoredToken = !!getTokenLink(tokenData.id);
                     
                     return (
                       <TableRow key={tokenData.id} className="border-slate-700">
@@ -420,6 +423,20 @@ export function CollectionLinksPage() {
                             <p className="text-white font-medium">{tokenData.enumerator_name}</p>
                             {tokenData.enumerator_email && (
                               <p className="text-slate-400 text-sm">{tokenData.enumerator_email}</p>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            {tokenProjects.length > 0 ? (
+                              tokenProjects.map((proj, idx) => (
+                                <div key={idx} className="flex items-center gap-1.5">
+                                  <Folder className="w-3 h-3 text-slate-400" />
+                                  <span className="text-slate-300 text-sm">{proj}</span>
+                                </div>
+                              ))
+                            ) : (
+                              <span className="text-slate-500 text-sm">-</span>
                             )}
                           </div>
                         </TableCell>
@@ -451,29 +468,71 @@ export function CollectionLinksPage() {
                         <TableCell className="text-right">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <Share2 className="w-4 h-4" />
+                              <Button variant="ghost" size="icon" data-testid={`actions-menu-${tokenData.id}`}>
+                                <MoreVertical className="w-4 h-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700">
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  // Note: We don't have the actual token stored, only the hash
-                                  // This would need the token to be retrieved differently
-                                  toast.info('Token was only shown at creation time for security');
-                                }}
-                                className="text-slate-200"
-                              >
-                                <Copy className="w-4 h-4 mr-2" />
-                                Copy Link
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleRevokeToken(tokenData.id)}
-                                className="text-red-400"
-                              >
-                                <XCircle className="w-4 h-4 mr-2" />
-                                Revoke Link
-                              </DropdownMenuItem>
+                            <DropdownMenuContent align="end" className="w-48">
+                              {hasStoredToken && active && (
+                                <>
+                                  <DropdownMenuItem
+                                    onClick={() => handleShare(tokenData)}
+                                    className="cursor-pointer"
+                                  >
+                                    <Share2 className="w-4 h-4 mr-2" />
+                                    Share Link...
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => copyToClipboard(getTokenLink(tokenData.id))}
+                                    className="cursor-pointer"
+                                  >
+                                    <Copy className="w-4 h-4 mr-2" />
+                                    Copy Link
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => shareViaWhatsApp(getTokenLink(tokenData.id), tokenData.enumerator_name)}
+                                    className="cursor-pointer"
+                                  >
+                                    <MessageCircle className="w-4 h-4 mr-2" />
+                                    Share via WhatsApp
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => shareViaEmail(getTokenLink(tokenData.id), tokenData.enumerator_name, tokenData.enumerator_email)}
+                                    className="cursor-pointer"
+                                  >
+                                    <Mail className="w-4 h-4 mr-2" />
+                                    Share via Email
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => shareViaSMS(getTokenLink(tokenData.id), tokenData.enumerator_name)}
+                                    className="cursor-pointer"
+                                  >
+                                    <Smartphone className="w-4 h-4 mr-2" />
+                                    Share via SMS
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                </>
+                              )}
+                              {!hasStoredToken && active && (
+                                <DropdownMenuItem disabled className="text-slate-500">
+                                  <XCircle className="w-4 h-4 mr-2" />
+                                  Link not available
+                                </DropdownMenuItem>
+                              )}
+                              {active && (
+                                <DropdownMenuItem
+                                  onClick={() => handleRevokeToken(tokenData.id)}
+                                  className="text-red-400 cursor-pointer focus:text-red-400"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" />
+                                  Revoke Link
+                                </DropdownMenuItem>
+                              )}
+                              {!active && (
+                                <DropdownMenuItem disabled className="text-slate-500">
+                                  Link is {expired ? 'expired' : 'revoked'}
+                                </DropdownMenuItem>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
