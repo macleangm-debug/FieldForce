@@ -91,6 +91,12 @@ export function CollectPage() {
       setShowLogin(false);
       loadForms();
       loadPendingCount();
+      
+      // Show offline explainer first time
+      const hasSeenExplainer = localStorage.getItem('fieldforce_seen_offline_explainer');
+      if (!hasSeenExplainer) {
+        setShowOfflineExplainer(true);
+      }
     }
   }, [isAuthenticated]);
 
