@@ -503,23 +503,94 @@ export function CollectionLinksPage() {
   };
   
   // Open email client with all enumerator links
-  const sendBulkEmail = () => {
+  // Email service state
+  const [emailServiceStatus, setEmailServiceStatus] = useState(null);
+  const [sendingEmails, setSendingEmails] = useState(false);
+
+  // Check email service status on mount
+  useEffect(() => {
+    checkEmailServiceStatus();
+  }, []);
+
+  const checkEmailServiceStatus = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/email/status`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setEmailServiceStatus(data);
+      }
+    } catch (error) {
+      console.error('Failed to check email status:', error);
+    }
+  };
+
+  const sendBulkEmail = async () => {
     if (!importResults?.created_tokens?.length) return;
     
-    // Note: This opens default email client. For actual bulk email, need SendGrid/etc
-    const subject = 'FieldForce Data Collection Links';
-    let body = 'Dear Team,\n\nHere are the data collection links:\n\n';
+    // Check if email service is configured
+    if (!emailServiceStatus?.configured) {
+      // Fallback to mailto
+      const subject = 'FieldForce Data Collection Links';
+      let body = 'Dear Team,\n\nHere are the data collection links:\n\n';
+      
+      importResults.created_tokens.forEach(t => {
+        const link = `${window.location.origin}/collect/t/${t.token}`;
+        body += `${t.name}: ${link}`;
+        if (t.pin) body += ` (PIN: ${t.pin})`;
+        body += '\n';
+      });
+      
+      body += '\nOpen your link on your phone to start collecting data.\n\nBest regards';
+      
+      window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      toast.info('Email service not configured. Opening default email client instead.');
+      return;
+    }
+
+    // Use Resend API for bulk email
+    setSendingEmails(true);
     
-    importResults.created_tokens.forEach(t => {
-      const link = `${window.location.origin}/collect/t/${t.token}`;
-      body += `${t.name}: ${link}`;
-      if (t.pin) body += ` (PIN: ${t.pin})`;
-      body += '\n';
-    });
-    
-    body += '\nOpen your link on your phone to start collecting data.\n\nBest regards';
-    
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    try {
+      const recipients = importResults.created_tokens
+        .filter(t => t.email) // Only send to tokens with email addresses
+        .map(t => ({
+          email: t.email,
+          name: t.name,
+          link: `${window.location.origin}/collect/t/${t.token}`,
+          pin: t.pin || null,
+          expiry: t.expires_at ? new Date(t.expires_at).toLocaleDateString() : null
+        }));
+
+      if (recipients.length === 0) {
+        toast.error('No email addresses found. Add email addresses during import.');
+        setSendingEmails(false);
+        return;
+      }
+
+      const res = await fetch(`${API_URL}/api/email/send-bulk`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recipients })
+      });
+
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        toast.success(data.message);
+      } else {
+        toast.error(data.detail || data.message || 'Failed to send emails');
+      }
+    } catch (error) {
+      console.error('Failed to send bulk emails:', error);
+      toast.error('Failed to send emails. Please try again.');
+    } finally {
+      setSendingEmails(false);
+    }
   };
   
   // Copy all links to clipboard for bulk SMS
