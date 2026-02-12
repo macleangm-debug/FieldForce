@@ -405,9 +405,76 @@ export function CollectionLinksPage() {
     setImportExpiresDays(30);
     setImportMaxSubmissions('');
     setImportResults(null);
+    setImportSecurityMode('standard');
+    setImportPinMode('auto');
+    setImportSharedPin('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+  
+  // Export import results as CSV with links and PINs
+  const exportImportResultsCSV = () => {
+    if (!importResults?.created_tokens?.length) return;
+    
+    const hasPin = importSecurityMode === 'pin_protected';
+    const headers = hasPin 
+      ? ['name', 'email', 'link', 'pin', 'security_mode']
+      : ['name', 'email', 'link', 'security_mode'];
+    
+    const rows = importResults.created_tokens.map(t => {
+      const link = `${window.location.origin}/collect/t/${t.token}`;
+      const base = [t.name, t.email || '', link];
+      if (hasPin) {
+        base.push(t.pin || '');
+      }
+      base.push(importSecurityMode);
+      return base.join(',');
+    });
+    
+    const csvContent = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `enumerator_links_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    toast.success('Links exported to CSV');
+  };
+  
+  // Open email client with all enumerator links
+  const sendBulkEmail = () => {
+    if (!importResults?.created_tokens?.length) return;
+    
+    // Note: This opens default email client. For actual bulk email, need SendGrid/etc
+    const subject = 'FieldForce Data Collection Links';
+    let body = 'Dear Team,\n\nHere are the data collection links:\n\n';
+    
+    importResults.created_tokens.forEach(t => {
+      const link = `${window.location.origin}/collect/t/${t.token}`;
+      body += `${t.name}: ${link}`;
+      if (t.pin) body += ` (PIN: ${t.pin})`;
+      body += '\n';
+    });
+    
+    body += '\nOpen your link on your phone to start collecting data.\n\nBest regards';
+    
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+  
+  // Copy all links to clipboard for bulk SMS
+  const copyAllLinksForSMS = () => {
+    if (!importResults?.created_tokens?.length) return;
+    
+    const hasPin = importSecurityMode === 'pin_protected';
+    const messages = importResults.created_tokens.map(t => {
+      const link = `${window.location.origin}/collect/t/${t.token}`;
+      let msg = `${t.name}: ${link}`;
+      if (hasPin && t.pin) msg += ` PIN:${t.pin}`;
+      return msg;
+    });
+    
+    navigator.clipboard.writeText(messages.join('\n\n'));
+    toast.success(`${importResults.created_tokens.length} links copied! Paste into your SMS app.`);
   };
 
   const shortenLink = async (url) => {
