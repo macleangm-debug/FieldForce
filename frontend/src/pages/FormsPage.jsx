@@ -279,6 +279,27 @@ export function FormsPage() {
     }
   };
 
+  const handleShareLink = (formId, formName) => {
+    const surveyUrl = `${window.location.origin}/survey/${formId}`;
+    navigator.clipboard.writeText(surveyUrl).then(() => {
+      toast.success(
+        <div>
+          <p className="font-medium">Survey link copied!</p>
+          <p className="text-xs text-muted-foreground mt-1 break-all">{surveyUrl}</p>
+        </div>
+      );
+    }).catch(() => {
+      // Fallback: show the link in a prompt
+      toast.info(
+        <div>
+          <p className="font-medium">Share this link with data collectors:</p>
+          <p className="text-xs bg-muted p-2 rounded mt-2 break-all font-mono">{surveyUrl}</p>
+        </div>,
+        { duration: 10000 }
+      );
+    });
+  };
+
   const filteredForms = forms.filter(f => {
     const matchesSearch = f.name.toLowerCase().includes(search.toLowerCase()) ||
       (f.description && f.description.toLowerCase().includes(search.toLowerCase()));
