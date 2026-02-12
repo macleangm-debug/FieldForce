@@ -9,6 +9,7 @@ import io
 import pandas as pd
 
 from auth import get_current_user
+from utils.url_shortener import shorten_url
 
 router = APIRouter(prefix="/collect", tags=["Data Collection"])
 
