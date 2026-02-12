@@ -1,10 +1,12 @@
 """FieldForce - Data Collection Routes for Enumerators"""
-from fastapi import APIRouter, HTTPException, status, Request, Depends
+from fastapi import APIRouter, HTTPException, status, Request, Depends, UploadFile, File
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone, timedelta
 from pydantic import BaseModel
 import secrets
 import hashlib
+import io
+import pandas as pd
 
 from auth import get_current_user
 
