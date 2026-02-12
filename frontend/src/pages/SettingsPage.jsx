@@ -159,6 +159,119 @@ export function SettingsPage() {
     { id: '2', name: 'iPhone 14', type: 'mobile', location: 'Nairobi, Kenya', lastActive: new Date(Date.now() - 86400000), current: false },
   ]);
 
+  // Message templates state
+  const [templates, setTemplates] = useState([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(false);
+  const [showTemplateEditor, setShowTemplateEditor] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState(null);
+  const [templateForm, setTemplateForm] = useState({
+    name: '',
+    type: 'whatsapp',
+    subject: '',
+    body: '',
+    scope: 'user'
+  });
+
+  // Load templates when templates section is active
+  React.useEffect(() => {
+    if (activeSection === 'templates') {
+      loadTemplates();
+    }
+  }, [activeSection]);
+
+  const loadTemplates = async () => {
+    setLoadingTemplates(true);
+    try {
+      const res = await fetch(`${API_URL}/api/message-templates`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTemplates(data);
+      }
+    } catch (error) {
+      console.error('Failed to load templates:', error);
+      toast.error('Failed to load templates');
+    } finally {
+      setLoadingTemplates(false);
+    }
+  };
+
+  const handleSaveTemplate = async () => {
+    if (!templateForm.name.trim() || !templateForm.body.trim()) {
+      toast.error('Please fill in name and message body');
+      return;
+    }
+
+    try {
+      const url = editingTemplate 
+        ? `${API_URL}/api/message-templates/${editingTemplate.id}`
+        : `${API_URL}/api/message-templates`;
+      
+      const method = editingTemplate ? 'PUT' : 'POST';
+      
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(templateForm)
+      });
+
+      if (res.ok) {
+        toast.success(editingTemplate ? 'Template updated' : 'Template created');
+        setShowTemplateEditor(false);
+        setEditingTemplate(null);
+        setTemplateForm({ name: '', type: 'whatsapp', subject: '', body: '', scope: 'user' });
+        loadTemplates();
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to save template');
+      }
+    } catch (error) {
+      toast.error('Failed to save template');
+    }
+  };
+
+  const handleDeleteTemplate = async (templateId) => {
+    if (!confirm('Are you sure you want to delete this template?')) return;
+
+    try {
+      const res = await fetch(`${API_URL}/api/message-templates/${templateId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (res.ok) {
+        toast.success('Template deleted');
+        loadTemplates();
+      } else {
+        const error = await res.json();
+        toast.error(error.detail || 'Failed to delete template');
+      }
+    } catch (error) {
+      toast.error('Failed to delete template');
+    }
+  };
+
+  const openTemplateEditor = (template = null) => {
+    if (template) {
+      setEditingTemplate(template);
+      setTemplateForm({
+        name: template.name,
+        type: template.type,
+        subject: template.subject || '',
+        body: template.body,
+        scope: template.scope
+      });
+    } else {
+      setEditingTemplate(null);
+      setTemplateForm({ name: '', type: 'whatsapp', subject: '', body: '', scope: 'user' });
+    }
+    setShowTemplateEditor(true);
+  };
+
   // Handlers
   const handleSave = async () => {
     setSaving(true);
