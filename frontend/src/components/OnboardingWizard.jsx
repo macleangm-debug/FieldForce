@@ -414,38 +414,33 @@ export function OnboardingWizard({ onComplete, onSkip }) {
  */
 function WelcomeStep({ user, onNext }) {
   return (
-    <div className="text-center space-y-6">
-      <div className="space-y-4">
-        <p className="text-lg text-slate-300">
-          Hi <span className="text-primary font-semibold">{user?.name || 'there'}</span>! 👋
-        </p>
-        <p className="text-slate-400">
-          Let's set up your workspace in just a few steps. You'll be collecting data in no time!
-        </p>
-      </div>
+    <div className="space-y-4">
+      <p className="text-slate-300 text-sm">
+        Hi <span className="text-primary font-semibold">{user?.name || 'there'}</span>! 👋 Let's set up your workspace in a few quick steps.
+      </p>
 
-      <div className="grid grid-cols-3 gap-4 py-6">
+      <div className="flex justify-center gap-3 py-2">
         {[
-          { icon: Building2, label: 'Organization' },
+          { icon: Building2, label: 'Org' },
           { icon: FolderKanban, label: 'Project' },
-          { icon: FileText, label: 'Forms' },
+          { icon: FileText, label: 'Form' },
         ].map((item, i) => (
           <motion.div
             key={item.label}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 + i * 0.1 }}
-            className="flex flex-col items-center gap-2"
+            transition={{ delay: 0.2 + i * 0.1 }}
+            className="flex flex-col items-center gap-1"
           >
-            <div className="p-3 rounded-xl bg-slate-800/50 border border-slate-700">
-              <item.icon className="w-5 h-5 text-slate-400" />
+            <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700">
+              <item.icon className="w-4 h-4 text-slate-400" />
             </div>
             <span className="text-xs text-slate-500">{item.label}</span>
           </motion.div>
         ))}
       </div>
 
-      <Button onClick={onNext} size="lg" className="w-full">
+      <Button onClick={onNext} className="w-full">
         Let's Get Started
         <ArrowRight className="w-4 h-4 ml-2" />
       </Button>
@@ -458,46 +453,44 @@ function WelcomeStep({ user, onNext }) {
  */
 function OrganizationStep({ data, onChange, onNext, onSkip, loading }) {
   return (
-    <div className="space-y-6">
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardContent className="pt-6 space-y-4">
-          <div className="space-y-2">
-            <Label className="text-white">Organization Name *</Label>
-            <Input
-              value={data.name}
-              onChange={(e) => onChange({ ...data, name: e.target.value })}
-              placeholder="Acme Research Ltd."
-              className="bg-slate-700 border-slate-600 text-white"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label className="text-white">Description (Optional)</Label>
-            <Textarea
-              value={data.description}
-              onChange={(e) => onChange({ ...data, description: e.target.value })}
-              placeholder="What does your organization do?"
-              className="bg-slate-700 border-slate-600 text-white"
-              rows={3}
-            />
-          </div>
-        </CardContent>
-      </Card>
+    <div className="space-y-3">
+      <div className="space-y-2">
+        <Label className="text-white text-sm">Organization Name *</Label>
+        <Input
+          value={data.name}
+          onChange={(e) => onChange({ ...data, name: e.target.value })}
+          placeholder="Acme Research Ltd."
+          className="bg-slate-800 border-slate-700 text-white h-9"
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label className="text-white text-sm">Description (Optional)</Label>
+        <Textarea
+          value={data.description}
+          onChange={(e) => onChange({ ...data, description: e.target.value })}
+          placeholder="What does your organization do?"
+          className="bg-slate-800 border-slate-700 text-white"
+          rows={2}
+        />
+      </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-2 pt-1">
         <Button
           variant="ghost"
+          size="sm"
           onClick={onSkip}
           className="flex-1 text-slate-400"
         >
-          Skip for now
+          Skip
         </Button>
         <Button
+          size="sm"
           onClick={onNext}
           disabled={loading || !data.name.trim()}
           className="flex-1"
         >
-          {loading ? 'Creating...' : 'Create Organization'}
+          {loading ? 'Creating...' : 'Create'}
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
@@ -510,53 +503,51 @@ function OrganizationStep({ data, onChange, onNext, onSkip, loading }) {
  */
 function ProjectStep({ data, onChange, orgName, onNext, onSkip, loading }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {orgName && (
-        <div className="flex items-center gap-2 text-sm text-slate-400">
-          <Building2 className="w-4 h-4" />
-          <span>Creating project in <span className="text-white">{orgName}</span></span>
+        <div className="flex items-center gap-2 text-xs text-slate-400">
+          <Building2 className="w-3 h-3" />
+          <span>In <span className="text-white">{orgName}</span></span>
         </div>
       )}
 
-      <Card className="bg-slate-800/50 border-slate-700">
-        <CardContent className="pt-6 space-y-4">
-          <div className="space-y-2">
-            <Label className="text-white">Project Name *</Label>
-            <Input
-              value={data.name}
-              onChange={(e) => onChange({ ...data, name: e.target.value })}
-              placeholder="Household Survey 2025"
-              className="bg-slate-700 border-slate-600 text-white"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label className="text-white">Description (Optional)</Label>
-            <Textarea
-              value={data.description}
-              onChange={(e) => onChange({ ...data, description: e.target.value })}
-              placeholder="What data will you collect?"
-              className="bg-slate-700 border-slate-600 text-white"
-              rows={3}
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="space-y-2">
+        <Label className="text-white text-sm">Project Name *</Label>
+        <Input
+          value={data.name}
+          onChange={(e) => onChange({ ...data, name: e.target.value })}
+          placeholder="Household Survey 2025"
+          className="bg-slate-800 border-slate-700 text-white h-9"
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label className="text-white text-sm">Description (Optional)</Label>
+        <Textarea
+          value={data.description}
+          onChange={(e) => onChange({ ...data, description: e.target.value })}
+          placeholder="What data will you collect?"
+          className="bg-slate-800 border-slate-700 text-white"
+          rows={2}
+        />
+      </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-2 pt-1">
         <Button
           variant="ghost"
+          size="sm"
           onClick={onSkip}
           className="flex-1 text-slate-400"
         >
-          Skip for now
+          Skip
         </Button>
         <Button
+          size="sm"
           onClick={onNext}
           disabled={loading || !data.name.trim()}
           className="flex-1"
         >
-          {loading ? 'Creating...' : 'Create Project'}
+          {loading ? 'Creating...' : 'Create'}
           <ChevronRight className="w-4 h-4 ml-1" />
         </Button>
       </div>
@@ -573,46 +564,46 @@ function FormChoiceStep({ selected, onSelect }) {
       id: 'scratch',
       icon: Plus,
       title: 'Start from scratch',
-      description: 'Build a custom form with our drag-and-drop builder',
+      description: 'Build with drag-and-drop',
       color: 'from-primary to-cyan-500',
     },
     {
       id: 'template',
       icon: FileText,
       title: 'Use a template',
-      description: 'Start with a pre-built survey template',
+      description: 'Pre-built survey template',
       color: 'from-violet-500 to-purple-500',
     },
     {
       id: 'skip',
       icon: ArrowRight,
-      title: 'I\'ll do this later',
-      description: 'Skip and explore the dashboard first',
+      title: 'Do this later',
+      description: 'Explore dashboard first',
       color: 'from-slate-600 to-slate-700',
     },
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {options.map((option) => (
         <motion.button
           key={option.id}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
           onClick={() => onSelect(option.id)}
-          className={`w-full p-4 rounded-xl border transition-all text-left ${
+          className={`w-full p-3 rounded-lg border transition-all text-left ${
             selected === option.id
               ? 'border-primary bg-primary/10'
               : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
           }`}
         >
-          <div className="flex items-center gap-4">
-            <div className={`p-3 rounded-lg bg-gradient-to-br ${option.color}`}>
-              <option.icon className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg bg-gradient-to-br ${option.color}`}>
+              <option.icon className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h3 className="font-medium text-white">{option.title}</h3>
-              <p className="text-sm text-slate-400">{option.description}</p>
+              <h3 className="font-medium text-white text-sm">{option.title}</h3>
+              <p className="text-xs text-slate-400">{option.description}</p>
             </div>
           </div>
         </motion.button>
@@ -630,46 +621,46 @@ function TeamStep({ selected, onSelect, inviteEmail, onEmailChange }) {
       id: 'link',
       icon: Link2,
       title: 'Share collection link',
-      description: 'Generate a link for enumerators (no account needed)',
+      description: 'No account needed',
       color: 'from-emerald-500 to-green-500',
     },
     {
       id: 'invite',
       icon: Users,
       title: 'Invite team members',
-      description: 'Add users with full dashboard access',
+      description: 'Full dashboard access',
       color: 'from-blue-500 to-indigo-500',
     },
     {
       id: 'skip',
       icon: ArrowRight,
-      title: 'I\'ll work solo for now',
-      description: 'Skip team setup and continue',
+      title: 'Work solo for now',
+      description: 'Skip team setup',
       color: 'from-slate-600 to-slate-700',
     },
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       {options.map((option) => (
         <motion.button
           key={option.id}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
           onClick={() => onSelect(option.id)}
-          className={`w-full p-4 rounded-xl border transition-all text-left ${
+          className={`w-full p-3 rounded-lg border transition-all text-left ${
             selected === option.id
               ? 'border-primary bg-primary/10'
               : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
           }`}
         >
-          <div className="flex items-center gap-4">
-            <div className={`p-3 rounded-lg bg-gradient-to-br ${option.color}`}>
-              <option.icon className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-3">
+            <div className={`p-2 rounded-lg bg-gradient-to-br ${option.color}`}>
+              <option.icon className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h3 className="font-medium text-white">{option.title}</h3>
-              <p className="text-sm text-slate-400">{option.description}</p>
+              <h3 className="font-medium text-white text-sm">{option.title}</h3>
+              <p className="text-xs text-slate-400">{option.description}</p>
             </div>
           </div>
         </motion.button>
@@ -683,73 +674,57 @@ function TeamStep({ selected, onSelect, inviteEmail, onEmailChange }) {
  */
 function CompleteStep({ orgName, projectName, formChoice, teamChoice, onComplete }) {
   return (
-    <div className="text-center space-y-6">
-      {/* Celebration animation */}
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', delay: 0.2 }}
-        className="relative"
-      >
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ scale: 0, x: 0, y: 0 }}
-            animate={{
-              scale: [0, 1, 0],
-              x: Math.cos(i * 45 * Math.PI / 180) * 60,
-              y: Math.sin(i * 45 * Math.PI / 180) * 60,
-            }}
-            transition={{ duration: 0.8, delay: 0.3 + i * 0.05 }}
-            className="absolute left-1/2 top-1/2 w-3 h-3 rounded-full"
-            style={{ background: `hsl(${i * 45}, 70%, 60%)` }}
-          />
-        ))}
-        <div className="text-6xl">🎉</div>
-      </motion.div>
-
-      <div className="space-y-2">
-        <h2 className="text-xl font-bold text-white">Awesome! You're ready to go!</h2>
-        <p className="text-slate-400">Here's what we set up for you:</p>
+    <div className="space-y-4">
+      {/* Celebration */}
+      <div className="text-center">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring' }}
+          className="text-4xl mb-2"
+        >
+          🎉
+        </motion.div>
+        <p className="text-slate-300 text-sm">You're all set!</p>
       </div>
 
       {/* Summary */}
-      <div className="space-y-3 text-left">
+      <div className="space-y-2">
         {orgName && (
-          <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
-            <Check className="w-5 h-5 text-green-500" />
-            <div>
-              <p className="text-white font-medium">Organization</p>
-              <p className="text-sm text-slate-400">{orgName}</p>
+          <div className="flex items-center gap-2 p-2 bg-slate-800/50 rounded-lg border border-slate-700">
+            <Check className="w-4 h-4 text-green-500 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-white text-sm font-medium truncate">{orgName}</p>
+              <p className="text-xs text-slate-500">Organization</p>
             </div>
           </div>
         )}
         
         {projectName && (
-          <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
-            <Check className="w-5 h-5 text-green-500" />
-            <div>
-              <p className="text-white font-medium">Project</p>
-              <p className="text-sm text-slate-400">{projectName}</p>
+          <div className="flex items-center gap-2 p-2 bg-slate-800/50 rounded-lg border border-slate-700">
+            <Check className="w-4 h-4 text-green-500 shrink-0" />
+            <div className="min-w-0">
+              <p className="text-white text-sm font-medium truncate">{projectName}</p>
+              <p className="text-xs text-slate-500">Project</p>
             </div>
           </div>
         )}
         
-        <div className="flex items-center gap-3 p-3 bg-slate-800/50 rounded-lg border border-slate-700">
-          <Check className="w-5 h-5 text-green-500" />
+        <div className="flex items-center gap-2 p-2 bg-slate-800/50 rounded-lg border border-slate-700">
+          <ArrowRight className="w-4 h-4 text-primary shrink-0" />
           <div>
-            <p className="text-white font-medium">Next step</p>
-            <p className="text-sm text-slate-400">
+            <p className="text-white text-sm font-medium">
               {formChoice === 'scratch' && 'Create your first form'}
-              {formChoice === 'template' && 'Browse form templates'}
-              {formChoice === 'skip' && 'Explore the dashboard'}
-              {!formChoice && 'Explore the dashboard'}
+              {formChoice === 'template' && 'Browse templates'}
+              {formChoice === 'skip' && 'Explore dashboard'}
+              {!formChoice && 'Explore dashboard'}
             </p>
+            <p className="text-xs text-slate-500">Next step</p>
           </div>
         </div>
       </div>
 
-      <Button onClick={onComplete} size="lg" className="w-full">
+      <Button onClick={onComplete} className="w-full">
         <Rocket className="w-4 h-4 mr-2" />
         Launch Dashboard
       </Button>
