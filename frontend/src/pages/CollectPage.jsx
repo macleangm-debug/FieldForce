@@ -27,6 +27,12 @@ import { Badge } from '../components/ui/badge';
 import { toast } from 'sonner';
 import { useAuthStore } from '../store';
 import { offlineStorage, syncManager } from '../lib/offlineStorage';
+import { 
+  OfflineBanner, 
+  ConnectionStatusPill, 
+  FloatingSyncStatus,
+  OfflineExplainerCard 
+} from '../components/OfflineIndicators';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
