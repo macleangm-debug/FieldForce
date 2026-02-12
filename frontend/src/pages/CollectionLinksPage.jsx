@@ -87,8 +87,7 @@ export function CollectionLinksPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const headers = { 'Authorization': `Bearer ${token}` };
+      const headers = { 'Authorization': `Bearer ${authToken}` };
 
       // Load tokens
       const tokensRes = await fetch(`${API_URL}/api/collect/tokens`, { headers });
