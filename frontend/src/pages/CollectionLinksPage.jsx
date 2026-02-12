@@ -749,15 +749,15 @@ export function CollectionLinksPage() {
 
       {/* Create Link Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="sm:max-w-[480px] max-h-[85vh] overflow-hidden flex flex-col">
-          <DialogHeader className="shrink-0 pb-2">
+        <DialogContent className="sm:max-w-[480px] max-h-[80vh] p-0 flex flex-col">
+          <DialogHeader className="shrink-0 p-4 pb-2 border-b border-border">
             <DialogTitle className="flex items-center gap-2 text-lg">
               <Link2 className="w-5 h-5 text-primary" />
               Create Collection Link
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {/* Enumerator Name & Email - Compact row */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
@@ -937,7 +937,7 @@ export function CollectionLinksPage() {
             )}
           </div>
 
-          <DialogFooter className="shrink-0 border-t border-border pt-3 mt-2">
+          <DialogFooter className="shrink-0 p-4 pt-3 border-t border-border bg-background">
             <Button variant="outline" size="sm" onClick={() => setShowCreateDialog(false)}>
               Cancel
             </Button>
