@@ -233,9 +233,16 @@ export function TokenCollectPage() {
   // Main Interface
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Offline Banner - Prominent */}
+      {/* Connection Restored Banner */}
       <AnimatePresence>
-        <OfflineBanner isOnline={isOnline} />
+        {showConnectionRestored && (
+          <ConnectionRestoredBanner onDismiss={() => setShowConnectionRestored(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* Offline Ribbon */}
+      <AnimatePresence>
+        <OfflineRibbon isOnline={isOnline} />
       </AnimatePresence>
 
       {/* Install Banner */}
