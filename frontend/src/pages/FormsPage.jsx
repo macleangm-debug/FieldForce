@@ -109,9 +109,9 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
                   </DropdownMenuItem>
                 )}
                 {form.status === 'published' && (
-                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onShareLink(form.id, form.name); }}>
+                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onShare(form.id, form.name); }}>
                     <Share2 className="w-4 h-4 mr-2" />
-                    Share Survey Link
+                    Share (Link, QR, Embed)
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDuplicate(form.id, form.name); }}>
