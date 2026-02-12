@@ -101,6 +101,7 @@ const NAVIGATION = [
     items: [
       { label: 'GPS Map', path: '/map', icon: MapPin },
       { label: 'Devices', path: '/devices', icon: Smartphone },
+      { label: 'Collection Links', path: '/collection-links', icon: Link2 },
       { label: 'Quality', path: '/quality', icon: Sparkles },
       { label: 'Analytics', path: '/analytics', icon: BarChart3 }
     ]
