@@ -125,11 +125,10 @@ export function CollectionLinksPage() {
 
     setCreating(true);
     try {
-      const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/api/collect/tokens`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
