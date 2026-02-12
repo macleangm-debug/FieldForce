@@ -77,6 +77,12 @@ export function TokenCollectPage() {
   // Verify token and load forms
   useEffect(() => {
     verifyToken();
+    
+    // Show offline explainer first time
+    const hasSeenExplainer = localStorage.getItem('fieldforce_seen_offline_explainer');
+    if (!hasSeenExplainer) {
+      setShowOfflineExplainer(true);
+    }
   }, [token]);
 
   const verifyToken = async () => {
