@@ -1855,9 +1855,14 @@ export function CollectionLinksPage() {
                       variant="outline"
                       className="flex flex-col items-center gap-1 h-auto py-3"
                       onClick={sendBulkEmail}
+                      disabled={sendingEmails}
                     >
-                      <Mail className="w-5 h-5 text-green-400" />
-                      <span className="text-xs">Email All</span>
+                      {sendingEmails ? (
+                        <RefreshCw className="w-5 h-5 text-green-400 animate-spin" />
+                      ) : (
+                        <Mail className="w-5 h-5 text-green-400" />
+                      )}
+                      <span className="text-xs">{sendingEmails ? 'Sending...' : 'Email All'}</span>
                     </Button>
                     <Button
                       variant="outline"
