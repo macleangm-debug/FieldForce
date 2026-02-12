@@ -690,16 +690,40 @@ function CAWIField({ field, value, onChange, error }) {
  * Survey Complete Page
  */
 export function SurveyCompletePage() {
+  const [searchParams] = useSearchParams();
+  const formId = searchParams.get('formId');
+  const [settings, setSettings] = useState({
+    thankYouMessage: 'Your response has been recorded successfully.',
+    primaryColor: '#22c55e'
+  });
+  
+  useEffect(() => {
+    // Try to get settings from localStorage (saved during survey)
+    if (formId) {
+      const localKey = `cawi_settings_${formId}`;
+      const savedSettings = localStorage.getItem(localKey);
+      if (savedSettings) {
+        try {
+          const parsed = JSON.parse(savedSettings);
+          setSettings(prev => ({ ...prev, ...parsed }));
+        } catch (e) {}
+      }
+    }
+  }, [formId]);
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800">
       <Card className="max-w-md bg-slate-800/50 border-slate-700">
         <CardContent className="pt-8 pb-6 text-center">
-          <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-8 h-8 text-green-500" />
+          <div 
+            className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            style={{ backgroundColor: `${settings.primaryColor}20` }}
+          >
+            <CheckCircle2 className="w-8 h-8" style={{ color: settings.primaryColor }} />
           </div>
           <h2 className="text-2xl font-semibold text-white mb-2">Thank You!</h2>
           <p className="text-slate-400 mb-6">
-            Your response has been recorded successfully.
+            {settings.thankYouMessage}
           </p>
           <p className="text-sm text-slate-500">
             You can close this window now.
