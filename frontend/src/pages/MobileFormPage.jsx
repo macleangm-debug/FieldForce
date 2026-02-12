@@ -202,10 +202,12 @@ export function MobileFormPage() {
 
   const goNext = () => {
     if (!validateCurrentPage()) {
+      haptic.warning();
       toast.error('Please fill required fields');
       return;
     }
     
+    haptic.light();
     if (currentPage < pages.length - 1) {
       setCurrentPage(prev => prev + 1);
       window.scrollTo(0, 0);
@@ -213,6 +215,7 @@ export function MobileFormPage() {
   };
 
   const goPrevious = () => {
+    haptic.light();
     if (currentPage > 0) {
       setCurrentPage(prev => prev - 1);
       window.scrollTo(0, 0);
