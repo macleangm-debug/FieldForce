@@ -649,6 +649,12 @@ export function DashboardLayout({ children }) {
             </>
           )}
         </AnimatePresence>
+
+        {/* Command Palette (Global Search) */}
+        <CommandPalette 
+          open={commandPaletteOpen} 
+          onOpenChange={setCommandPaletteOpen} 
+        />
       </div>
     </TooltipProvider>
   );
