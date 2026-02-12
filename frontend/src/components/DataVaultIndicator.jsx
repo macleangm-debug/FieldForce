@@ -15,6 +15,47 @@ import { toast } from 'sonner';
 import { offlineStorage, syncManager } from '../lib/offlineStorage';
 
 /**
+ * Haptic Feedback Utility
+ * Provides tactile feedback on supported mobile devices
+ */
+const haptic = {
+  // Light tap - for button presses, selections
+  light: () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10);
+    }
+  },
+  
+  // Medium tap - for confirmations
+  medium: () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(25);
+    }
+  },
+  
+  // Success pattern - for sync complete, form submitted
+  success: () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate([30, 50, 30, 50, 50]);
+    }
+  },
+  
+  // Warning pattern - for errors, offline
+  warning: () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate([50, 30, 50]);
+    }
+  },
+  
+  // Celebration pattern - for major achievements
+  celebration: () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate([30, 30, 30, 30, 50, 100, 50]);
+    }
+  }
+};
+
+/**
  * Data Vault - Offline Status Component
  * Shows a "vault" protecting your data when offline
  */
