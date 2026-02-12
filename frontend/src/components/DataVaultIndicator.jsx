@@ -127,6 +127,7 @@ export function DataVault({ isOnline, pendingCount = 0 }) {
       // Show celebration
       setTimeout(() => {
         setShowCelebration(true);
+        haptic.celebration(); // Celebration haptic feedback!
         toast.success('All data synced successfully!');
         setTimeout(() => {
           setShowCelebration(false);
@@ -135,6 +136,7 @@ export function DataVault({ isOnline, pendingCount = 0 }) {
         }, 2000);
       }, 500);
     } catch (error) {
+      haptic.warning(); // Warning haptic on error
       toast.error('Sync failed. Will retry.');
       setSyncing(false);
       setSyncProgress(0);
