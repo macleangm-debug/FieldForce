@@ -80,11 +80,21 @@ export function CollectionLinksPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
   const [selectedToken, setSelectedToken] = useState(null);
   const [generatedLink, setGeneratedLink] = useState('');
   const [generatedToken, setGeneratedToken] = useState('');
   const [creating, setCreating] = useState(false);
   const [copied, setCopied] = useState(false);
+  const fileInputRef = useRef(null);
+  
+  // Import state
+  const [importFile, setImportFile] = useState(null);
+  const [importFormIds, setImportFormIds] = useState([]);
+  const [importExpiresDays, setImportExpiresDays] = useState(30);
+  const [importMaxSubmissions, setImportMaxSubmissions] = useState('');
+  const [importing, setImporting] = useState(false);
+  const [importResults, setImportResults] = useState(null);
   
   // Form state for creating new token
   const [newToken, setNewToken] = useState({
