@@ -85,7 +85,7 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
 - [x] TinyURL integration
 - [x] Security modes (supervisor UI)
 - [x] Security modes (enumerator enforcement)
-- [x] Create Link modal scroll fix
+- [x] Create Link modal - made compact with dropdown security selector (fits 85vh)
 
 ## Backlog
 - [ ] Custom message templates for sharing
