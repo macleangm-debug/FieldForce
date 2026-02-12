@@ -264,12 +264,7 @@ export function TokenCollectPage() {
             </div>
             
             {/* Connection Status */}
-            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-              isOnline ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-            }`}>
-              {isOnline ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-              {isOnline ? 'Online' : 'Offline'}
-            </div>
+            <ConnectionStatusPill isOnline={isOnline} size="small" />
           </div>
         </div>
       </header>
@@ -294,10 +289,21 @@ export function TokenCollectPage() {
         </div>
       )}
 
-      {/* Sync Bar */}
-      {pendingCount > 0 && (
-        <div className="px-4 py-2 bg-amber-500/20 border-b border-amber-500/30">
-          <div className="flex items-center justify-between">
+      {/* Offline Explainer - First Time */}
+      <AnimatePresence>
+        {showOfflineExplainer && (
+          <OfflineExplainerCard 
+            onDismiss={() => {
+              setShowOfflineExplainer(false);
+              localStorage.setItem('fieldforce_seen_offline_explainer', 'true');
+            }} 
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Forms List */}
+      <main className="p-4 space-y-4">
+        <h2 className="text-white font-medium">Available Forms</h2>
             <div className="flex items-center gap-2 text-amber-400">
               <CloudOff className="w-4 h-4" />
               <span className="text-sm">{pendingCount} pending</span>
