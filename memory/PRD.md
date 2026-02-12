@@ -98,13 +98,20 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
   - Settings page > Message Templates section for managing templates
   - Template variables: `{name}`, `{link}`, `{pin_section}`, `{expiry}`
   - Template selector in Collection Links share dialog
+- [x] **Resend Email Service Ready** - Scalable PIN distribution (Feb 12)
+  - Backend API at `/api/email/*` (send-single, send-bulk, test, status)
+  - Professional HTML email template with FieldForce branding
+  - Non-blocking async email sending
+  - Bulk import "Email All" button integrates with Resend when configured
 
 ## Backlog
-- [ ] Scalable PIN distribution (batch SMS/email via SendGrid/Twilio)
 - [ ] Auto-open single-form surveys
 - [ ] Full light/dark theme consistency
 - [ ] Component refactoring for InteractiveDemoPage
 - [ ] Component refactoring for CollectionLinksPage.jsx (split into CreateLinkModal, BulkImportModal)
+
+## Environment Ready (Pending API Key)
+- **Resend Email**: Add `RESEND_API_KEY=re_your_key` to `/app/backend/.env` to enable bulk email
 
 ## Test Credentials
 - Email: `demo@fieldforce.io`
