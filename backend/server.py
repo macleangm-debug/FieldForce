@@ -79,6 +79,9 @@ from routes.quality_ai_routes import router as quality_ai_router
 from routes.billing_routes import router as billing_router
 from routes.dashboard_routes import router as dashboard_router
 from routes.collect_routes import router as collect_router
+from routes.search_routes import router as search_router
+from routes.notification_routes import router as notification_router
+from routes.settings_routes import router as settings_router
 
 # Include core route modules
 api_router.include_router(auth_router)
