@@ -52,7 +52,7 @@ import { formAPI, projectAPI } from '../lib/api';
 import { formatDate, getStatusVariant } from '../lib/utils';
 import { toast } from 'sonner';
 
-const FormCard = ({ form, onPublish, onDuplicate, onArchive }) => {
+const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShareLink }) => {
   const navigate = useNavigate();
   
   return (
