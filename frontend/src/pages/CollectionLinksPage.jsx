@@ -749,53 +749,52 @@ export function CollectionLinksPage() {
 
       {/* Create Link Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="sm:max-w-[500px] max-h-[90vh] flex flex-col">
-          <DialogHeader className="shrink-0">
-            <DialogTitle className="flex items-center gap-2">
+        <DialogContent className="sm:max-w-[480px] max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader className="shrink-0 pb-2">
+            <DialogTitle className="flex items-center gap-2 text-lg">
               <Link2 className="w-5 h-5 text-primary" />
               Create Collection Link
             </DialogTitle>
-            <DialogDescription>
-              Generate a shareable link for a field enumerator to collect data
-            </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto space-y-4 py-4 px-1 -mx-1">
-            {/* Enumerator Name */}
-            <div className="space-y-2">
-              <Label>Enumerator Name *</Label>
-              <Input
-                value={newToken.enumerator_name}
-                onChange={(e) => setNewToken(prev => ({ ...prev, enumerator_name: e.target.value }))}
-                placeholder="John Smith"
-                data-testid="enumerator-name-input"
-              />
+          <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+            {/* Enumerator Name & Email - Compact row */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs">Name *</Label>
+                <Input
+                  value={newToken.enumerator_name}
+                  onChange={(e) => setNewToken(prev => ({ ...prev, enumerator_name: e.target.value }))}
+                  placeholder="John Smith"
+                  className="h-9"
+                  data-testid="enumerator-name-input"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs">Email</Label>
+                <Input
+                  type="email"
+                  value={newToken.enumerator_email}
+                  onChange={(e) => setNewToken(prev => ({ ...prev, enumerator_email: e.target.value }))}
+                  placeholder="john@example.com"
+                  className="h-9"
+                />
+              </div>
             </div>
 
-            {/* Email (Optional) */}
-            <div className="space-y-2">
-              <Label>Email (Optional)</Label>
-              <Input
-                type="email"
-                value={newToken.enumerator_email}
-                onChange={(e) => setNewToken(prev => ({ ...prev, enumerator_email: e.target.value }))}
-                placeholder="john@example.com"
-              />
-            </div>
-
-            {/* Select Forms */}
-            <div className="space-y-2">
-              <Label>Assign Forms *</Label>
+            {/* Select Forms - Compact */}
+            <div className="space-y-1">
+              <Label className="text-xs">Assign Forms *</Label>
               {forms.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No published forms available</p>
+                <p className="text-xs text-muted-foreground">No published forms available</p>
               ) : (
-                <div className="space-y-2 max-h-40 overflow-y-auto border border-border rounded-lg p-2">
+                <div className="space-y-1 max-h-24 overflow-y-auto border border-border rounded-lg p-1.5">
                   {forms.map((form) => (
                     <label
                       key={form.id}
-                      className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${
+                      className={`flex items-center gap-2 p-1.5 rounded cursor-pointer transition-colors text-sm ${
                         newToken.form_ids.includes(form.id)
-                          ? 'bg-primary/20 border border-primary/50'
+                          ? 'bg-primary/20'
                           : 'hover:bg-muted/50'
                       }`}
                     >
@@ -804,39 +803,30 @@ export function CollectionLinksPage() {
                         checked={newToken.form_ids.includes(form.id)}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setNewToken(prev => ({
-                              ...prev,
-                              form_ids: [...prev.form_ids, form.id]
-                            }));
+                            setNewToken(prev => ({ ...prev, form_ids: [...prev.form_ids, form.id] }));
                           } else {
-                            setNewToken(prev => ({
-                              ...prev,
-                              form_ids: prev.form_ids.filter(id => id !== form.id)
-                            }));
+                            setNewToken(prev => ({ ...prev, form_ids: prev.form_ids.filter(id => id !== form.id) }));
                           }
                         }}
-                        className="w-4 h-4 rounded"
+                        className="w-3.5 h-3.5 rounded"
                       />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-foreground text-sm font-medium truncate">{form.name}</p>
-                        <p className="text-muted-foreground text-xs">{form.field_count} fields</p>
-                      </div>
+                      <span className="text-foreground truncate">{form.name}</span>
+                      <span className="text-muted-foreground text-xs ml-auto">{form.field_count} fields</span>
                     </label>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Expiry */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Expires In</Label>
+            {/* Expiry & Max Submissions - Compact */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs">Expires In</Label>
                 <Select
-                  defaultValue="30"
                   value={String(newToken.expires_days)}
                   onValueChange={(val) => setNewToken(prev => ({ ...prev, expires_days: parseInt(val) }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9">
                     <SelectValue placeholder="30 days" />
                   </SelectTrigger>
                   <SelectContent>
@@ -849,116 +839,75 @@ export function CollectionLinksPage() {
                   </SelectContent>
                 </Select>
               </div>
-
-              <div className="space-y-2">
-                <Label>Max Submissions</Label>
+              <div className="space-y-1">
+                <Label className="text-xs">Max Submissions</Label>
                 <Input
                   type="number"
                   value={newToken.max_submissions}
                   onChange={(e) => setNewToken(prev => ({ ...prev, max_submissions: e.target.value }))}
                   placeholder="Unlimited"
+                  className="h-9"
                 />
               </div>
             </div>
 
-            {/* Security Mode */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Shield className="w-4 h-4 text-muted-foreground" />
-                <Label>Security & Device Tracking</Label>
-              </div>
+            {/* Security Mode - Dropdown style */}
+            <div className="space-y-1">
+              <Label className="text-xs flex items-center gap-1.5">
+                <Shield className="w-3 h-3" />
+                Security Mode
+              </Label>
+              <Select
+                value={newToken.security_mode}
+                onValueChange={(val) => setNewToken(prev => ({ 
+                  ...prev, 
+                  security_mode: val, 
+                  require_pin: val === 'pin_protected' 
+                }))}
+              >
+                <SelectTrigger className="h-9">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="standard">
+                    <div className="flex items-center gap-2">
+                      <Link2 className="w-3.5 h-3.5 text-blue-500" />
+                      <span>Standard Link</span>
+                      <span className="text-xs text-muted-foreground ml-1">- Anyone can access</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="device_locked">
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="w-3.5 h-3.5 text-orange-500" />
+                      <span>Device Locked</span>
+                      <span className="text-xs text-muted-foreground ml-1">- One device only</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="pin_protected">
+                    <div className="flex items-center gap-2">
+                      <Key className="w-3.5 h-3.5 text-green-500" />
+                      <span>PIN Protected</span>
+                      <span className="text-xs text-muted-foreground ml-1">- Most secure</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
               
-              <div className="space-y-2">
-                {/* Standard Mode */}
-                <label
-                  className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    newToken.security_mode === 'standard'
-                      ? 'bg-primary/10 border-primary/50'
-                      : 'border-border hover:bg-muted/30'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="security_mode"
-                    checked={newToken.security_mode === 'standard'}
-                    onChange={() => setNewToken(prev => ({ ...prev, security_mode: 'standard', require_pin: false }))}
-                    className="mt-1"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <Link2 className="w-4 h-4 text-blue-500" />
-                      <span className="font-medium text-foreground">Standard Link</span>
-                      <Badge variant="secondary" className="text-xs">Quick Setup</Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Simple shareable link. Basic device info captured (browser, OS). 
-                      Best for <span className="text-foreground">temporary surveys</span> or <span className="text-foreground">trusted teams</span>.
-                    </p>
-                  </div>
-                </label>
+              {/* Security mode description */}
+              <p className="text-xs text-muted-foreground">
+                {newToken.security_mode === 'standard' && 'Simple link. Good for public surveys or trusted teams.'}
+                {newToken.security_mode === 'device_locked' && 'Link locks to first device. Prevents unauthorized sharing.'}
+                {newToken.security_mode === 'pin_protected' && 'Requires PIN + locks to device. Maximum control.'}
+              </p>
+            </div>
 
-                {/* Device Locked Mode */}
-                <label
-                  className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    newToken.security_mode === 'device_locked'
-                      ? 'bg-primary/10 border-primary/50'
-                      : 'border-border hover:bg-muted/30'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="security_mode"
-                    checked={newToken.security_mode === 'device_locked'}
-                    onChange={() => setNewToken(prev => ({ ...prev, security_mode: 'device_locked', require_pin: false }))}
-                    className="mt-1"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-orange-500" />
-                      <span className="font-medium text-foreground">Device Locked</span>
-                      <Badge variant="outline" className="text-xs border-orange-500/50 text-orange-500">Recommended</Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Link locks to first device that opens it. Prevents link sharing.
-                      Enables <span className="text-foreground">remote lock/wipe</span> from Devices page.
-                    </p>
-                  </div>
-                </label>
-
-                {/* PIN Protected Mode */}
-                <label
-                  className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    newToken.security_mode === 'pin_protected'
-                      ? 'bg-primary/10 border-primary/50'
-                      : 'border-border hover:bg-muted/30'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="security_mode"
-                    checked={newToken.security_mode === 'pin_protected'}
-                    onChange={() => setNewToken(prev => ({ ...prev, security_mode: 'pin_protected', require_pin: true }))}
-                    className="mt-1"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <Key className="w-4 h-4 text-green-500" />
-                      <span className="font-medium text-foreground">PIN Protected</span>
-                      <Badge variant="outline" className="text-xs border-green-500/50 text-green-500">Most Secure</Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Requires 4-digit PIN to access. Device locked after PIN entry.
-                      Best for <span className="text-foreground">sensitive data</span> or <span className="text-foreground">external contractors</span>.
-                    </p>
-                  </div>
-                </label>
-              </div>
-
-              {/* PIN Input (shown when PIN mode selected) */}
-              {newToken.security_mode === 'pin_protected' && (
-                <div className="space-y-2 pl-6 border-l-2 border-green-500/30 ml-2">
-                  <Label className="text-sm">Set Access PIN</Label>
-                  <div className="flex gap-2 items-center">
+            {/* PIN Input (shown when PIN mode selected) */}
+            {newToken.security_mode === 'pin_protected' && (
+              <div className="flex items-center gap-3 p-2.5 bg-green-500/10 border border-green-500/30 rounded-lg">
+                <Key className="w-4 h-4 text-green-500 shrink-0" />
+                <div className="flex-1">
+                  <Label className="text-xs">Access PIN</Label>
+                  <div className="flex gap-2 items-center mt-1">
                     <Input
                       type="text"
                       maxLength={4}
@@ -967,13 +916,14 @@ export function CollectionLinksPage() {
                         const val = e.target.value.replace(/\D/g, '').slice(0, 4);
                         setNewToken(prev => ({ ...prev, pin_code: val }));
                       }}
-                      placeholder="4-digit PIN"
-                      className="w-32 text-center font-mono text-lg tracking-widest"
+                      placeholder="0000"
+                      className="w-20 h-8 text-center font-mono tracking-widest"
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
+                      className="h-8 text-xs"
                       onClick={() => {
                         const randomPin = Math.floor(1000 + Math.random() * 9000).toString();
                         setNewToken(prev => ({ ...prev, pin_code: randomPin }));
@@ -982,32 +932,16 @@ export function CollectionLinksPage() {
                       Generate
                     </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Share this PIN separately (e.g., via SMS or call). Don't include in the link message.
-                  </p>
-                </div>
-              )}
-
-              {/* Info Box */}
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/30 border border-border">
-                <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                <div className="text-xs text-muted-foreground">
-                  <p className="font-medium text-foreground mb-1">What's the difference?</p>
-                  <ul className="space-y-1">
-                    <li><span className="text-blue-500">Standard:</span> Anyone with link can submit. Good for public surveys.</li>
-                    <li><span className="text-orange-500">Device Locked:</span> One device per link. Manage from Devices page.</li>
-                    <li><span className="text-green-500">PIN Protected:</span> Verification required. Maximum control.</li>
-                  </ul>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
-          <DialogFooter className="shrink-0 border-t border-border pt-4 mt-2">
-            <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+          <DialogFooter className="shrink-0 border-t border-border pt-3 mt-2">
+            <Button variant="outline" size="sm" onClick={() => setShowCreateDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCreateToken} disabled={creating} data-testid="generate-link-btn">
+            <Button size="sm" onClick={handleCreateToken} disabled={creating} data-testid="generate-link-btn">
               {creating ? (
                 <RefreshCw className="w-4 h-4 animate-spin mr-2" />
               ) : (
