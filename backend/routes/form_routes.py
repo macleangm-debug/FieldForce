@@ -18,6 +18,22 @@ class FormSettingsUpdate(BaseModel):
     settings: Dict[str, Any]
 
 
+class SurveySettingsUpdate(BaseModel):
+    """Survey settings including branding options"""
+    name: Optional[str] = None
+    description: Optional[str] = None
+    closeDate: Optional[str] = None
+    closeTime: Optional[str] = None
+    maxResponses: Optional[int] = None
+    thankYouMessage: Optional[str] = None
+    logo: Optional[str] = None
+    primaryColor: Optional[str] = None
+    showProgressBar: Optional[bool] = None
+    shuffleQuestions: Optional[bool] = None
+    allowMultipleSubmissions: Optional[bool] = None
+    requireLogin: Optional[bool] = None
+
+
 async def check_project_access(db, project_id: str, user_id: str, required_roles: List[str] = None):
     """Check if user has access to project's organization"""
     project = await db.projects.find_one({"id": project_id}, {"_id": 0})
