@@ -488,7 +488,8 @@ export function CAWISurveyPage() {
             <Button
               onClick={handleSubmit}
               disabled={submitting}
-              className="bg-green-600 hover:bg-green-700"
+              className="survey-primary-btn text-white"
+              style={{ backgroundColor: primaryColor }}
             >
               {submitting ? (
                 <>
@@ -503,7 +504,11 @@ export function CAWISurveyPage() {
               )}
             </Button>
           ) : (
-            <Button onClick={goNext}>
+            <Button 
+              onClick={goNext}
+              className="survey-primary-btn text-white"
+              style={{ backgroundColor: primaryColor }}
+            >
               Next
               <ChevronRight className="w-4 h-4 ml-2" />
             </Button>
