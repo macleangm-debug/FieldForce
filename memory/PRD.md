@@ -249,6 +249,29 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
    - `/api/settings/*` - User preferences and language settings
 3. ✅ Delivered complete reusable code for data collection flow
 
+### Session Log - Feb 12, 2025 (Continued)
+
+### Completed This Session
+1. ✅ **Fixed Session Logout Issue (P0):**
+   - Updated `frontend/src/store/index.js` to sync auth token to standalone localStorage key
+   - Added `onRehydrate` callback to restore token on page refresh
+   - Components using `localStorage.getItem('token')` now work correctly
+
+2. ✅ **Bulk Enumerator Import (CSV/Excel):**
+   - New backend endpoint: `POST /api/collect/tokens/bulk-import`
+   - Supports CSV and Excel (.xlsx, .xls) file uploads
+   - Parses `name` (required) and `email` (optional) columns
+   - Returns success/error counts and created tokens
+   - Template endpoint: `GET /api/collect/tokens/template`
+   - Frontend: Import button and dialog on Collection Links page
+
+3. ✅ **Link Shortener Integration (TinyURL):**
+   - New utility: `backend/utils/url_shortener.py`
+   - New endpoint: `POST /api/collect/shorten-url`
+   - Uses TinyURL's free API (no API key required)
+   - Frontend: "Shorten & Copy" button in share dialogs
+   - Shortened links displayed and cached in UI
+
 ### Provided to User
 - Complete code for Collection Links management page
 - Token-based and login-based mobile collection pages
