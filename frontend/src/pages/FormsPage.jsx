@@ -47,6 +47,7 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { DashboardLayout } from '../layouts/DashboardLayout';
+import { ShareSurveyDialog } from '../components/ShareSurveyDialog';
 import { useOrgStore, useProjectStore } from '../store';
 import { formAPI, projectAPI } from '../lib/api';
 import { formatDate, getStatusVariant } from '../lib/utils';
