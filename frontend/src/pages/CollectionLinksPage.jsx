@@ -113,6 +113,11 @@ export function CollectionLinksPage() {
   const [shortenedLinks, setShortenedLinks] = useState({}); // Maps original URL to shortened URL
   const [shorteningUrl, setShorteningUrl] = useState(null); // URL currently being shortened
   
+  // Message templates state
+  const [messageTemplates, setMessageTemplates] = useState([]);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [customMessage, setCustomMessage] = useState('');
+  
   // Form state for creating new token
   const [newToken, setNewToken] = useState({
     enumerator_name: '',
