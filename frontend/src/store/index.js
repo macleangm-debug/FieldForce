@@ -9,17 +9,31 @@ export const useAuthStore = create(
       token: null,
       isAuthenticated: false,
       
-      setAuth: (user, token) => set({ user, token, isAuthenticated: true }),
+      setAuth: (user, token) => {
+        // Also store token directly for backward compatibility with components using localStorage.getItem('token')
+        localStorage.setItem('token', token);
+        localStorage.setItem('user_id', user?.id || user?._id || '');
+        set({ user, token, isAuthenticated: true });
+      },
       
       logout: () => {
         set({ user: null, token: null, isAuthenticated: false });
         localStorage.removeItem('auth-storage');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user_id');
       },
       
       getToken: () => get().token,
     }),
     {
       name: 'auth-storage',
+      onRehydrate: () => (state) => {
+        // When store rehydrates from storage, also sync the standalone token key
+        if (state?.token) {
+          localStorage.setItem('token', state.token);
+          localStorage.setItem('user_id', state.user?.id || state.user?._id || '');
+        }
+      },
     }
   )
 );
