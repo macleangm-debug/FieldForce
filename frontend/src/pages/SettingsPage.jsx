@@ -81,6 +81,7 @@ const settingsNav = [
   { id: 'appearance', label: 'Appearance', icon: Palette, description: 'Theme and display settings' },
   { id: 'notifications', label: 'Notifications', icon: Bell, description: 'Email and push notifications' },
   { id: 'security', label: 'Security', icon: Shield, description: 'Password and authentication' },
+  { id: 'templates', label: 'Message Templates', icon: MessageSquare, description: 'Sharing message templates' },
   { id: 'billing', label: 'Billing', icon: CreditCard, description: 'Subscription and payments' },
   { id: 'organization', label: 'Organization', icon: Building2, description: 'Organization settings' },
   { id: 'api', label: 'API & Integrations', icon: Key, description: 'API keys and webhooks' },
