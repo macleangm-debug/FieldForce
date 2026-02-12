@@ -436,8 +436,11 @@ export function CollectPage() {
         )}
       </main>
 
+      {/* Floating Sync Status */}
+      <FloatingSyncStatus isOnline={isOnline} />
+
       {/* Bottom Safe Area */}
-      <div className="h-20" />
+      <div className="h-24" />
     </div>
   );
 }
