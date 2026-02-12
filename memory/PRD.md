@@ -86,6 +86,9 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
 - [x] Security modes (supervisor UI)
 - [x] Security modes (enumerator enforcement)
 - [x] Create Link modal - made compact with dropdown security selector (fits 85vh)
+- [x] Bulk Import with Security Modes - supports Standard, Device Locked, PIN Protected
+- [x] PIN options for bulk import - Auto-generate unique PINs or Shared PIN
+- [x] Distribution options after bulk import - Export CSV, Email All, Copy for SMS
 
 ## Backlog
 - [ ] Custom message templates for sharing
