@@ -1,66 +1,83 @@
 <analysis>**original_problem_statement:**
-The user's initial request from the previous session was to investigate and implement a light/dark mode feature. During this session, the scope expanded significantly based on user feedback and questions. The full list of requirements addressed includes:
-1.  **Light/Dark Mode:** Implement a fully functional light/dark theme switcher, persist the user's choice, and add the toggle to all relevant headers (public, dashboard, interactive demo).
-2.  **UI/UX Refinements:**
-    *   Relocate the dashboard header icons to the far right for better alignment.
-    *   Redesign the main account settings page to use a vertical sidebar layout, matching a provided reference (Survey360).
-3.  **Backend Connectivity & Data:**
-    *   Investigate and ensure all backend and frontend functions are properly linked.
-    *   Fix any broken or unregistered API endpoints (specifically for the dashboard).
-    *   Create sample data (projects) via API to unblock the user's testing of the form creation flow.
-4.  **Form & Survey Enhancements:**
-    *   Implement a way to share survey links with data collectors.
-    *   Create a Survey Settings sidebar that slides in on the Form Builder page, containing fields for logo, description, close date, response limits, thank you messages, and branding colors.
-    *   Implement an enhanced Share Survey dialog with three tabs: a direct link, a downloadable QR code, and a customizable embed code.
+The user initially requested the reusable code for a Survey Settings sidebar. The session's scope then expanded significantly to include:
+1.  **Code Reusability:** Providing complete, reusable code for the  and  components.
+2.  **UI/UX Enhancements:**
+    *   Implementing an advanced date-time picker in the settings sidebar.
+    *   Fixing the calendar's dark mode styling.
+    *   Making the Primary Color setting functional by connecting it to the backend and applying it to the public survey page, including a live preview.
+    *   Creating a unique, animated Data Vault offline/sync status indicator.
+    *   Adding haptic feedback for mobile interactions like form submission and data sync.
+3.  **New Features:**
+    *   **PWA & Offline Collection:** Transforming the app into a Progressive Web App (PWA) with a manifest and service worker, enabling full offline data collection capabilities with automatic syncing.
+    *   **Enumerator Interfaces:** Creating two dedicated, mobile-first data collection interfaces: a login-based page () and a token-based, no-login page ().
+    *   **Supervisor Tools:** Building a Collection Links management page in the admin dashboard for supervisors to generate, view, and manage token-based access links for enumerators.
+    *   **Onboarding Wizard:** Implementing a comprehensive, multi-step onboarding wizard for new users to guide them through initial setup (creating an organization, first project, etc.).
+4.  **Bug Fixes:** Removing a leftover debug panel from a form page.
+
+The user's final message was an unprompted block of code for a new, feature-rich  component.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The project is a full-stack application named FieldForce with a React frontend, FastAPI backend, and a MongoDB database.
-
-**Key implemented features include:**
--   **Full Authentication:** JWT-based login, registration, and user management.
--   **Core Application Backend:** Endpoints for organizations, projects, forms, submissions, device management, and dashboard stats are implemented and connected.
--   **Interactive Demo:** A feature-rich, sandboxed demo at  that uses mock frontend data to showcase UI/UX without requiring a backend connection.
--   **Theme System:** A complete, persistent light/dark mode is implemented, accessible from all main application areas. The dashboard and authenticated pages respond fully, while public-facing pages (Landing, Demo) have a fixed dark theme by design.
--   **Advanced Form & Survey Features:**
-    -   A form builder to create and publish surveys.
-    -   A slide-in Survey Settings panel within the form builder for detailed configuration (logo, response limits, branding, etc.).
-    -   A comprehensive Share Survey dialog that provides a direct link, a QR code, and an HTML embed code.
--   **Modern UI:** The application uses a consistent design system with a redesigned vertical sidebar for settings pages.
+The application FieldForce is a full-stack project (React/FastAPI/MongoDB) with a comprehensive feature set. It now includes:
+-   Full authentication, project/form management, and a theme system.
+-   **PWA Functionality:** The app is now a fully installable Progressive Web App with a service worker () and manifest () for offline capabilities.
+-   **Offline Data Collection:** A robust offline system using IndexedDB is in place. It features a unique Data Vault UI with particle-stream animations for syncing and haptic feedback on mobile devices.
+-   **Dedicated Collection Interfaces:** Two mobile-optimized data collection portals exist:
+    *   : For registered enumerators to log in and access assigned forms.
+    *   : For no-login access via a secure, supervisor-generated link.
+-   **Supervisor Management UI:** A new Collection Links page allows administrators to create and manage token-based links for field data collection.
+-   **User Onboarding:** A multi-step, skippable onboarding wizard guides new users through the initial setup process upon their first login, with progress saved to .
+-   **Enhanced Survey Settings:** The settings sidebar now includes an advanced date-time picker and a functional primary color selector with a live preview that affects the public survey page.
 
 **Last working item**:
--   **Last item agent was working:** The user asked how they could reuse the Survey Settings layout in another similar product, implying a request for the code. The agent's last implementation task was completing the Survey Settings sidebar and the enhanced Share Survey dialog.
--   **Status:** USER VERIFICATION PENDING
--   **Agent Testing Done:** Y
--   **Which testing method agent to use?** Manual testing. The user should be directed to the Form Builder to test the new Settings button and to the Forms list to test the Share option in the dropdown menu.
--   **User Testing Done:** N
+-   **Last item agent was working:** The user unexpectedly provided a large code snippet for a new  component. This component includes many new features like a global search palette, language selector, and a more advanced notifications system. The agent had just finished debugging the data collection flow and had not yet analyzed or acted on this new input.
+-   **Status:** NOT STARTED
+-   **Agent Testing Done:** N/A
+-   **Which testing method agent to use?** Frontend testing agent. The agent must first clarify the user's intent. If the user wants to implement this new header, it will require significant frontend work and potentially new backend endpoints.
+-   **User Testing Done:** N/A
 
 **All Pending/In progress Issue list**:
-There are no known pending issues. All issues identified during the session (unregistered dashboard routes, UI alignment) have been resolved.
+-   **Issue 1: (P0) Implement or clarify the purpose of the new  code.** The user's last message was a large code block for a new header.
+-   **Issue 2: (P1) Provide reusable code for the entire data collection flow.** The user requested the code for all changes from collection links process all the way to haptic feedback. The agent started this but did not complete it.
+
+Issues Detail:
+-   **Issue 1: New Dashboard Header**
+    -   **Attempted fixes:** None. This is a new request.
+    -   **Next debug checklist:**
+        1.  Use  to confirm with the user if they want to replace the existing dashboard header with the new  code they provided.
+        2.  Clarify if the new implied features (Language Selector,  Search, advanced Notifications) should be made functional, as this will require significant new backend and frontend development.
+        3.  If confirmed, replace the existing header in  and begin wiring up the new component's props.
+    -   **Why fix this issue and what will be achieved with the fix?** To address the user's latest request and significantly upgrade the application's main navigation and UI.
+    -   **Status:** NOT STARTED
+    -   **Should Test frontend/backend/both after fix?** Both
+-   **Issue 2: Provide Reusable Code for Data Collection Flow**
+    -   **Attempted fixes:** The agent began viewing the relevant files to compile the code but did not finish and provide it to the user.
+    -   **Next debug checklist:**
+        1.  Use ERROR: Please provide a comma-separated list of file or directory paths to read the content of all newly created and modified files related to the data collection flow.
+        2.  Files to include: , , , , , , , , and any other related components or backend files.
+        3.  Present the complete code to the user in a structured, reusable format with dependencies and usage instructions.
+    -   **Why fix this issue and what will be achieved with the fix?** Fulfills a direct user request and provides them with the value they asked for.
+    -   **Status:** IN PROGRESS
+    -   **Should Test frontend/backend/both after fix?** N/A (This is a code delivery task).
 
 **In progress Task List**:
-There are no in-progress implementation tasks.
+None. All tasks from the previous session were either completed or are now captured in the pending issue list.
 
 **Upcoming and Future Tasks**
--   **P0: Provide Reusable Code for Survey Settings:** Address the user's last question by providing the code for the  component and any related dependencies so they can replicate the layout in another project.
+-   **Upcoming Tasks:**
+    -   **(P2) Auto-open single-form surveys:** If a collection token link contains only one form, automatically redirect the enumerator to the form-filling page, skipping the form list view. This was a suggestion the user did not respond to.
+-   **Future Tasks:**
+    -   **Refactor for Full Theming:** Refactor  and  to use theme-aware CSS variables, allowing them to switch between light and dark modes.
+    -   **Component Refactoring:** Break down the large  into smaller, more maintainable child components.
+    -   **Share via... buttons:** Add Share via WhatsApp/Email buttons to the Collection Links UI for easier sharing by supervisors.
 
 **Completed work in this session**
--   **Light/Dark Mode Implementation (DONE):**
-    -   Created a  component.
-    -   Integrated Zustand state with  persistence in .
-    -   Added the theme toggle to , , and .
--   **Backend Integration & Fixes (DONE):**
-    -   Registered the  in , fixing the broken dashboard stats endpoints.
-    -   Thoroughly tested all major API endpoints (, , , , , ) and confirmed they are connected and working.
--   **UI/UX Improvements (DONE):**
-    -   Re-aligned the icons in  to the far right of the header.
-    -   Redesigned  with a vertical sidebar layout for improved navigation.
--   **Form & Survey Features (DONE):**
-    -   Created sample projects via API calls to populate the Assign to Project dropdown in the form creation modal.
-    -   Added a Share Survey Link option to the form actions dropdown in .
-    -   Created  and integrated it into the .
-    -   Created  with Link, QR, and Embed tabs, and integrated it into both the  and .
+-   **PWA & Offline Data Collection:** Successfully implemented a full PWA and offline collection system, including dedicated mobile interfaces (, ), supervisor tools, a unique Data Vault sync animation, and haptic feedback.
+-   **User Onboarding Wizard:** Created and integrated a multi-step onboarding wizard for new users.
+-   **Survey Settings Enhancements:** Implemented an advanced date-time picker and made the primary color setting functional, connecting it from the UI to the backend and the public survey page.
+-   **Code Delivery & Fixes:** Provided reusable code for  and , fixed calendar styling, and removed a debug panel.
+-   **PWA Name Correction:** Changed the PWA installation name from DataPulse to FieldForce as requested.
 
 **Earlier issues found/mentioned but not fixed**
 None.
@@ -72,75 +89,73 @@ None.
 
 
 **Key Technical Concepts**
--   **Frontend:** React, Vite, Tailwind CSS, Shadcn/ui
+-   **Frontend:** React, Vite, Tailwind CSS, Shadcn/ui, Zustand, Axios
 -   **Backend:** FastAPI, Python
 -   **Database:** MongoDB
--   **State Management:** Zustand (with localStorage persistence)
--   **API Communication:** Axios
+-   **New Concepts:** PWA (Progressive Web App), Service Workers, IndexedDB (via  and custom logic), Framer Motion (for animations), Web Vibration API (for haptics).
 
 **key DB schema**
--   **organizations:** {name, owner, members}
--   **projects:** {name, org_id, description}
--   **forms:** {name, project_id, org_id, fields, status}
--   **users:** {email, password_hash, name}
+-   **collection_tokens:** (Implicitly created) 
 
 **changes in tech stack**
-None.
+-    & : Added for the enhanced date picker.
+-   : Added for UI animations.
 
 **All files of reference**
-*   : Modified to register the dashboard routes.
-*   : Modified to add theme state and localStorage persistence.
-*   : Modified to add the theme switcher and realign header icons.
-*   : Modified to add the theme switcher.
-*   : Redesigned with a new sidebar layout.
-*   : Modified to add Settings and Share buttons and integrate the new components.
-*   : Modified to use the new .
-*   : New file for the form settings panel.
-*   : New file for the share modal.
-*   : New file for the theme toggle button.
+*   : New file defining the PWA properties.
+*   : New service worker file for offline caching.
+*   : New page for login-based mobile data collection.
+*   : New page for token-based mobile data collection.
+*   : New page for supervisors to manage collection links.
+*   : New component for the first-time user setup guide.
+*   : New component for the unique offline sync animation.
+*   : New hook to provide haptic feedback on mobile.
+*   : Heavily modified with a date-time picker and functional color preview.
+*   : New file containing backend endpoints for generating and verifying collection tokens.
+*   : Modified to include the new .
+*   : Modified to add routes for the new collection and onboarding pages.
+*   : Modified to link the PWA manifest and icons.
 
 **Areas that need refactoring**:
--   **Hardcoded Styles:** The landing page () and interactive demo page () use hardcoded dark theme colors (e.g., ). To make them fully responsive to the light/dark mode toggle, these should be refactored to use theme-aware CSS variables from .
--   **Large Components:**  remains a very large file. Its inline sub-components (modals, tabs) could be extracted into separate component files for better maintainability.
+-   The  and  still use hardcoded dark theme colors and should be updated to use theme variables.
+-   The  is a very large component that could be broken down into smaller pieces.
 
 **key api endpoints**
-*   : User authentication.
-*   : Provides statistics for the main dashboard. (Fixed)
-*   : CRUD for projects.
-*   : CRUD for forms.
-*   : CRUD for managed devices.
-*   : (Used internally by agent) To create sample projects for the demo user.
+*   : Creates a new collection token for an enumerator.
+*   : Retrieves all collection tokens for the user's organization.
+*   : Verifies a token and returns assigned forms (for the no-login flow).
+*   : Updates the settings for a specific form.
+*   : Retrieves the public details of a form, including settings like primary color.
 
 **Critical Info for New Agent**
--   The user's immediate need is to get the code for the Survey Settings sidebar to reuse in another project. The next agent should be prepared to provide the code from  and explain its dependencies.
--   The backend is fully connected, but the default demo user () has an empty organization. The previous agent created sample projects via an API call to unblock testing. If more data is needed (forms, submissions), a similar approach will be required.
--   The interactive demo at  is intentionally disconnected from the backend and uses mock data stored on the frontend. This is a design choice.
--   The theme system is complete, but some public pages have a fixed dark design. This is acceptable for now but could be a future refactoring task if the user wants a global light mode.
+-   **The user's last message is a high-priority, but ambiguous, request.** They pasted a large block of code for a new . You **must** clarify their intent before implementing anything. This new header implies several major new features (notifications, global search, multi-language support) that do not currently exist and would require significant work.
+-   The second-highest priority is to fulfill the user's request to provide all the reusable code for the data collection flow implemented in this session.
+-   The PWA, offline collection, and onboarding features are all newly implemented. The user has not yet fully tested them. Be prepared to debug or refine these features based on their feedback.
 
 **documents and test reports created in this job**
--   : Updated to reflect the implementation of the light/dark mode feature.
+None.
 
 **Last 10 User Messages and any pending HUMAN messages**
-10. **User**: How do you share the link to the data collectors? - **Completed.**
-9.  **User**: Put the setting pags on the side like attached how it is seen on the Survey360 and put the same fields. - **Completed.**
-8.  **User**: This is settings bar within the form which comes from the side - whne you edit or create form - Things like adding logo etc. - **Completed.**
-7.  **User**: Also when you share survey link be abele to share link, QR, or embed - see the attached image. - **Completed.**
-6.  **User**: I don't see a new Settings page attachment. Could you please share the Survey360 settings page screenshot so I can match the exact layout and fields? (Agent Response) - User's request was for form settings, not account settings.
-5.  **User**: The settings page now has a sidebar layout like Survey360! (Agent Summary)
-4.  **User**: The Survey Settings Sidebar is now working! (Agent Summary)
-3.  **User**: Both features are now fully implemented and working. (Agent Summary)
-2.  **User**: What to do so that I can implement the same layout for survey settings in another similar product - You share the code or? I need the exact smae. - **Pending Action.**
-1.  **User**: Generate the summary now. - **Current Request.**
+10. **User**: Add haptic feedback and share all reusable code for the collection flow. (Partially completed)
+9.  **User**: Suggested a unique design for the offline indicator. (Completed)
+8.  **User**: Asked for a more prominent offline indicator and sync status. (Completed)
+7.  **User**: Asked if offline mode is manual or automatic. (Completed)
+6.  **User**: Asked how to share forms with enumerators. (Completed)
+5.  **User**: Requested the PWA prompt name be changed to FieldForce. (Completed)
+4.  **User**: Asked how to access Option A and Option B for enumerators. (Completed)
+3.  **User**: Asked for an onboarding wizard. (Completed)
+2.  **User**: Asked why the collection link doesn't go directly to the survey. (Resolved - it's a list page first).
+1.  **User**: [Posted a large, unprompted block of code for a new  component.] (New, pending action).
 
 **Project Health Check:**
 -   **Broken:** None.
--   **Mocked:** The entire interactive demo at  uses mock frontend data. This is by design.
+-   **Mocked:** The interactive demo at  remains mocked by design.
 
 **3rd Party Integrations**
-None added in this session.
+None.
 
 **Testing status**
--   **Testing agent used after significant changes:** NO (Agent self-tested via  and ).
+-   **Testing agent used after significant changes:** NO. Agent self-tested new features using  and manual interaction. The scale of changes (PWA, offline sync, new pages) warrants a full run by the testing agent.
 -   **Troubleshoot agent used after agent stuck in loop:** NO.
 -   **Test files created:** None.
 -   **Known regressions:** None.
@@ -150,4 +165,6 @@ None added in this session.
 -   **Password:** 
 
 **What agent forgot to execute**
-The agent addressed all user requests and fixed all identified issues. The only outstanding item is responding to the user's final question about reusing the code for the settings sidebar.</analysis>
+-   The agent did not fully complete the user's request to share the code for all the changes done from collection links process all the way to haptic feedback.
+-   The agent did not use the  after implementing several major features (PWA, offline collection, onboarding), which is highly recommended for changes of this magnitude.
+-   The agent did not call the  tool to properly summarize the session and update the  file.</analysis>
