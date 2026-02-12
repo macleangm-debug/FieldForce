@@ -102,6 +102,13 @@ export function CollectionLinksPage() {
   const [importing, setImporting] = useState(false);
   const [importResults, setImportResults] = useState(null);
   
+  // Enhanced import state for security modes
+  const [importSecurityMode, setImportSecurityMode] = useState('standard');
+  const [importPinMode, setImportPinMode] = useState('auto'); // 'auto' | 'shared'
+  const [importSharedPin, setImportSharedPin] = useState('');
+  const [showDistributeDialog, setShowDistributeDialog] = useState(false);
+  const [distributing, setDistributing] = useState(false);
+  
   // Link shortening state
   const [shortenedLinks, setShortenedLinks] = useState({}); // Maps original URL to shortened URL
   const [shorteningUrl, setShorteningUrl] = useState(null); // URL currently being shortened
