@@ -352,3 +352,156 @@ async def get_my_assigned_forms(
             for f in forms
         ]
     }
+
+
+
+@router.post("/tokens/bulk-import", response_model=BulkImportResult)
+async def bulk_import_enumerators(
+    request: Request,
+    file: UploadFile = File(...),
+    form_ids: str = None,  # Comma-separated form IDs
+    expires_days: int = 30,
+    max_submissions: Optional[int] = None,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Bulk import enumerators from CSV or Excel file.
+    
+    Expected columns:
+    - name (required): Enumerator name
+    - email (optional): Enumerator email
+    
+    Query params:
+    - form_ids: Comma-separated list of form IDs to assign
+    - expires_days: Token validity in days (default: 30)
+    - max_submissions: Max submissions per enumerator (optional)
+    """
+    db = request.app.state.db
+    
+    # Validate file type
+    filename = file.filename.lower()
+    if not filename.endswith(('.csv', '.xlsx', '.xls')):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid file type. Please upload a CSV or Excel file."
+        )
+    
+    # Parse form_ids
+    if not form_ids:
+        raise HTTPException(
+            status_code=400,
+            detail="Please specify form_ids to assign to enumerators"
+        )
+    
+    assigned_form_ids = [fid.strip() for fid in form_ids.split(',') if fid.strip()]
+    if not assigned_form_ids:
+        raise HTTPException(
+            status_code=400,
+            detail="Please provide at least one form ID"
+        )
+    
+    # Read file content
+    content = await file.read()
+    
+    try:
+        # Parse file based on type
+        if filename.endswith('.csv'):
+            df = pd.read_csv(io.BytesIO(content))
+        else:
+            df = pd.read_excel(io.BytesIO(content))
+        
+        # Normalize column names (lowercase, strip whitespace)
+        df.columns = [col.lower().strip() for col in df.columns]
+        
+        # Check required columns
+        if 'name' not in df.columns:
+            raise HTTPException(
+                status_code=400,
+                detail="Missing required column: 'name'. File must have a 'name' column."
+            )
+        
+        # Process each row
+        results = {
+            "success_count": 0,
+            "error_count": 0,
+            "errors": [],
+            "created_tokens": []
+        }
+        
+        now = datetime.now(timezone.utc)
+        expires_at = now + timedelta(days=expires_days)
+        
+        for idx, row in df.iterrows():
+            row_num = idx + 2  # Account for header and 0-indexing
+            
+            # Get name
+            name = str(row.get('name', '')).strip()
+            if not name or name.lower() == 'nan':
+                results["error_count"] += 1
+                results["errors"].append({
+                    "row": row_num,
+                    "error": "Missing or empty name"
+                })
+                continue
+            
+            # Get email (optional)
+            email = str(row.get('email', '')).strip() if 'email' in df.columns else None
+            if email and email.lower() == 'nan':
+                email = None
+            
+            # Generate token
+            token = generate_token()
+            token_hash = hashlib.sha256(token.encode()).hexdigest()
+            
+            token_doc = {
+                "id": f"ct_{secrets.token_hex(8)}",
+                "token_hash": token_hash,
+                "enumerator_name": name,
+                "enumerator_email": email,
+                "form_ids": assigned_form_ids,
+                "created_by": current_user["user_id"],
+                "created_at": now.isoformat(),
+                "expires_at": expires_at.isoformat(),
+                "submission_count": 0,
+                "max_submissions": max_submissions,
+                "is_active": True,
+                "source": "bulk_import"
+            }
+            
+            try:
+                await db.collection_tokens.insert_one(token_doc)
+                
+                results["success_count"] += 1
+                results["created_tokens"].append({
+                    "id": token_doc["id"],
+                    "token": token,
+                    "name": name,
+                    "email": email
+                })
+            except Exception as e:
+                results["error_count"] += 1
+                results["errors"].append({
+                    "row": row_num,
+                    "name": name,
+                    "error": str(e)
+                })
+        
+        return BulkImportResult(**results)
+        
+    except pd.errors.EmptyDataError:
+        raise HTTPException(status_code=400, detail="The uploaded file is empty")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error parsing file: {str(e)}")
+
+
+@router.get("/tokens/template")
+async def download_import_template():
+    """Download a sample CSV template for bulk enumerator import"""
+    return {
+        "template_url": "data:text/csv;charset=utf-8,name,email\nJohn Smith,john@example.com\nJane Doe,jane@example.com",
+        "columns": [
+            {"name": "name", "required": True, "description": "Enumerator's full name"},
+            {"name": "email", "required": False, "description": "Enumerator's email address (optional)"}
+        ],
+        "instructions": "Upload a CSV or Excel file with 'name' column (required) and optional 'email' column."
+    }
