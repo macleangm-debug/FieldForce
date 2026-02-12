@@ -1359,6 +1359,41 @@ export function CollectionLinksPage() {
             </TabsContent>
 
             <TabsContent value="share" className="space-y-4 mt-4">
+              {/* Template Selection */}
+              {messageTemplates.length > 0 && (
+                <div className="space-y-2 p-3 bg-muted/50 rounded-lg">
+                  <Label className="text-xs text-muted-foreground">Message Template (Optional)</Label>
+                  <Select
+                    value={selectedTemplate?.id || 'default'}
+                    onValueChange={(val) => {
+                      if (val === 'default') {
+                        setSelectedTemplate(null);
+                      } else {
+                        const template = messageTemplates.find(t => t.id === val);
+                        setSelectedTemplate(template);
+                      }
+                    }}
+                  >
+                    <SelectTrigger className="h-8">
+                      <SelectValue placeholder="Use default message" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="default">Default message</SelectItem>
+                      {messageTemplates.filter(t => t.type === 'whatsapp' || t.type === 'email' || t.type === 'sms').map(t => (
+                        <SelectItem key={t.id} value={t.id}>
+                          <span className="flex items-center gap-2">
+                            {t.type === 'whatsapp' && <MessageCircle className="w-3 h-3 text-green-500" />}
+                            {t.type === 'email' && <Mail className="w-3 h-3 text-blue-500" />}
+                            {t.type === 'sms' && <Smartphone className="w-3 h-3 text-purple-500" />}
+                            {t.name}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              
               <div className="space-y-3">
                 <Button
                   variant="outline"
@@ -1395,7 +1430,7 @@ export function CollectionLinksPage() {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground text-center">
-                These options will open the respective app with a pre-filled message
+                {selectedTemplate ? `Using template: ${selectedTemplate.name}` : 'Using default message templates'}
               </p>
             </TabsContent>
           </Tabs>
