@@ -136,12 +136,12 @@ async def list_collection_tokens(
     
     tokens = await db.collection_tokens.find(
         {"created_by": current_user["user_id"]},
-        {"_id": 0, "token_hash": 0}
+        {"_id": 0, "token_hash": 0, "pin_hash": 0}
     ).to_list(1000)
     
     result = []
     for t in tokens:
-        result.append(CollectionTokenOut(
+        token_out = CollectionTokenOut(
             id=t["id"],
             token="***hidden***",  # Never expose the actual token
             enumerator_name=t["enumerator_name"],
@@ -152,7 +152,13 @@ async def list_collection_tokens(
             submission_count=t.get("submission_count", 0),
             max_submissions=t.get("max_submissions"),
             is_active=t.get("is_active", True)
-        ))
+        )
+        # Add security_mode as extra field (not in Pydantic model but passed through)
+        result.append({
+            **token_out.dict(),
+            "security_mode": t.get("security_mode", "standard"),
+            "device_locked": t.get("locked_device_id") is not None
+        })
     
     return result
 
