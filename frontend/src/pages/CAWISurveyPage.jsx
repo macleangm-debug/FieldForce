@@ -75,8 +75,20 @@ export function CAWISurveyPage() {
       const formData = await formRes.json();
       setForm(formData);
       
-      // Organize fields into pages
-      const formPages = organizeIntoPages(formData.fields || []);
+      // Set survey settings (including primary color)
+      if (formData.settings) {
+        setSurveySettings(prev => ({
+          ...prev,
+          ...formData.settings
+        }));
+      }
+      
+      // Organize fields into pages (shuffle if enabled)
+      let fieldsToOrganize = formData.fields || [];
+      if (formData.settings?.shuffleQuestions) {
+        fieldsToOrganize = [...fieldsToOrganize].sort(() => Math.random() - 0.5);
+      }
+      const formPages = organizeIntoPages(fieldsToOrganize);
       setPages(formPages);
       
       // Resume if session exists
