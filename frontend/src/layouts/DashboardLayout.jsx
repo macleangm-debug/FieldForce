@@ -516,6 +516,9 @@ export function DashboardLayout({ children }) {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              {/* Theme Toggle - Far Right */}
+              <ThemeSwitcher variant="icon" />
             </div>
           </header>
 
