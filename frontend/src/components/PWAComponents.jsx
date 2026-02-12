@@ -94,7 +94,7 @@ export function PWAInstallPrompt() {
               <Smartphone className="w-6 h-6 text-primary" />
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-white mb-1">Install DataPulse</h3>
+              <h3 className="font-semibold text-white mb-1">Install FieldForce</h3>
               <p className="text-sm text-gray-400 mb-3">
                 Install the app for offline data collection and faster access.
               </p>
