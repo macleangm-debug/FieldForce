@@ -52,6 +52,7 @@ export function CollectPage() {
   const [showLogin, setShowLogin] = useState(!isAuthenticated);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
+  const [showOfflineExplainer, setShowOfflineExplainer] = useState(false);
   
   // Login form state
   const [email, setEmail] = useState('');
