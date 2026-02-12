@@ -344,6 +344,23 @@ export function SurveySettingsSidebar({
                     className="bg-slate-800 border-slate-600 text-white font-mono flex-1"
                   />
                 </div>
+                
+                {/* Color Preview */}
+                <div className="mt-3 p-3 bg-slate-800 rounded-lg border border-slate-600">
+                  <p className="text-xs text-slate-400 mb-2">Preview:</p>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      className="px-4 py-2 rounded-md text-white text-sm font-medium transition-colors"
+                      style={{ backgroundColor: localSettings.primaryColor }}
+                    >
+                      Submit Survey
+                    </button>
+                    <div 
+                      className="h-2 flex-1 rounded-full"
+                      style={{ backgroundColor: localSettings.primaryColor }}
+                    />
+                  </div>
+                </div>
               </div>
 
               <Separator className="bg-slate-700" />
