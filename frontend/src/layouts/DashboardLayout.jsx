@@ -41,7 +41,8 @@ import {
   Languages,
   Key,
   Crown,
-  Plus
+  Plus,
+  Command
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
@@ -62,6 +63,9 @@ import { useAuthStore, useOrgStore, useUIStore } from '../store';
 import { cn } from '../lib/utils';
 import { OfflineStatusIndicator } from '../components/OfflineStatus';
 import { ThemeSwitcher } from '../components/ThemeSwitcher';
+import { CommandPalette } from '../components/CommandPalette';
+import { NotificationsPanel } from '../components/NotificationsPanel';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 // Navigation structure - grouped for Canva-style rail (FieldForce simplified)
 const NAVIGATION = [
