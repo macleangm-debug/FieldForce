@@ -206,6 +206,11 @@ function App() {
               <DeviceManagementPage />
             </ProtectedRoute>
           } />
+          <Route path="/collection-links" element={
+            <ProtectedRoute>
+              <CollectionLinksPage />
+            </ProtectedRoute>
+          } />
           
           {/* Public CAWI Survey Routes */}
           <Route path="/survey/:formId" element={<CAWISurveyPage />} />
