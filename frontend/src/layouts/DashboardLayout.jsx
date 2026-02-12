@@ -457,6 +457,9 @@ export function DashboardLayout({ children }) {
 
             {/* Right side actions */}
             <div className="flex items-center gap-2">
+              {/* Theme Toggle */}
+              <ThemeSwitcher variant="icon" />
+
               {/* Help Button */}
               <Tooltip>
                 <TooltipTrigger asChild>
