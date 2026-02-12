@@ -327,6 +327,10 @@ export function CollectionLinksPage() {
       toast.error('Please select at least one form to assign');
       return;
     }
+    if (importSecurityMode === 'pin_protected' && importPinMode === 'shared' && importSharedPin.length !== 4) {
+      toast.error('Please enter a 4-digit shared PIN');
+      return;
+    }
 
     setImporting(true);
     setImportResults(null);
@@ -337,10 +341,17 @@ export function CollectionLinksPage() {
 
       const params = new URLSearchParams({
         form_ids: importFormIds.join(','),
-        expires_days: importExpiresDays.toString()
+        expires_days: importExpiresDays.toString(),
+        security_mode: importSecurityMode
       });
       if (importMaxSubmissions) {
         params.append('max_submissions', importMaxSubmissions);
+      }
+      if (importSecurityMode === 'pin_protected') {
+        params.append('pin_mode', importPinMode);
+        if (importPinMode === 'shared') {
+          params.append('shared_pin', importSharedPin);
+        }
       }
 
       const res = await fetch(`${API_URL}/api/collect/tokens/bulk-import?${params.toString()}`, {
