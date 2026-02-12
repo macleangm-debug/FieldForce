@@ -92,10 +92,15 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
 - [x] **Non-blocking Onboarding Wizard** - Redesigned as floating card in bottom-right corner (Feb 12)
 - [x] **Button Rename** - "Create Link" → "Create Single Link", "Import" → "Bulk Links" (Feb 12)
 - [x] **CSV/Excel Support Verified** - Bulk import accepts .csv, .xlsx, .xls files (Feb 12)
+- [x] **Custom Message Templates (P2)** - Full CRUD for message templates (Feb 12)
+  - Backend API at `/api/message-templates` with user/org/system scopes
+  - 5 system templates: WhatsApp (Friendly, Professional), Email (Standard), SMS (Short, With Instructions)
+  - Settings page > Message Templates section for managing templates
+  - Template variables: `{name}`, `{link}`, `{pin_section}`, `{expiry}`
+  - Template selector in Collection Links share dialog
 
 ## Backlog
-- [ ] Custom message templates for sharing
-- [ ] Scalable PIN distribution (batch SMS/email)
+- [ ] Scalable PIN distribution (batch SMS/email via SendGrid/Twilio)
 - [ ] Auto-open single-form surveys
 - [ ] Full light/dark theme consistency
 - [ ] Component refactoring for InteractiveDemoPage
