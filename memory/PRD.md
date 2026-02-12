@@ -13,8 +13,9 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 
 ## User Personas
 1. **Survey Administrators** - Create and manage surveys, view analytics
-2. **Data Collectors/Enumerators** - Fill out surveys in the field
-3. **Respondents** - Complete public surveys via shared links
+2. **Supervisors** - Generate collection links, manage enumerators
+3. **Data Collectors/Enumerators** - Fill out surveys in the field
+4. **Respondents** - Complete public surveys via shared links
 
 ---
 
@@ -37,7 +38,7 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
   - Close date with calendar picker + time selector
   - Max responses limit
   - Thank you message customization
-  - **Primary color picker with live preview**
+  - Primary color picker with live preview
   - Progress bar toggle
   - Shuffle questions toggle
   - Multiple submissions toggle
@@ -56,7 +57,7 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - Dynamic theming based on primary color setting
 - Custom thank you message on completion
 
-### Mobile Data Collection (PWA) ✅ - NEW
+### Mobile Data Collection (PWA) ✅
 - **PWA Infrastructure:**
   - manifest.json with app icons
   - Service worker for offline caching
@@ -73,6 +74,22 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
   - Token identifies enumerator
   - Supervisor-generated collection links
   - Submission limits and expiry tracking
+
+### Collection Links Management ✅ - NEW
+- **Page:** `/collection-links` (under Field menu)
+- Supervisors can:
+  - Create collection tokens for enumerators
+  - Assign specific forms to each token
+  - Set expiry period (7 days - 1 year)
+  - Set max submissions limit
+- Generated links display:
+  - Direct URL
+  - QR code (downloadable)
+  - Security warning
+- Table view of all tokens with:
+  - Status (Active/Expired/Revoked)
+  - Submission count
+  - Revoke action
 
 ### Light/Dark Mode ✅
 - Theme switcher in all headers
@@ -95,9 +112,8 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - `PATCH /api/forms/{id}/settings` - Update survey settings
 - `GET /api/forms/{id}/public` - Get public form with settings
 - `POST /api/forms/{id}/publish` - Publish form
-- `POST /api/forms/{id}/duplicate` - Duplicate form
 
-### Data Collection (NEW)
+### Data Collection
 - `POST /api/collect/tokens` - Create collection token
 - `GET /api/collect/tokens` - List tokens
 - `DELETE /api/collect/tokens/{id}` - Revoke token
@@ -130,6 +146,7 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - `/frontend/src/pages/CollectPage.jsx` - Login-based mobile collection
 - `/frontend/src/pages/TokenCollectPage.jsx` - Token-based collection
 - `/frontend/src/pages/MobileFormPage.jsx` - Mobile form filling
+- `/frontend/src/pages/CollectionLinksPage.jsx` - Supervisor token management
 - `/frontend/public/manifest.json` - PWA manifest
 - `/frontend/public/sw.js` - Service worker
 - `/backend/routes/collect_routes.py` - Collection APIs
@@ -142,18 +159,17 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - None currently
 
 ### P1 (High Priority)
-- Create UI for supervisors to generate collection tokens
-- Add "Share Collection Link" button in admin dashboard
-- Test full mobile form filling flow
+- Test offline data collection & sync
+- Test form submission via token links
 
 ### P2 (Medium Priority)
 - Photo/audio capture in mobile form
 - GPS auto-capture during collection
 - Background sync improvements
-- Refactor Landing/Demo pages for full light/dark mode support
+- Bulk token generation
 
 ### P3 (Low Priority/Future)
+- SMS/WhatsApp link sharing integration
 - Custom branding fonts
 - Email notifications for submissions
 - Advanced analytics dashboard
-- Extract inline components from InteractiveDemoPage
