@@ -578,14 +578,14 @@ export function CollectionLinksPage() {
                 resetImportDialog();
                 setShowImportDialog(true);
               }}
-              data-testid="import-enumerators-btn"
+              data-testid="bulk-links-btn"
             >
               <Upload className="w-4 h-4 mr-2" />
-              Import
+              Bulk Links
             </Button>
-            <Button onClick={() => setShowCreateDialog(true)} data-testid="create-link-btn">
+            <Button onClick={() => setShowCreateDialog(true)} data-testid="create-single-link-btn">
               <Plus className="w-4 h-4 mr-2" />
-              Create Link
+              Create Single Link
             </Button>
           </div>
         </div>

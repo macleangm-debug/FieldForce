@@ -317,26 +317,15 @@ export function OnboardingWizard({ onComplete, onSkip }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute inset-0 pointer-events-none" style={{
-          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
-                           radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.15) 0%, transparent 50%)`
-        }} />
-      </div>
-
-      {/* Skip button */}
-      <button
-        onClick={onSkip}
-        className="absolute top-4 right-4 z-50 text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-sm"
-      >
-        Skip
-        <X className="w-4 h-4" />
-      </button>
-
+    <motion.div 
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.95 }}
+      className="fixed bottom-4 right-4 z-50 w-[420px] max-w-[calc(100vw-32px)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden"
+      data-testid="onboarding-wizard"
+    >
       {/* Progress bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-slate-800">
+      <div className="h-1 bg-slate-800">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
@@ -344,78 +333,70 @@ export function OnboardingWizard({ onComplete, onSkip }) {
         />
       </div>
 
-      {/* Step indicators */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 flex items-center gap-2">
-        {ONBOARDING_STEPS.map((s, i) => (
-          <motion.div
-            key={s.id}
-            initial={{ scale: 0.8 }}
-            animate={{ 
-              scale: i === currentStep ? 1.2 : 1,
-              opacity: i <= currentStep ? 1 : 0.3
-            }}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              i < currentStep 
-                ? 'bg-green-500' 
-                : i === currentStep 
-                  ? 'bg-primary' 
-                  : 'bg-slate-600'
-            }`}
-          />
-        ))}
+      {/* Header with step indicators and skip */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
+        <div className="flex items-center gap-1.5">
+          {ONBOARDING_STEPS.map((s, i) => (
+            <motion.div
+              key={s.id}
+              initial={{ scale: 0.8 }}
+              animate={{ 
+                scale: i === currentStep ? 1.2 : 1,
+                opacity: i <= currentStep ? 1 : 0.3
+              }}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                i < currentStep 
+                  ? 'bg-green-500' 
+                  : i === currentStep 
+                    ? 'bg-primary' 
+                    : 'bg-slate-600'
+              }`}
+            />
+          ))}
+        </div>
+        <button
+          onClick={onSkip}
+          className="text-slate-400 hover:text-white transition-colors flex items-center gap-1 text-xs"
+          data-testid="onboarding-skip-btn"
+        >
+          Skip setup
+          <X className="w-3.5 h-3.5" />
+        </button>
       </div>
 
       {/* Main content */}
-      <div className="h-full flex flex-col items-center justify-center px-4 py-16">
+      <div className="p-4 max-h-[70vh] overflow-y-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={step.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-lg"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2 }}
           >
-            {/* Step icon */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', delay: 0.1 }}
-              className="flex justify-center mb-6"
-            >
-              <div className={`p-4 rounded-2xl bg-gradient-to-br ${step.color} shadow-lg`}>
-                <step.icon className="w-8 h-8 text-white" />
+            {/* Step icon and title */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`p-2.5 rounded-xl bg-gradient-to-br ${step.color} shadow-lg shrink-0`}>
+                <step.icon className="w-5 h-5 text-white" />
               </div>
-            </motion.div>
-
-            {/* Step title */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-center mb-8"
-            >
-              <h1 className="text-2xl font-bold text-white mb-2">{step.title}</h1>
-              <p className="text-slate-400">{step.subtitle}</p>
-            </motion.div>
+              <div>
+                <h2 className="text-lg font-bold text-white">{step.title}</h2>
+                <p className="text-slate-400 text-sm">{step.subtitle}</p>
+              </div>
+            </div>
 
             {/* Step content */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              {renderStepContent()}
-            </motion.div>
+            {renderStepContent()}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Navigation */}
+      {/* Navigation footer */}
       {currentStep > 0 && currentStep < ONBOARDING_STEPS.length - 1 && (
-        <div className="absolute bottom-8 left-4">
+        <div className="px-4 py-3 border-t border-slate-800 bg-slate-900/50">
           <Button
             variant="ghost"
+            size="sm"
             onClick={goPrev}
             className="text-slate-400 hover:text-white"
           >
@@ -424,7 +405,7 @@ export function OnboardingWizard({ onComplete, onSkip }) {
           </Button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
