@@ -643,13 +643,28 @@ export function CollectionLinksPage() {
                           {formatDate(tokenData.expires_at)}
                         </TableCell>
                         <TableCell>
-                          {active ? (
-                            <Badge className="bg-green-500/20 text-green-400">Active</Badge>
-                          ) : expired ? (
-                            <Badge className="bg-amber-500/20 text-amber-400">Expired</Badge>
-                          ) : (
-                            <Badge className="bg-red-500/20 text-red-400">Revoked</Badge>
-                          )}
+                          <div className="flex flex-col gap-1">
+                            {active ? (
+                              <Badge className="bg-green-500/20 text-green-400 w-fit">Active</Badge>
+                            ) : expired ? (
+                              <Badge className="bg-amber-500/20 text-amber-400 w-fit">Expired</Badge>
+                            ) : (
+                              <Badge className="bg-red-500/20 text-red-400 w-fit">Revoked</Badge>
+                            )}
+                            {/* Security Mode Badge */}
+                            {tokenData.security_mode === 'device_locked' && (
+                              <Badge variant="outline" className="text-orange-400 border-orange-400/50 w-fit text-xs">
+                                <Smartphone className="w-3 h-3 mr-1" />
+                                Device Lock
+                              </Badge>
+                            )}
+                            {tokenData.security_mode === 'pin_protected' && (
+                              <Badge variant="outline" className="text-green-400 border-green-400/50 w-fit text-xs">
+                                <Key className="w-3 h-3 mr-1" />
+                                PIN
+                              </Badge>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="text-right">
                           <DropdownMenu>
