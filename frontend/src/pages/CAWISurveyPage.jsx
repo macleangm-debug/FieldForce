@@ -321,9 +321,15 @@ export function CAWISurveyPage() {
       });
       
       if (res.ok) {
-        // Clear local storage
+        // Clear local storage for responses
         const localKey = `cawi_${formId}_${token || 'anon'}`;
         localStorage.removeItem(localKey);
+        
+        // Save settings for the completion page
+        localStorage.setItem(`cawi_settings_${formId}`, JSON.stringify({
+          thankYouMessage: surveySettings.thankYouMessage,
+          primaryColor: surveySettings.primaryColor
+        }));
         
         toast.success('Survey submitted successfully!');
         navigate(`/survey/complete?formId=${formId}`);
