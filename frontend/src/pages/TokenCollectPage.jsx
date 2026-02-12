@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -13,11 +13,18 @@ import {
   FileText,
   User,
   AlertCircle,
-  CheckCircle2
+  CheckCircle2,
+  Lock,
+  Key,
+  Smartphone,
+  Shield,
+  ShieldCheck,
+  ShieldX
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
+import { Input } from '../components/ui/input';
 import { toast } from 'sonner';
 import { offlineStorage, syncManager } from '../lib/offlineStorage';
 import { 
@@ -31,8 +38,59 @@ import { DataVault, OfflineRibbon, ConnectionRestoredBanner } from '../component
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 /**
+ * Generate a unique device ID for this browser/device
+ */
+const getOrCreateDeviceId = () => {
+  const storageKey = 'fieldforce_device_id';
+  let deviceId = localStorage.getItem(storageKey);
+  if (!deviceId) {
+    deviceId = `dev_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem(storageKey, deviceId);
+  }
+  return deviceId;
+};
+
+/**
+ * Get device info for registration
+ */
+const getDeviceInfo = () => {
+  const ua = navigator.userAgent;
+  let deviceType = 'desktop';
+  if (/Mobi|Android/i.test(ua)) deviceType = 'mobile';
+  else if (/Tablet|iPad/i.test(ua)) deviceType = 'tablet';
+  
+  let browser = 'Unknown';
+  if (/Chrome/i.test(ua)) browser = 'Chrome';
+  else if (/Firefox/i.test(ua)) browser = 'Firefox';
+  else if (/Safari/i.test(ua)) browser = 'Safari';
+  else if (/Edge/i.test(ua)) browser = 'Edge';
+  
+  let os = 'Unknown';
+  if (/Windows/i.test(ua)) os = 'Windows';
+  else if (/Mac/i.test(ua)) os = 'macOS';
+  else if (/Linux/i.test(ua)) os = 'Linux';
+  else if (/Android/i.test(ua)) os = 'Android';
+  else if (/iOS|iPhone|iPad/i.test(ua)) os = 'iOS';
+  
+  return {
+    device_id: getOrCreateDeviceId(),
+    device_type: deviceType,
+    browser,
+    os,
+    screen_width: window.screen.width,
+    screen_height: window.screen.height,
+    user_agent: ua
+  };
+};
+
+/**
  * Token-Based Data Collection Page (Option B - No Login Required)
  * Accessed via /collect/t/{token}
+ * 
+ * Supports three security modes:
+ * 1. Standard: Simple link access
+ * 2. Device Locked: First device to access locks the link
+ * 3. PIN Protected: Requires 4-digit PIN + device lock
  */
 export function TokenCollectPage() {
   const { token } = useParams();
@@ -50,6 +108,16 @@ export function TokenCollectPage() {
   const [showOfflineExplainer, setShowOfflineExplainer] = useState(false);
   const [showConnectionRestored, setShowConnectionRestored] = useState(false);
   const [wasOffline, setWasOffline] = useState(false);
+  
+  // Security state
+  const [securityMode, setSecurityMode] = useState('standard');
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [pin, setPin] = useState(['', '', '', '']);
+  const [pinError, setPinError] = useState('');
+  const [verifying, setVerifying] = useState(false);
+  const [deviceLocked, setDeviceLocked] = useState(false);
+  const pinInputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
 
   // Track online status
   useEffect(() => {
