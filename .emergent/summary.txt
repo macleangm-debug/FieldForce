@@ -1,83 +1,72 @@
 <analysis>**original_problem_statement:**
-The user initially requested the reusable code for a Survey Settings sidebar. The session's scope then expanded significantly to include:
-1.  **Code Reusability:** Providing complete, reusable code for the  and  components.
-2.  **UI/UX Enhancements:**
-    *   Implementing an advanced date-time picker in the settings sidebar.
-    *   Fixing the calendar's dark mode styling.
-    *   Making the Primary Color setting functional by connecting it to the backend and applying it to the public survey page, including a live preview.
-    *   Creating a unique, animated Data Vault offline/sync status indicator.
-    *   Adding haptic feedback for mobile interactions like form submission and data sync.
-3.  **New Features:**
-    *   **PWA & Offline Collection:** Transforming the app into a Progressive Web App (PWA) with a manifest and service worker, enabling full offline data collection capabilities with automatic syncing.
-    *   **Enumerator Interfaces:** Creating two dedicated, mobile-first data collection interfaces: a login-based page () and a token-based, no-login page ().
-    *   **Supervisor Tools:** Building a Collection Links management page in the admin dashboard for supervisors to generate, view, and manage token-based access links for enumerators.
-    *   **Onboarding Wizard:** Implementing a comprehensive, multi-step onboarding wizard for new users to guide them through initial setup (creating an organization, first project, etc.).
-4.  **Bug Fixes:** Removing a leftover debug panel from a form page.
+The user initially requested reusable code for UI components. The scope then expanded to a full PWA with offline data collection (FieldForce app), enumerator interfaces, supervisor tools, and an onboarding wizard.
 
-The user's final message was an unprompted block of code for a new, feature-rich  component.
+In this session, the user asked to:
+1.  Implement a new, feature-rich  they provided.
+2.  Fix and enhance the sharing functionality on the Collection Links page.
+3.  Add the same enhanced sharing functionality to the main Forms page.
+4.  The latest request from the user is to add a CSV/Excel import for enumerators, integrate a link shortener, and allow custom message templates for sharing.
+
+PRODUCT REQUIREMENTS:
+-   A fully functional dashboard header with Global Search (⌘K), Notifications, and a Language Selector.
+-   A robust and user-friendly sharing mechanism for both collection links and surveys, including options for WhatsApp, Email, SMS, QR Code, and direct link copying.
+-   Project context to be visible on the Collection Links page.
+-   (New) Bulk enumerator import via CSV/Excel files.
+-   (New) Integration with a link-shortening service.
+-   (New) Customizable message templates for sharing links.
 
 **User's preferred language**: English
 
 **what currently exists?**
-The application FieldForce is a full-stack project (React/FastAPI/MongoDB) with a comprehensive feature set. It now includes:
--   Full authentication, project/form management, and a theme system.
--   **PWA Functionality:** The app is now a fully installable Progressive Web App with a service worker () and manifest () for offline capabilities.
--   **Offline Data Collection:** A robust offline system using IndexedDB is in place. It features a unique Data Vault UI with particle-stream animations for syncing and haptic feedback on mobile devices.
--   **Dedicated Collection Interfaces:** Two mobile-optimized data collection portals exist:
-    *   : For registered enumerators to log in and access assigned forms.
-    *   : For no-login access via a secure, supervisor-generated link.
--   **Supervisor Management UI:** A new Collection Links page allows administrators to create and manage token-based links for field data collection.
--   **User Onboarding:** A multi-step, skippable onboarding wizard guides new users through the initial setup process upon their first login, with progress saved to .
--   **Enhanced Survey Settings:** The settings sidebar now includes an advanced date-time picker and a functional primary color selector with a live preview that affects the public survey page.
+The FieldForce application is a full-stack PWA (React/FastAPI/MongoDB) with offline data collection capabilities. It features:
+-   Full user authentication and project/form management.
+-   A new, fully functional dashboard header with a  global search palette, a notifications panel, and a language selector.
+-   A Collection Links management page for supervisors with a 3-dots action menu offering enhanced sharing options (WhatsApp, Email, SMS, QR Code, Copy Link) and project context in the table.
+-   The main Forms dashboard now also includes the same 3-dots action menu with a share submenu on each form card.
+-   Two data collection flows: a login-based one for internal teams () and a token-based one for external enumerators ().
 
 **Last working item**:
--   **Last item agent was working:** The user unexpectedly provided a large code snippet for a new  component. This component includes many new features like a global search palette, language selector, and a more advanced notifications system. The agent had just finished debugging the data collection flow and had not yet analyzed or acted on this new input.
--   **Status:** NOT STARTED
--   **Agent Testing Done:** N/A
--   **Which testing method agent to use?** Frontend testing agent. The agent must first clarify the user's intent. If the user wants to implement this new header, it will require significant frontend work and potentially new backend endpoints.
--   **User Testing Done:** N/A
+-   **Last item agent was working:** Implementing the enhanced 3-dots share menu on the main Forms page, adding a submenu with options for Copy Link, QR Code, WhatsApp, Email, and SMS.
+-   **Status:** USER VERIFICATION PENDING
+-   **Agent Testing Done:** Y
+-   **Which testing method agent to use?** NA (Work is complete, awaiting user feedback or proceeding to next tasks).
+-   **User Testing Done:** N
 
 **All Pending/In progress Issue list**:
--   **Issue 1: (P0) Implement or clarify the purpose of the new  code.** The user's last message was a large code block for a new header.
--   **Issue 2: (P1) Provide reusable code for the entire data collection flow.** The user requested the code for all changes from collection links process all the way to haptic feedback. The agent started this but did not complete it.
+-   **Issue 1: (P0) Unstable User Session.** The agent experienced repeated, frequent logouts during testing with the . Each tool call seemed to start a new, unauthenticated session. This is a critical blocker for both development and user experience.
 
 Issues Detail:
--   **Issue 1: New Dashboard Header**
-    -   **Attempted fixes:** None. This is a new request.
+-   **Issue 1: Unstable User Session**
+    -   **Attempted fixes:** The agent worked around the issue by combining multiple test steps into single, long  scripts, but did not investigate or fix the root cause.
     -   **Next debug checklist:**
-        1.  Use  to confirm with the user if they want to replace the existing dashboard header with the new  code they provided.
-        2.  Clarify if the new implied features (Language Selector,  Search, advanced Notifications) should be made functional, as this will require significant new backend and frontend development.
-        3.  If confirmed, replace the existing header in  and begin wiring up the new component's props.
-    -   **Why fix this issue and what will be achieved with the fix?** To address the user's latest request and significantly upgrade the application's main navigation and UI.
+        1.  Examine  and any related auth hooks. Verify how the authentication token is stored (e.g., , , in-memory). It should be in  for persistence.
+        2.  Check the Axios instance configuration. Ensure the  header is correctly and consistently applied to all API requests after login.
+        3.  Review the  dependency in  to ensure it's not failing silently under certain conditions.
+        4.  Run a simple test: log in, refresh the page, and make an authenticated API call via the browser's developer console to see if the session persists.
+    -   **Why fix this issue and what will be achieved with the fix?** A stable session is fundamental for a usable application. Fixing this will unblock reliable testing and provide a normal user experience.
     -   **Status:** NOT STARTED
+    -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** Both
--   **Issue 2: Provide Reusable Code for Data Collection Flow**
-    -   **Attempted fixes:** The agent began viewing the relevant files to compile the code but did not finish and provide it to the user.
-    -   **Next debug checklist:**
-        1.  Use ERROR: Please provide a comma-separated list of file or directory paths to read the content of all newly created and modified files related to the data collection flow.
-        2.  Files to include: , , , , , , , , and any other related components or backend files.
-        3.  Present the complete code to the user in a structured, reusable format with dependencies and usage instructions.
-    -   **Why fix this issue and what will be achieved with the fix?** Fulfills a direct user request and provides them with the value they asked for.
-    -   **Status:** IN PROGRESS
-    -   **Should Test frontend/backend/both after fix?** N/A (This is a code delivery task).
+    -   **Blocked on other issue:** None. This is a blocker for other tasks.
 
 **In progress Task List**:
-None. All tasks from the previous session were either completed or are now captured in the pending issue list.
+None.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
-    -   **(P2) Auto-open single-form surveys:** If a collection token link contains only one form, automatically redirect the enumerator to the form-filling page, skipping the form list view. This was a suggestion the user did not respond to.
+    -   **(P1) Add Enumerator Import:** Implement functionality to import enumerators from CSV and Excel files. This will likely require a new UI component and backend endpoints for file parsing and user/token creation.
+    -   **(P1) Integrate Link Shortener:** Integrate a third-party link shortening service. The agent **must** use the  tool for this.
+    -   **(P2) Custom Message Templates:** Create a feature that allows supervisors to define and use custom message templates for the WhatsApp, Email, and SMS share options.
 -   **Future Tasks:**
-    -   **Refactor for Full Theming:** Refactor  and  to use theme-aware CSS variables, allowing them to switch between light and dark modes.
+    -   **Auto-open single-form surveys:** If a collection token link contains only one form, automatically redirect the enumerator to the form-filling page.
+    -   **Full Theming:** Refactor  and  to use theme-aware CSS variables for light/dark mode consistency.
     -   **Component Refactoring:** Break down the large  into smaller, more maintainable child components.
-    -   **Share via... buttons:** Add Share via WhatsApp/Email buttons to the Collection Links UI for easier sharing by supervisors.
 
 **Completed work in this session**
--   **PWA & Offline Data Collection:** Successfully implemented a full PWA and offline collection system, including dedicated mobile interfaces (, ), supervisor tools, a unique Data Vault sync animation, and haptic feedback.
--   **User Onboarding Wizard:** Created and integrated a multi-step onboarding wizard for new users.
--   **Survey Settings Enhancements:** Implemented an advanced date-time picker and made the primary color setting functional, connecting it from the UI to the backend and the public survey page.
--   **Code Delivery & Fixes:** Provided reusable code for  and , fixed calendar styling, and removed a debug panel.
--   **PWA Name Correction:** Changed the PWA installation name from DataPulse to FieldForce as requested.
+-   **Dashboard Header Overhaul:** Implemented a new, fully functional dashboard header with a Global Search () Command Palette, a Notifications Panel, and a Language Selector.
+-   **Reusable Code Delivery:** Provided the complete, reusable code for the entire data collection flow as requested by the user.
+-   **Enhanced Collection Links Sharing:** Upgraded the Collection Links page with a 3-dots action menu, advanced share options (WhatsApp, Email, SMS, QR), and added a Project column for context.
+-   **Enhanced Forms Page Sharing:** Implemented the same advanced 3-dots share submenu on the main Forms page for each survey card.
 
 **Earlier issues found/mentioned but not fixed**
 None.
@@ -89,82 +78,80 @@ None.
 
 
 **Key Technical Concepts**
--   **Frontend:** React, Vite, Tailwind CSS, Shadcn/ui, Zustand, Axios
--   **Backend:** FastAPI, Python
--   **Database:** MongoDB
--   **New Concepts:** PWA (Progressive Web App), Service Workers, IndexedDB (via  and custom logic), Framer Motion (for animations), Web Vibration API (for haptics).
+-   **Frontend:** React, Vite, Tailwind CSS, Shadcn/ui, Zustand, Axios, Framer Motion.
+-   **Backend:** FastAPI, Python.
+-   **Database:** MongoDB.
+-   **PWA:** Service Workers, .
+-   **Offline:** IndexedDB.
+-   **New Libraries:**  for the command palette.
 
 **key DB schema**
--   **collection_tokens:** (Implicitly created) 
+-   **collection_tokens:** Modified. Now stores the  itself alongside the  to enable the share later functionality.
 
 **changes in tech stack**
--    & : Added for the enhanced date picker.
--   : Added for UI animations.
+-   Added  dependency for the global search command palette.
 
 **All files of reference**
-*   : New file defining the PWA properties.
-*   : New service worker file for offline caching.
-*   : New page for login-based mobile data collection.
-*   : New page for token-based mobile data collection.
-*   : New page for supervisors to manage collection links.
-*   : New component for the first-time user setup guide.
-*   : New component for the unique offline sync animation.
-*   : New hook to provide haptic feedback on mobile.
-*   : Heavily modified with a date-time picker and functional color preview.
-*   : New file containing backend endpoints for generating and verifying collection tokens.
-*   : Modified to include the new .
-*   : Modified to add routes for the new collection and onboarding pages.
-*   : Modified to link the PWA manifest and icons.
+*   : New backend for global search.
+*   : New backend for notifications.
+*   : Modified to include new routers.
+*   : New UI for the search palette.
+*   : New UI for the notifications dropdown.
+*   : New UI for language selection.
+*   : Modified to integrate the new header components.
+*   : Modified to add the project column and the 3-dots share menu.
+*   : Modified to add the 3-dots share menu to form cards.
+*   : Modified with the new share submenu logic.
+*   : Modified to include more sharing options (WhatsApp, Email, etc.).
+*   : Modified to add state for the command palette.
 
 **Areas that need refactoring**:
--   The  and  still use hardcoded dark theme colors and should be updated to use theme variables.
--   The  is a very large component that could be broken down into smaller pieces.
+-    and  still use hardcoded dark theme colors and should be updated to use theme variables.
+-   The session persistence logic needs to be investigated and potentially refactored to be more robust (see All Pending/In progress Issue list).
 
 **key api endpoints**
-*   : Creates a new collection token for an enumerator.
-*   : Retrieves all collection tokens for the user's organization.
-*   : Verifies a token and returns assigned forms (for the no-login flow).
-*   : Updates the settings for a specific form.
-*   : Retrieves the public details of a form, including settings like primary color.
+*   : For the global search functionality.
+*   : To fetch user notifications.
+*   : To mark notifications as read.
+*   : (Modified) The response now includes the full token upon creation.
 
 **Critical Info for New Agent**
--   **The user's last message is a high-priority, but ambiguous, request.** They pasted a large block of code for a new . You **must** clarify their intent before implementing anything. This new header implies several major new features (notifications, global search, multi-language support) that do not currently exist and would require significant work.
--   The second-highest priority is to fulfill the user's request to provide all the reusable code for the data collection flow implemented in this session.
--   The PWA, offline collection, and onboarding features are all newly implemented. The user has not yet fully tested them. Be prepared to debug or refine these features based on their feedback.
+-   **FIX THE SESSION LOGOUT ISSUE FIRST (P0).** You will be unable to test reliably until the user session persists between actions. Investigate the auth token storage () and Axios headers immediately.
+-   The user's next set of tasks is clearly defined: CSV/Excel import, link shortener integration, and custom message templates.
+-   For the Link Shortener task, you **must** use the  subagent to ensure a correct and secure implementation.
 
 **documents and test reports created in this job**
-None.
+*    was updated.
 
 **Last 10 User Messages and any pending HUMAN messages**
-10. **User**: Add haptic feedback and share all reusable code for the collection flow. (Partially completed)
-9.  **User**: Suggested a unique design for the offline indicator. (Completed)
-8.  **User**: Asked for a more prominent offline indicator and sync status. (Completed)
-7.  **User**: Asked if offline mode is manual or automatic. (Completed)
-6.  **User**: Asked how to share forms with enumerators. (Completed)
-5.  **User**: Requested the PWA prompt name be changed to FieldForce. (Completed)
-4.  **User**: Asked how to access Option A and Option B for enumerators. (Completed)
-3.  **User**: Asked for an onboarding wizard. (Completed)
-2.  **User**: Asked why the collection link doesn't go directly to the survey. (Resolved - it's a list page first).
-1.  **User**: [Posted a large, unprompted block of code for a new  component.] (New, pending action).
+10. **User**: Add CSV/Excel enumerator import and integrate a link shortener with custom message templates. (Pending)
+9.  **User**: *[Posts screenshot of forms page]* Do also for share functionality on this page. (Completed)
+8.  **Agent**: Provides summary of collection links fixes and asks about scalability. (Completed)
+7.  **User**: *[Clicks a 3-dots menu on collection links page]*. (Implicit request to test)
+6.  **Agent**: Provides the live URL and instructions. (Completed)
+5.  **User**: Share the web link URL. (Completed)
+4.  **Agent**: Updates PRD.md and calls finish tool. (Interrupted by user message)
+3.  **User**: On Collection Link - When you click share the link is not copies - Why not have multople options like and also how do you knwo which project do the links belong to? What if there are over 500 enumeators What is another way to implement this which is quicker - by using login is it there? Is the present approach the token approach. (Addressed and implemented)
+2.  **User**: For sharev- use the 3 dots and re-use the code below *[pastes ShareSurveyDialog code]*. (Addressed and implemented)
+1.  **User**: 1. Fully functional 2. Yes. (Confirmation to implement the new Dashboard Header).
 
 **Project Health Check:**
--   **Broken:** None.
--   **Mocked:** The interactive demo at  remains mocked by design.
+-   **Broken:** User session management. The application frequently logs the user out, making it difficult to use and test.
+-   **Mocked:** The interactive demo at .
 
 **3rd Party Integrations**
-None.
+-   **Requested:** A Link Shortener integration is the next task.
 
 **Testing status**
--   **Testing agent used after significant changes:** NO. Agent self-tested new features using  and manual interaction. The scale of changes (PWA, offline sync, new pages) warrants a full run by the testing agent.
--   **Troubleshoot agent used after agent stuck in loop:** NO.
--   **Test files created:** None.
--   **Known regressions:** None.
+-   **Testing agent used after significant changes:** NO
+-   **Troubleshoot agent used after agent stuck in loop:** NO
+-   **Test files created:** None
+-   **Known regressions:** The unstable user session is a major regression in usability.
 
 **Credentials to test flow:**
 -   **Email:** 
 -   **Password:** 
 
 **What agent forgot to execute**
--   The agent did not fully complete the user's request to share the code for all the changes done from collection links process all the way to haptic feedback.
--   The agent did not use the  after implementing several major features (PWA, offline collection, onboarding), which is highly recommended for changes of this magnitude.
--   The agent did not call the  tool to properly summarize the session and update the  file.</analysis>
+-   The agent did not fix the root cause of the session logout issue, instead opting for workarounds.
+-   A full test run using  was not performed after the significant implementation of the new Dashboard Header and its associated features.</analysis>
