@@ -616,17 +616,7 @@ export function FormPreviewPage() {
           </div>
         </div>
 
-        {/* Debug Panel */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle className="text-white text-sm">Form Data (Debug)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-xs text-gray-400 overflow-auto max-h-40 bg-black/50 p-3 rounded">
-              {JSON.stringify(values, null, 2)}
-            </pre>
-          </CardContent>
-        </Card>
+
       </div>
     </DashboardLayout>
   );
