@@ -71,9 +71,19 @@ async def create_collection_token(
     """Create a collection token for an enumerator (supervisors only)"""
     db = request.app.state.db
     
+    # Validate PIN if required
+    if data.security_mode == "pin_protected":
+        if not data.pin_code or len(data.pin_code) != 4 or not data.pin_code.isdigit():
+            raise HTTPException(status_code=400, detail="PIN must be a 4-digit number")
+    
     # Generate token
     token = generate_token()
     token_hash = hashlib.sha256(token.encode()).hexdigest()
+    
+    # Hash PIN if provided (don't store plaintext)
+    pin_hash = None
+    if data.pin_code:
+        pin_hash = hashlib.sha256(data.pin_code.encode()).hexdigest()
     
     now = datetime.now(timezone.utc)
     expires_at = now + timedelta(days=data.expires_days)
@@ -89,7 +99,15 @@ async def create_collection_token(
         "expires_at": expires_at.isoformat(),
         "submission_count": 0,
         "max_submissions": data.max_submissions,
-        "is_active": True
+        "is_active": True,
+        # Security settings
+        "security_mode": data.security_mode,
+        "require_pin": data.require_pin,
+        "pin_hash": pin_hash,
+        # Device tracking
+        "locked_device_id": None,  # Will be set when device_locked mode activates
+        "device_info": None,  # Captured device info
+        "device_registered_at": None
     }
     
     await db.collection_tokens.insert_one(token_doc)
