@@ -143,7 +143,8 @@ export function CollectPage() {
       if (res.ok) {
         const data = await res.json();
         const token = data.access_token || data.token;
-        login(token, data.user);
+        localStorage.setItem('token', token);
+        setAuth(data.user, token);
         toast.success('Welcome back!');
       } else {
         const error = await res.json();
