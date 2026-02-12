@@ -167,6 +167,10 @@ export function CollectionLinksPage() {
       toast.error('Please select at least one form');
       return;
     }
+    if (newToken.security_mode === 'pin_protected' && newToken.pin_code.length !== 4) {
+      toast.error('Please enter a 4-digit PIN');
+      return;
+    }
 
     setCreating(true);
     try {
@@ -201,12 +205,23 @@ export function CollectionLinksPage() {
           enumerator_email: '',
           form_ids: [],
           expires_days: 30,
-          max_submissions: ''
+          max_submissions: '',
+          security_mode: 'standard',
+          require_pin: false,
+          pin_code: ''
         });
+        
+        // Show PIN reminder if PIN protected
+        if (newToken.security_mode === 'pin_protected') {
+          toast.success(`Link created! Remember to share PIN: ${newToken.pin_code}`, {
+            duration: 10000
+          });
+        } else {
+          toast.success('Collection link created!');
+        }
         
         // Reload tokens list
         loadData();
-        toast.success('Collection link created!');
       } else {
         const error = await res.json();
         toast.error(error.detail || 'Failed to create link');
