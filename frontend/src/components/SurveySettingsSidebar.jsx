@@ -39,7 +39,8 @@ export function SurveySettingsSidebar({
   const [localSettings, setLocalSettings] = useState({
     name: settings?.name || '',
     description: settings?.description || '',
-    closeDate: settings?.closeDate || '',
+    closeDate: settings?.closeDate ? new Date(settings.closeDate) : null,
+    closeTime: settings?.closeTime || '23:59',
     maxResponses: settings?.maxResponses || '',
     thankYouMessage: settings?.thankYouMessage || 'Thank you for completing our survey!',
     logo: settings?.logo || null,
@@ -49,6 +50,20 @@ export function SurveySettingsSidebar({
     allowMultipleSubmissions: settings?.allowMultipleSubmissions ?? false,
     requireLogin: settings?.requireLogin ?? false,
   });
+  
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  
+  // Generate time options in 30-minute intervals
+  const timeOptions = [];
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 30) {
+      const hour = h.toString().padStart(2, '0');
+      const minute = m.toString().padStart(2, '0');
+      const time = `${hour}:${minute}`;
+      const label = format(new Date(2000, 0, 1, h, m), 'h:mm a');
+      timeOptions.push({ value: time, label });
+    }
+  }
 
   const handleChange = (key, value) => {
     setLocalSettings(prev => ({ ...prev, [key]: value }));
