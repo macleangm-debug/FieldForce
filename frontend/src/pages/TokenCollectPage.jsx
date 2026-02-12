@@ -613,9 +613,28 @@ export function TokenCollectPage() {
               </div>
               <div>
                 <h1 className="text-white font-semibold">FieldForce</h1>
-                <div className="flex items-center gap-1 text-xs text-slate-400">
-                  <User className="w-3 h-3" />
-                  {tokenData?.enumerator_name || 'Data Collector'}
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <div className="flex items-center gap-1">
+                    <User className="w-3 h-3" />
+                    {tokenData?.enumerator_name || 'Data Collector'}
+                  </div>
+                  {/* Security Mode Badge */}
+                  {securityMode !== 'standard' && (
+                    <Badge 
+                      variant="outline" 
+                      className={`text-[10px] px-1.5 py-0 ${
+                        securityMode === 'pin_protected' 
+                          ? 'border-green-500/50 text-green-400' 
+                          : 'border-orange-500/50 text-orange-400'
+                      }`}
+                    >
+                      {securityMode === 'pin_protected' ? (
+                        <><Key className="w-2.5 h-2.5 mr-0.5" />PIN</>
+                      ) : (
+                        <><Lock className="w-2.5 h-2.5 mr-0.5" />Locked</>
+                      )}
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>
