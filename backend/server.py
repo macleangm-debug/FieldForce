@@ -109,6 +109,9 @@ api_router.include_router(quality_ai_router)
 api_router.include_router(billing_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(collect_router)
+api_router.include_router(search_router)
+api_router.include_router(notification_router)
+api_router.include_router(settings_router)
 
 
 # Health check endpoint
