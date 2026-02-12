@@ -81,7 +81,7 @@ export function CollectionLinksPage() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [currentOrg]);
 
   const loadData = async () => {
     setLoading(true);
