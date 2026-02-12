@@ -184,19 +184,89 @@ export function SurveySettingsSidebar({
               <Separator className="bg-slate-700" />
 
               {/* Close Date */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label className="text-white font-medium flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
+                  <CalendarIcon className="w-4 h-4" />
                   Close Date (Optional)
                 </Label>
-                <Input
-                  type="datetime-local"
-                  value={localSettings.closeDate}
-                  onChange={(e) => handleChange('closeDate', e.target.value)}
-                  className="bg-slate-800 border-slate-600 text-white"
-                />
+                
+                {/* Date Picker */}
+                <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-slate-800 border-slate-600 hover:bg-slate-700",
+                        !localSettings.closeDate && "text-slate-400"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {localSettings.closeDate ? (
+                        format(localSettings.closeDate, "PPP")
+                      ) : (
+                        <span>Pick a close date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-slate-800 border-slate-600" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={localSettings.closeDate}
+                      onSelect={(date) => {
+                        handleChange('closeDate', date);
+                        setIsCalendarOpen(false);
+                      }}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                      className="rounded-md"
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                {/* Time Picker */}
+                {localSettings.closeDate && (
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-slate-400" />
+                    <Select
+                      value={localSettings.closeTime}
+                      onValueChange={(value) => handleChange('closeTime', value)}
+                    >
+                      <SelectTrigger className="flex-1 bg-slate-800 border-slate-600 text-white">
+                        <SelectValue placeholder="Select time" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-800 border-slate-600 max-h-[200px]">
+                        {timeOptions.map((time) => (
+                          <SelectItem 
+                            key={time.value} 
+                            value={time.value}
+                            className="text-white hover:bg-slate-700"
+                          >
+                            {time.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {/* Clear Date Button */}
+                {localSettings.closeDate && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-slate-400 hover:text-white"
+                    onClick={() => {
+                      handleChange('closeDate', null);
+                      handleChange('closeTime', '23:59');
+                    }}
+                  >
+                    <X className="w-3 h-3 mr-1" />
+                    Clear date
+                  </Button>
+                )}
+
                 <p className="text-xs text-slate-400">
-                  Survey will automatically stop accepting responses after this date
+                  Survey will automatically stop accepting responses after this date and time
                 </p>
               </div>
 
