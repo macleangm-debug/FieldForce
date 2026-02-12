@@ -797,7 +797,14 @@ export function CollectionLinksPage() {
                   onValueChange={(val) => setNewToken(prev => ({ ...prev, expires_days: parseInt(val) }))}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select duration">
+                      {newToken.expires_days === 7 && "7 days"}
+                      {newToken.expires_days === 14 && "14 days"}
+                      {newToken.expires_days === 30 && "30 days"}
+                      {newToken.expires_days === 60 && "60 days"}
+                      {newToken.expires_days === 90 && "90 days"}
+                      {newToken.expires_days === 365 && "1 year"}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="7">7 days</SelectItem>
