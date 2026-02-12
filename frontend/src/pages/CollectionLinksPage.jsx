@@ -938,7 +938,7 @@ export function CollectionLinksPage() {
           </div>
 
           <DialogFooter className="shrink-0 p-4 pt-3 border-t border-border bg-background">
-            <Button variant="outline" size="sm" onClick={() => setShowCreateDialog(false)}>
+            <Button variant="ghost" size="sm" onClick={() => setShowCreateDialog(false)} className="text-muted-foreground hover:text-foreground">
               Cancel
             </Button>
             <Button size="sm" onClick={handleCreateToken} disabled={creating} data-testid="generate-link-btn">
