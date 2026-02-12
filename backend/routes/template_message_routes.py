@@ -14,7 +14,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from auth import get_current_user
 
-router = APIRouter(prefix="/api/message-templates", tags=["Message Templates"])
+router = APIRouter(prefix="/message-templates", tags=["Message Templates"])
 
 # MongoDB connection
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
