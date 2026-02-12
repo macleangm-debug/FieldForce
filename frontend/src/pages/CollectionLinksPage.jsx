@@ -1623,23 +1623,30 @@ export function CollectionLinksPage() {
                     <SelectItem value="standard">
                       <div className="flex items-center gap-2">
                         <Link2 className="w-3.5 h-3.5 text-blue-500" />
-                        <span>Standard - Anyone can access</span>
+                        <span>Standard - Open access, no tracking</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="device_locked">
                       <div className="flex items-center gap-2">
                         <Smartphone className="w-3.5 h-3.5 text-orange-500" />
-                        <span>Device Locked - One device per link</span>
+                        <span>Device Locked - GPS map tracking enabled</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="pin_protected">
                       <div className="flex items-center gap-2">
                         <Key className="w-3.5 h-3.5 text-green-500" />
-                        <span>PIN Protected - Requires PIN</span>
+                        <span>PIN Protected - Maximum security + tracking</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
                 </Select>
+                
+                {/* Bulk import security description */}
+                <p className="text-xs text-muted-foreground mt-1.5 px-1">
+                  {importSecurityMode === 'standard' && 'Links can be accessed from any device. No GPS tracking available.'}
+                  {importSecurityMode === 'device_locked' && 'Each link locks to one device. Enables real-time GPS tracking on the map to monitor enumerator locations.'}
+                  {importSecurityMode === 'pin_protected' && 'PIN + device lock. Maximum security with GPS tracking. Ideal for sensitive data collection.'}
+                </p>
               </div>
               
               {/* PIN Options (shown when PIN protected selected) */}
