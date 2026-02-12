@@ -94,6 +94,7 @@ export function DataVault({ isOnline, pendingCount = 0 }) {
   // Auto-sync when coming online with pending items
   useEffect(() => {
     if (isOnline && pendingCount > 0 && !syncing) {
+      haptic.medium(); // Haptic feedback when auto-sync starts
       handleSync();
     }
   }, [isOnline, pendingCount]);
