@@ -456,7 +456,7 @@ export function DashboardLayout({ children }) {
             </div>
 
             {/* Right side actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 ml-auto">
               {/* Theme Toggle */}
               <ThemeSwitcher variant="icon" />
 
