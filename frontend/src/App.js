@@ -33,6 +33,7 @@ import { MobileFormPage } from './pages/MobileFormPage';
 import { CollectionLinksPage } from './pages/CollectionLinksPage';
 import { PWAInstallPrompt } from './components/PWAComponents';
 import { NetworkStatusBanner } from './components/OfflineSync';
+import { OnboardingWizard, useOnboarding } from './components/OnboardingWizard';
 import '@/App.css';
 
 // Register service worker for offline support
