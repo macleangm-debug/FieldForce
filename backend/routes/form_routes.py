@@ -489,3 +489,95 @@ async def duplicate_form(
         updated_at=new_form.updated_at,
         published_at=None
     )
+
+
+@router.get("/{form_id}/public")
+async def get_public_form(
+    request: Request,
+    form_id: str
+):
+    """Get form for public survey (no auth required) - includes settings for styling"""
+    db = request.app.state.db
+    
+    form = await db.forms.find_one({"id": form_id}, {"_id": 0})
+    if not form:
+        raise HTTPException(status_code=404, detail="Form not found")
+    
+    # Check if form is published
+    if form.get("status") != "published":
+        raise HTTPException(status_code=404, detail="Survey not available")
+    
+    # Get settings with defaults
+    settings = form.get("settings", {})
+    
+    # Check close date
+    if settings.get("closeDate"):
+        from datetime import datetime
+        try:
+            close_date = datetime.fromisoformat(settings["closeDate"].replace('Z', '+00:00'))
+            if datetime.now(timezone.utc) > close_date:
+                raise HTTPException(status_code=410, detail="Survey has closed")
+        except (ValueError, TypeError):
+            pass
+    
+    # Check max responses
+    if settings.get("maxResponses"):
+        submission_count = await db.submissions.count_documents({"form_id": form_id})
+        if submission_count >= int(settings["maxResponses"]):
+            raise HTTPException(status_code=410, detail="Survey has reached maximum responses")
+    
+    return {
+        "id": form["id"],
+        "name": form["name"],
+        "description": form.get("description"),
+        "fields": form.get("fields", []),
+        "settings": {
+            "primaryColor": settings.get("primaryColor", "#0ea5e9"),
+            "logo": settings.get("logo"),
+            "thankYouMessage": settings.get("thankYouMessage", "Thank you for completing our survey!"),
+            "showProgressBar": settings.get("showProgressBar", True),
+            "shuffleQuestions": settings.get("shuffleQuestions", False),
+        }
+    }
+
+
+@router.patch("/{form_id}/settings")
+async def update_form_settings(
+    request: Request,
+    form_id: str,
+    data: SurveySettingsUpdate,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update form survey settings (branding, limits, etc.)"""
+    db = request.app.state.db
+    
+    form = await db.forms.find_one({"id": form_id}, {"_id": 0})
+    if not form:
+        raise HTTPException(status_code=404, detail="Form not found")
+    
+    # Check project access
+    membership, _ = await check_project_access(
+        db, form["project_id"], current_user["user_id"],
+        ["admin", "manager", "analyst"]
+    )
+    
+    if not membership and not current_user.get("is_superadmin"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Insufficient permissions"
+        )
+    
+    # Get existing settings and merge with new data
+    existing_settings = form.get("settings", {})
+    new_settings = data.model_dump(exclude_none=True)
+    merged_settings = {**existing_settings, **new_settings}
+    
+    await db.forms.update_one(
+        {"id": form_id},
+        {"$set": {
+            "settings": merged_settings,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    
+    return {"message": "Settings updated successfully", "settings": merged_settings}
