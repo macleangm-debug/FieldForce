@@ -26,7 +26,13 @@ import {
   Folder,
   Upload,
   FileSpreadsheet,
-  AlertCircle
+  AlertCircle,
+  Shield,
+  ShieldCheck,
+  Lock,
+  Unlock,
+  Info,
+  Key
 } from 'lucide-react';
 import { DashboardLayout } from '../layouts/DashboardLayout';
 import { Button } from '../components/ui/button';
