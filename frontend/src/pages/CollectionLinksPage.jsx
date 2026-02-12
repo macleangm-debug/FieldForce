@@ -1490,6 +1490,115 @@ export function CollectionLinksPage() {
                   />
                 </div>
               </div>
+              
+              {/* Security Mode */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5" />
+                  Security Mode
+                </Label>
+                <Select
+                  value={importSecurityMode}
+                  onValueChange={(val) => setImportSecurityMode(val)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="standard">
+                      <div className="flex items-center gap-2">
+                        <Link2 className="w-3.5 h-3.5 text-blue-500" />
+                        <span>Standard - Anyone can access</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="device_locked">
+                      <div className="flex items-center gap-2">
+                        <Smartphone className="w-3.5 h-3.5 text-orange-500" />
+                        <span>Device Locked - One device per link</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="pin_protected">
+                      <div className="flex items-center gap-2">
+                        <Key className="w-3.5 h-3.5 text-green-500" />
+                        <span>PIN Protected - Requires PIN</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* PIN Options (shown when PIN protected selected) */}
+              {importSecurityMode === 'pin_protected' && (
+                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Key className="w-4 h-4 text-green-500" />
+                    <Label className="text-green-400">PIN Configuration</Label>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <label className={`flex-1 p-2 rounded-lg border cursor-pointer transition-colors ${
+                        importPinMode === 'auto' 
+                          ? 'bg-green-500/20 border-green-500/50' 
+                          : 'border-slate-600 hover:border-slate-500'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="pin_mode"
+                          checked={importPinMode === 'auto'}
+                          onChange={() => setImportPinMode('auto')}
+                          className="mr-2"
+                        />
+                        <span className="text-sm text-foreground">Auto-generate unique PINs</span>
+                        <p className="text-xs text-muted-foreground ml-5">Each enumerator gets a different PIN</p>
+                      </label>
+                      
+                      <label className={`flex-1 p-2 rounded-lg border cursor-pointer transition-colors ${
+                        importPinMode === 'shared' 
+                          ? 'bg-green-500/20 border-green-500/50' 
+                          : 'border-slate-600 hover:border-slate-500'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="pin_mode"
+                          checked={importPinMode === 'shared'}
+                          onChange={() => setImportPinMode('shared')}
+                          className="mr-2"
+                        />
+                        <span className="text-sm text-foreground">Use shared PIN</span>
+                        <p className="text-xs text-muted-foreground ml-5">Same PIN for all enumerators</p>
+                      </label>
+                    </div>
+                    
+                    {importPinMode === 'shared' && (
+                      <div className="flex gap-2 items-center">
+                        <Input
+                          type="text"
+                          maxLength={4}
+                          value={importSharedPin}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                            setImportSharedPin(val);
+                          }}
+                          placeholder="Enter 4-digit PIN"
+                          className="w-32 text-center font-mono tracking-widest"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const randomPin = Math.floor(1000 + Math.random() * 9000).toString();
+                            setImportSharedPin(randomPin);
+                          }}
+                        >
+                          Generate
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             /* Import Results */
@@ -1505,6 +1614,18 @@ export function CollectionLinksPage() {
                     <p className="text-slate-400 text-sm">Failed</p>
                   </div>
                 )}
+                <div className="flex-1 text-center">
+                  <Badge variant="outline" className={`${
+                    importSecurityMode === 'pin_protected' ? 'border-green-500/50 text-green-400' :
+                    importSecurityMode === 'device_locked' ? 'border-orange-500/50 text-orange-400' :
+                    'border-blue-500/50 text-blue-400'
+                  }`}>
+                    {importSecurityMode === 'pin_protected' && <Key className="w-3 h-3 mr-1" />}
+                    {importSecurityMode === 'device_locked' && <Lock className="w-3 h-3 mr-1" />}
+                    {importSecurityMode === 'standard' && <Link2 className="w-3 h-3 mr-1" />}
+                    {importSecurityMode.replace('_', ' ')}
+                  </Badge>
+                </div>
               </div>
 
               {importResults.error_count > 0 && (
@@ -1522,12 +1643,101 @@ export function CollectionLinksPage() {
               )}
 
               {importResults.created_tokens.length > 0 && (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <p className="text-sm text-slate-400">
-                    Links have been created and saved. You can share them from the table below.
+                    Links created! Choose how to distribute:
                   </p>
-                  <Button
-                    variant="outline"
+                  
+                  {/* Distribution Options */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button
+                      variant="outline"
+                      className="flex flex-col items-center gap-1 h-auto py-3"
+                      onClick={exportImportResultsCSV}
+                    >
+                      <Download className="w-5 h-5 text-blue-400" />
+                      <span className="text-xs">Export CSV</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex flex-col items-center gap-1 h-auto py-3"
+                      onClick={sendBulkEmail}
+                    >
+                      <Mail className="w-5 h-5 text-green-400" />
+                      <span className="text-xs">Email All</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="flex flex-col items-center gap-1 h-auto py-3"
+                      onClick={copyAllLinksForSMS}
+                    >
+                      <Smartphone className="w-5 h-5 text-purple-400" />
+                      <span className="text-xs">Copy for SMS</span>
+                    </Button>
+                  </div>
+                  
+                  {/* Preview of created links */}
+                  <div className="max-h-40 overflow-y-auto border border-border rounded-lg">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="text-xs">Name</TableHead>
+                          <TableHead className="text-xs">Link</TableHead>
+                          {importSecurityMode === 'pin_protected' && (
+                            <TableHead className="text-xs">PIN</TableHead>
+                          )}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {importResults.created_tokens.slice(0, 5).map((t, idx) => (
+                          <TableRow key={idx}>
+                            <TableCell className="text-xs py-1">{t.name}</TableCell>
+                            <TableCell className="text-xs py-1 font-mono text-muted-foreground">
+                              ...{t.token.slice(-8)}
+                            </TableCell>
+                            {importSecurityMode === 'pin_protected' && (
+                              <TableCell className="text-xs py-1 font-mono text-green-400">{t.pin || '-'}</TableCell>
+                            )}
+                          </TableRow>
+                        ))}
+                        {importResults.created_tokens.length > 5 && (
+                          <TableRow>
+                            <TableCell colSpan={importSecurityMode === 'pin_protected' ? 3 : 2} className="text-xs py-1 text-muted-foreground text-center">
+                              +{importResults.created_tokens.length - 5} more...
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            {!importResults ? (
+              <>
+                <Button variant="ghost" onClick={() => setShowImportDialog(false)} className="text-muted-foreground">
+                  Cancel
+                </Button>
+                <Button onClick={handleBulkImport} disabled={importing || !importFile}>
+                  {importing ? (
+                    <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Upload className="w-4 h-4 mr-2" />
+                  )}
+                  Import {importFile && 'Enumerators'}
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => setShowImportDialog(false)}>
+                Done
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
                     className="w-full"
                     onClick={() => {
                       // Export created tokens as CSV for reference
