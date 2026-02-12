@@ -82,6 +82,7 @@ from routes.collect_routes import router as collect_router
 from routes.search_routes import router as search_router
 from routes.notification_routes import router as notification_router
 from routes.settings_routes import router as settings_router
+from routes.template_message_routes import router as template_message_router
 
 # Include core route modules
 api_router.include_router(auth_router)
