@@ -368,14 +368,47 @@ export function CAWISurveyPage() {
 
   const progress = ((currentPage + 1) / pages.length) * 100;
   const currentPageData = pages[currentPage];
+  
+  // Dynamic styles based on primary color
+  const primaryColor = surveySettings.primaryColor || '#0ea5e9';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+      {/* Custom CSS Variables for primary color */}
+      <style>{`
+        .survey-primary-btn {
+          background-color: ${primaryColor} !important;
+        }
+        .survey-primary-btn:hover {
+          background-color: ${primaryColor}dd !important;
+        }
+        .survey-progress-bar > div {
+          background-color: ${primaryColor} !important;
+        }
+        .survey-accent {
+          color: ${primaryColor} !important;
+        }
+        .survey-radio:checked, .survey-checkbox:checked {
+          background-color: ${primaryColor} !important;
+          border-color: ${primaryColor} !important;
+        }
+      `}</style>
+      
       {/* Header */}
       <header className="sticky top-0 z-50 bg-slate-900/90 backdrop-blur border-b border-slate-700">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-2">
-            <h1 className="text-lg font-semibold text-white truncate">{form.name}</h1>
+            <div className="flex items-center gap-3">
+              {/* Survey Logo */}
+              {surveySettings.logo && (
+                <img 
+                  src={surveySettings.logo} 
+                  alt="Survey logo" 
+                  className="h-8 w-auto rounded"
+                />
+              )}
+              <h1 className="text-lg font-semibold text-white truncate">{form.name}</h1>
+            </div>
             <div className="flex items-center gap-2">
               {/* Connection status */}
               <div className={`flex items-center gap-1 text-xs ${isOnline ? 'text-green-400' : 'text-red-400'}`}>
@@ -404,14 +437,16 @@ export function CAWISurveyPage() {
             </div>
           </div>
           
-          {/* Progress */}
-          <div className="space-y-1">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>Page {currentPage + 1} of {pages.length}</span>
-              <span>{Math.round(progress)}% complete</span>
+          {/* Progress - conditionally shown based on settings */}
+          {surveySettings.showProgressBar && (
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>Page {currentPage + 1} of {pages.length}</span>
+                <span>{Math.round(progress)}% complete</span>
+              </div>
+              <Progress value={progress} className="h-1 survey-progress-bar" />
             </div>
-            <Progress value={progress} className="h-1" />
-          </div>
+          )}
         </div>
       </header>
 
