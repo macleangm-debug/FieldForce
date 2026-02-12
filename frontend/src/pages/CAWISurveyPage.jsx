@@ -29,6 +29,13 @@ export function CAWISurveyPage() {
   const resumeId = searchParams.get('resume');
   
   const [form, setForm] = useState(null);
+  const [surveySettings, setSurveySettings] = useState({
+    primaryColor: '#0ea5e9',
+    logo: null,
+    thankYouMessage: 'Thank you for completing our survey!',
+    showProgressBar: true,
+    shuffleQuestions: false,
+  });
   const [responses, setResponses] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const [pages, setPages] = useState([]);
