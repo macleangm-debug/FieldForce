@@ -72,12 +72,16 @@ export function CollectionLinksPage() {
   const authToken = useAuthStore((state) => state.token);
   const [tokens, setTokens] = useState([]);
   const [forms, setForms] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [selectedToken, setSelectedToken] = useState(null);
   const [generatedLink, setGeneratedLink] = useState('');
   const [generatedToken, setGeneratedToken] = useState('');
   const [creating, setCreating] = useState(false);
+  const [copied, setCopied] = useState(false);
   
   // Form state for creating new token
   const [newToken, setNewToken] = useState({
