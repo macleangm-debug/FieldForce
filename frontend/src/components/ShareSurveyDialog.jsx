@@ -6,7 +6,11 @@ import {
   Copy,
   Check,
   ExternalLink,
-  Download
+  Download,
+  Share2,
+  MessageCircle,
+  Mail,
+  Smartphone
 } from 'lucide-react';
 import {
   Dialog,
@@ -61,7 +65,7 @@ export function ShareSurveyDialog({ isOpen, onClose, formId, formName }) {
 
   const handleDownloadQR = () => {
     const link = document.createElement('a');
-    link.href = qrCodeUrl;
+    link.href = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(surveyUrl)}`;
     link.download = `${formName || 'survey'}-qr-code.png`;
     document.body.appendChild(link);
     link.click();
@@ -69,12 +73,28 @@ export function ShareSurveyDialog({ isOpen, onClose, formId, formName }) {
     toast.success('QR code downloaded');
   };
 
+  const shareViaWhatsApp = () => {
+    const message = `Please fill out this survey: ${formName || 'Survey'}\n\n${surveyUrl}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  const shareViaEmail = () => {
+    const subject = `Survey: ${formName || 'Please respond'}`;
+    const body = `Hi,\n\nPlease take a moment to fill out this survey:\n\n${surveyUrl}\n\nThank you!`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const shareViaSMS = () => {
+    const message = `Please fill out this survey: ${surveyUrl}`;
+    window.location.href = `sms:?body=${encodeURIComponent(message)}`;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Link2 className="w-5 h-5 text-primary" />
+            <Share2 className="w-5 h-5 text-primary" />
             Share Survey
           </DialogTitle>
           <DialogDescription>
@@ -83,18 +103,22 @@ export function ShareSurveyDialog({ isOpen, onClose, formId, formName }) {
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="link" className="flex items-center gap-2">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="link" className="flex items-center gap-1.5">
               <Link2 className="w-4 h-4" />
-              Link
+              <span className="hidden sm:inline">Link</span>
             </TabsTrigger>
-            <TabsTrigger value="qr" className="flex items-center gap-2">
+            <TabsTrigger value="qr" className="flex items-center gap-1.5">
               <QrCode className="w-4 h-4" />
-              QR Code
+              <span className="hidden sm:inline">QR</span>
             </TabsTrigger>
-            <TabsTrigger value="embed" className="flex items-center gap-2">
+            <TabsTrigger value="share" className="flex items-center gap-1.5">
+              <MessageCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">Share</span>
+            </TabsTrigger>
+            <TabsTrigger value="embed" className="flex items-center gap-1.5">
               <Code className="w-4 h-4" />
-              Embed
+              <span className="hidden sm:inline">Embed</span>
             </TabsTrigger>
           </TabsList>
 
@@ -117,7 +141,7 @@ export function ShareSurveyDialog({ isOpen, onClose, formId, formName }) {
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Share this link with anyone to collect responses. No login required for respondents.
+                Share this link with anyone to collect responses. No login required.
               </p>
             </div>
 
@@ -149,6 +173,42 @@ export function ShareSurveyDialog({ isOpen, onClose, formId, formName }) {
                 Download QR Code
               </Button>
             </div>
+          </TabsContent>
+
+          {/* Share Tab (NEW) */}
+          <TabsContent value="share" className="space-y-4 mt-4">
+            <p className="text-sm text-muted-foreground">
+              Share this survey via your preferred messaging app
+            </p>
+            <div className="space-y-3">
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={shareViaWhatsApp}
+              >
+                <MessageCircle className="w-5 h-5 mr-3 text-green-500" />
+                Share via WhatsApp
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={shareViaEmail}
+              >
+                <Mail className="w-5 h-5 mr-3 text-blue-500" />
+                Share via Email
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={shareViaSMS}
+              >
+                <Smartphone className="w-5 h-5 mr-3 text-purple-500" />
+                Share via SMS
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground text-center">
+              These options will open the respective app with a pre-filled message
+            </p>
           </TabsContent>
 
           {/* Embed Tab */}
