@@ -570,3 +570,12 @@ export class SyncManager {
 }
 
 export const syncManager = new SyncManager();
+
+// Alias methods for mobile pages
+offlineStorage.cacheForm = offlineStorage.saveForm.bind(offlineStorage);
+offlineStorage.getCachedForms = offlineStorage.getAllForms.bind(offlineStorage);
+offlineStorage.getCachedForm = offlineStorage.getForm.bind(offlineStorage);
+
+// Sync alias
+syncManager.syncAll = syncManager.syncPendingSubmissions.bind(syncManager);
+
