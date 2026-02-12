@@ -36,7 +36,7 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
  */
 export function CollectPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, user, login, logout } = useAuthStore();
+  const { isAuthenticated, user, setAuth, logout } = useAuthStore();
   
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [forms, setForms] = useState([]);
