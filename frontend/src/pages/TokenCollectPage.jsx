@@ -48,6 +48,8 @@ export function TokenCollectPage() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [showOfflineExplainer, setShowOfflineExplainer] = useState(false);
+  const [showConnectionRestored, setShowConnectionRestored] = useState(false);
+  const [wasOffline, setWasOffline] = useState(false);
 
   // Track online status
   useEffect(() => {
