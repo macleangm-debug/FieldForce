@@ -26,6 +26,7 @@ import {
   FloatingSyncStatus,
   OfflineExplainerCard 
 } from '../components/OfflineIndicators';
+import { DataVault, OfflineRibbon, ConnectionRestoredBanner } from '../components/DataVaultIndicator';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
