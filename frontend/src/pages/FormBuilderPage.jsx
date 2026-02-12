@@ -78,6 +78,8 @@ import { CalculatedFieldEditor } from '../components/CalculatedFieldEditor';
 import { VersionHistory, VersionComparison, SaveVersionDialog, RestoreVersionDialog } from '../components/FormVersioning';
 import { DuplicateRulesConfig, DuplicateReviewPanel } from '../components/DuplicateDetection';
 import { FormLogicVisualization } from '../components/FormLogicVisualization';
+import { SurveySettingsSidebar } from '../components/SurveySettingsSidebar';
+import { ShareSurveyDialog } from '../components/ShareSurveyDialog';
 import { useFormBuilderStore } from '../store';
 import { formAPI } from '../lib/api';
 import { generateId, cn } from '../lib/utils';
