@@ -281,12 +281,14 @@ export function MobileFormPage() {
         // Save offline
         if (offlineStorage.isReady) {
           await offlineStorage.saveSubmission(submission);
+          haptic.medium(); // Medium haptic for offline save
           toast.success('Saved offline. Will sync when connected.');
           goBack();
         }
       }
     } catch (error) {
       console.error('Submit error:', error);
+      haptic.warning();
       
       // Save offline as fallback
       if (offlineStorage.isReady) {
