@@ -748,16 +748,16 @@ export function CollectionLinksPage() {
             <div className="space-y-2">
               <Label>Assign Forms *</Label>
               {forms.length === 0 ? (
-                <p className="text-sm text-slate-400">No published forms available</p>
+                <p className="text-sm text-muted-foreground">No published forms available</p>
               ) : (
-                <div className="space-y-2 max-h-40 overflow-y-auto border border-slate-700 rounded-lg p-2">
+                <div className="space-y-2 max-h-40 overflow-y-auto border border-border rounded-lg p-2">
                   {forms.map((form) => (
                     <label
                       key={form.id}
                       className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${
                         newToken.form_ids.includes(form.id)
                           ? 'bg-primary/20 border border-primary/50'
-                          : 'hover:bg-slate-700/50'
+                          : 'hover:bg-muted/50'
                       }`}
                     >
                       <input
@@ -779,8 +779,8 @@ export function CollectionLinksPage() {
                         className="w-4 h-4 rounded"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-medium truncate">{form.name}</p>
-                        <p className="text-slate-400 text-xs">{form.field_count} fields</p>
+                        <p className="text-foreground text-sm font-medium truncate">{form.name}</p>
+                        <p className="text-muted-foreground text-xs">{form.field_count} fields</p>
                       </div>
                     </label>
                   ))}
