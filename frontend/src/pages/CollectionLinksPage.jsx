@@ -749,8 +749,8 @@ export function CollectionLinksPage() {
 
       {/* Create Link Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[500px] max-h-[90vh] flex flex-col">
+          <DialogHeader className="shrink-0">
             <DialogTitle className="flex items-center gap-2">
               <Link2 className="w-5 h-5 text-primary" />
               Create Collection Link
@@ -760,7 +760,7 @@ export function CollectionLinksPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className="flex-1 overflow-y-auto space-y-4 py-4 px-1 -mx-1">
             {/* Enumerator Name */}
             <div className="space-y-2">
               <Label>Enumerator Name *</Label>
