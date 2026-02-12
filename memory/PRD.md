@@ -218,22 +218,21 @@ Build a comprehensive field data collection platform (FieldForce/DataPulse) with
 - None currently
 
 ### P1 (High Priority)
-- Test offline data collection & sync end-to-end
-- Test form submission via token links
+- Custom message templates for sharing (WhatsApp, Email, SMS)
 - Implement actual i18n/translations with the language selector
+- Test offline data collection & sync end-to-end
 
 ### P2 (Medium Priority)
 - Photo/audio capture in mobile form
 - GPS auto-capture during collection
 - Background sync improvements
-- Bulk token generation
 - Email notifications integration (with real email service)
+- Auto-open single-form surveys
 
 ### P3 (Low Priority/Future)
-- SMS/WhatsApp link sharing integration
 - Custom branding fonts
 - Advanced analytics dashboard
-- Auto-open single-form surveys
+- Full theming for LandingPage & InteractiveDemoPage
 
 ---
 
