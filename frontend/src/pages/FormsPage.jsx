@@ -200,7 +200,7 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
                   className="text-destructive"
                 >
                   <Archive className="w-4 h-4 mr-2" />
-                  Archive
+                  {t('forms.archive')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -208,21 +208,21 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-            {form.description || 'No description'}
+            {form.description || t('common.noDescription')}
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <Edit3 className="w-3.5 h-3.5" />
-              {form.field_count} fields
+              {form.field_count} {t('forms.fields')}
             </div>
             <div className="flex items-center gap-1">
               <Database className="w-3.5 h-3.5" />
-              {form.submission_count} submissions
+              {form.submission_count} {t('forms.submissions')}
             </div>
           </div>
           <div className="flex items-center gap-1 mt-3 text-xs text-muted-foreground">
             <Calendar className="w-3.5 h-3.5" />
-            Updated {formatDate(form.updated_at)}
+            {t('forms.updated')} {formatDate(form.updated_at)}
           </div>
         </CardContent>
       </Card>
@@ -232,6 +232,7 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
 
 export function FormsPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { currentOrg } = useOrgStore();
   const { projects, currentProject, setCurrentProject } = useProjectStore();
   const [forms, setForms] = useState([]);
