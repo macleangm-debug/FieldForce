@@ -237,11 +237,25 @@
   "projects": {
     "title": "Projects",
     "subtitle": "Organize your data collection campaigns",
+    "manageProjects": "Manage your data collection projects",
     "newProject": "New Project",
     "createProject": "Create Project",
     "projectName": "Project Name",
     "startDate": "Start Date",
-    "endDate": "End Date"
+    "endDate": "End Date",
+    "addProject": "Add a new data collection project",
+    "projectCreated": "Project created",
+    "noProjects": "No projects found",
+    "noProjectsDescription": "Create your first project to start collecting data",
+    "searchProjects": "Search projects...",
+    "allStatus": "All Status",
+    "activate": "Activate",
+    "pause": "Pause",
+    "resume": "Resume",
+    "editProject": "Edit Project",
+    "adjustSearch": "Try adjusting your search",
+    "paused": "Paused",
+    "completed": "Completed"
   },
   "submissions": {
     "title": "Submissions",
