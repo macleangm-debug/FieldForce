@@ -62,6 +62,7 @@ const roleColors = {
 };
 
 const MemberRow = ({ member, currentUserId, onRemove, onRoleChange }) => {
+  const { t } = useTranslation();
   const isCurrentUser = member.user.id === currentUserId;
 
   return (
@@ -75,7 +76,7 @@ const MemberRow = ({ member, currentUserId, onRemove, onRoleChange }) => {
         <div>
           <p className="font-medium">
             {member.user.name}
-            {isCurrentUser && <span className="text-xs text-muted-foreground ml-2">(You)</span>}
+            {isCurrentUser && <span className="text-xs text-muted-foreground ml-2">{t('team.you')}</span>}
           </p>
           <p className="text-sm text-muted-foreground">{member.user.email}</p>
         </div>
@@ -90,11 +91,11 @@ const MemberRow = ({ member, currentUserId, onRemove, onRoleChange }) => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="admin">Admin</SelectItem>
-            <SelectItem value="manager">Manager</SelectItem>
-            <SelectItem value="analyst">Analyst</SelectItem>
-            <SelectItem value="enumerator">Enumerator</SelectItem>
-            <SelectItem value="viewer">Viewer</SelectItem>
+            <SelectItem value="admin">{t('team.admin')}</SelectItem>
+            <SelectItem value="manager">{t('team.manager')}</SelectItem>
+            <SelectItem value="analyst">{t('team.analyst')}</SelectItem>
+            <SelectItem value="enumerator">{t('team.enumerator')}</SelectItem>
+            <SelectItem value="viewer">{t('team.viewer')}</SelectItem>
           </SelectContent>
         </Select>
         {!isCurrentUser && (
@@ -106,15 +107,15 @@ const MemberRow = ({ member, currentUserId, onRemove, onRoleChange }) => {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Remove Member</AlertDialogTitle>
+                <AlertDialogTitle>{t('team.removeMember')}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to remove {member.user.name} from this organization?
+                  {t('team.confirmRemove', { name: member.user.name })}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                 <AlertDialogAction onClick={() => onRemove(member.id)}>
-                  Remove
+                  {t('common.remove')}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -126,6 +127,7 @@ const MemberRow = ({ member, currentUserId, onRemove, onRoleChange }) => {
 };
 
 export function TeamPage() {
+  const { t } = useTranslation();
   const { currentOrg } = useOrgStore();
   const { user } = useAuthStore();
   const [members, setMembers] = useState([]);
