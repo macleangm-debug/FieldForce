@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
   FolderKanban,
@@ -51,6 +52,7 @@ import { toast } from 'sonner';
 
 const ProjectCard = ({ project, onStatusChange, onSelect }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
   return (
     <motion.div
@@ -75,7 +77,9 @@ const ProjectCard = ({ project, onStatusChange, onSelect }) => {
                   {project.name}
                 </CardTitle>
                 <Badge variant={getStatusVariant(project.status)} className="mt-1">
-                  {project.status}
+                  {project.status === 'active' && t('common.active')}
+                  {project.status === 'paused' && t('projects.paused')}
+                  {project.status === 'completed' && t('projects.completed')}
                 </Badge>
               </div>
             </div>
