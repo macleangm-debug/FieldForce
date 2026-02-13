@@ -103,6 +103,13 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
   - Professional HTML email template with FieldForce branding
   - Non-blocking async email sending
   - Bulk import "Email All" button integrates with Resend when configured
+- [x] **i18n Multi-Language Support** - Full internationalization (Feb 13)
+  - 6 languages: English, Spanish, French, Portuguese, Swahili, Arabic (RTL support)
+  - Translation files at `/app/frontend/src/locales/*.json`
+  - Language selector in header (globe icon with dropdown)
+  - Auto-detection of browser language
+  - LocalStorage persistence for language preference
+  - Key pages translated: Dashboard, Collection Links
 
 ## Backlog
 - [ ] Auto-open single-form surveys
