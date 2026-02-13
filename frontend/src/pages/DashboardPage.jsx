@@ -180,8 +180,8 @@ export function DashboardPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{t('dashboard.title', 'Dashboard')}</h1>
-            <p className="text-slate-500">{currentOrg.name} {t('dashboard.overview', 'overview')}</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{t('dashboard.title')}</h1>
+            <p className="text-slate-500">{currentOrg.name} {t('dashboard.overview')}</p>
           </div>
           <div className="flex gap-2 items-center">
             <Tabs value={viewMode} onValueChange={setViewMode} className="mr-4">
@@ -198,11 +198,11 @@ export function DashboardPage() {
             </Tabs>
             <Button variant="outline" onClick={() => navigate('/projects')}>
               <FolderKanban className="w-4 h-4 mr-2" />
-              Projects
+              {t('nav.projects')}
             </Button>
             <Button onClick={() => navigate('/forms/new')} data-testid="new-form-btn">
               <Plus className="w-4 h-4 mr-2" />
-              New Form
+              {t('forms.newForm')}
             </Button>
           </div>
         </div>
@@ -229,26 +229,26 @@ export function DashboardPage() {
           ) : (
             <>
               <StatCard
-                title="Total Projects"
+                title={t('dashboard.totalProjects')}
                 value={stats?.total_projects || 0}
                 icon={FolderKanban}
                 onClick={() => navigate('/projects')}
               />
               <StatCard
-                title="Active Forms"
+                title={t('dashboard.totalForms')}
                 value={stats?.total_forms || 0}
                 icon={FileText}
                 onClick={() => navigate('/forms')}
               />
               <StatCard
-                title="Submissions"
+                title={t('nav.submissions')}
                 value={stats?.total_submissions || 0}
                 icon={Database}
-                description={`${stats?.submissions_today || 0} today`}
+                description={`${stats?.submissions_today || 0} ${t('dashboard.submissionsToday').toLowerCase()}`}
                 onClick={() => navigate('/submissions')}
               />
               <StatCard
-                title="Pending Reviews"
+                title={t('dashboard.pendingReviews')}
                 value={stats?.pending_reviews || 0}
                 icon={AlertCircle}
                 onClick={() => navigate('/submissions?status=pending')}
