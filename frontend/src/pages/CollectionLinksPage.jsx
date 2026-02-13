@@ -78,6 +78,7 @@ import { useOrgStore, useAuthStore } from '../store';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export function CollectionLinksPage() {
+  const { t } = useTranslation();
   const { currentOrg } = useOrgStore();
   const authToken = useAuthStore((state) => state.token);
   const [tokens, setTokens] = useState([]);
