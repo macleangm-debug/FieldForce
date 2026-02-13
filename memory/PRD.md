@@ -103,21 +103,23 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
   - Professional HTML email template with FieldForce branding
   - Non-blocking async email sending
   - Bulk import "Email All" button integrates with Resend when configured
-- [x] **i18n Multi-Language Support** - Full internationalization (Feb 13)
-  - 6 languages: English, Spanish, French, Portuguese, Swahili, Arabic (RTL support)
+- [x] **i18n Multi-Language Support (P0)** - Full internationalization (Feb 13)
+  - 6 languages: English, Spanish, French, Portuguese, Swahili, Arabic
   - Translation files at `/app/frontend/src/locales/*.json`
   - Language selector in header (globe icon with dropdown)
   - Auto-detection of browser language
   - LocalStorage persistence for language preference
-  - Key pages translated: Dashboard, Collection Links
+  - Pages translated: Dashboard, DashboardLayout (sidebar), Collection Links, Projects, Forms, Team, Settings (partial)
+  - Comprehensive locale files with 500+ translation keys per language
+  - Updated components: FormsPage, ProjectsPage, TeamPage, DashboardPage, SubmissionsPage
 
 ## Backlog
 - [ ] Auto-open single-form surveys
 - [ ] Full light/dark theme consistency
 - [ ] Component refactoring for InteractiveDemoPage
 - [ ] Component refactoring for CollectionLinksPage.jsx (split into CreateLinkModal, BulkImportModal)
-- [ ] Complete i18n for all remaining pages (Forms, Submissions, Settings, etc.)
-- [ ] Translate navigation sidebar labels
+- [ ] Complete i18n for remaining components (Settings page full translation, TokenCollectPage, AuthPages)
+- [ ] RTL support for Arabic language
 - [ ] Add more languages based on user demand
 
 ## Environment Ready (Pending API Key)
