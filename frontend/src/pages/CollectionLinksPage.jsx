@@ -750,7 +750,7 @@ export function CollectionLinksPage() {
                   <p className="text-2xl font-bold text-white">
                     {tokens.filter(t => t.is_active && !isExpired(t.expires_at)).length}
                   </p>
-                  <p className="text-slate-400 text-sm">Active Links</p>
+                  <p className="text-slate-400 text-sm">{t('collectionLinks.activeLinks', 'Active Links')}</p>
                 </div>
               </div>
             </CardContent>
