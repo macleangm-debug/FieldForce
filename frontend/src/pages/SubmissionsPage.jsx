@@ -228,6 +228,7 @@ const SubmissionDetail = ({ submission, onClose, onReview }) => {
 };
 
 export function SubmissionsPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const { currentOrg } = useOrgStore();
   const { projects } = useProjectStore();
