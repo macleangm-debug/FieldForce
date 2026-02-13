@@ -100,6 +100,7 @@ const ActivityItem = ({ activity }) => (
 
 export function DashboardPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { currentOrg, setCurrentOrg, setOrganizations } = useOrgStore();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
