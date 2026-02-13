@@ -91,25 +91,25 @@ const ProjectCard = ({ project, onStatusChange, onSelect }) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/projects/${project.id}/edit`); }}>
-                  Edit Project
+                  {t('projects.editProject')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {project.status === 'draft' && (
                   <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onStatusChange(project.id, 'active'); }}>
                     <Play className="w-4 h-4 mr-2" />
-                    Activate
+                    {t('projects.activate')}
                   </DropdownMenuItem>
                 )}
                 {project.status === 'active' && (
                   <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onStatusChange(project.id, 'paused'); }}>
                     <Pause className="w-4 h-4 mr-2" />
-                    Pause
+                    {t('projects.pause')}
                   </DropdownMenuItem>
                 )}
                 {project.status === 'paused' && (
                   <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onStatusChange(project.id, 'active'); }}>
                     <Play className="w-4 h-4 mr-2" />
-                    Resume
+                    {t('projects.resume')}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem 
@@ -117,7 +117,7 @@ const ProjectCard = ({ project, onStatusChange, onSelect }) => {
                   className="text-destructive"
                 >
                   <Archive className="w-4 h-4 mr-2" />
-                  Archive
+                  {t('forms.archive')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -125,16 +125,16 @@ const ProjectCard = ({ project, onStatusChange, onSelect }) => {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-            {project.description || 'No description'}
+            {project.description || t('common.noDescription')}
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
               <FileText className="w-3.5 h-3.5" />
-              <span>{project.form_count} forms</span>
+              <span>{project.form_count} {t('nav.forms').toLowerCase()}</span>
             </div>
             <div className="flex items-center gap-1">
               <Users className="w-3.5 h-3.5" />
-              {project.submission_count} submissions
+              {project.submission_count} {t('nav.submissions').toLowerCase()}
             </div>
           </div>
           {project.start_date && (
