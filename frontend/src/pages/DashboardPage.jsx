@@ -342,11 +342,11 @@ export function DashboardPage() {
                   </div>
                   <div className="text-center p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
                     <p className="text-2xl font-semibold text-amber-500">{quality.flagged_count}</p>
-                    <p className="text-xs text-muted-foreground">Flagged for Review</p>
+                    <p className="text-xs text-muted-foreground">{t('submissions.flagged')}</p>
                   </div>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground text-center py-8">No data yet</p>
+                <p className="text-sm text-muted-foreground text-center py-8">{t('common.noData')}</p>
               )}
             </CardContent>
           </Card>
@@ -358,11 +358,11 @@ export function DashboardPage() {
           <Card className="lg:col-span-2 bg-card border border-border">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle className="text-foreground">Recent Activity</CardTitle>
+                <CardTitle className="text-foreground">{t('dashboard.recentActivity')}</CardTitle>
                 <CardDescription className="text-muted-foreground">Latest submissions</CardDescription>
               </div>
               <Button variant="ghost" size="sm" onClick={() => navigate('/submissions')}>
-                View all
+                {t('common.view')} {t('common.all').toLowerCase()}
                 <ArrowUpRight className="w-4 h-4 ml-1" />
               </Button>
             </CardHeader>
@@ -388,7 +388,7 @@ export function DashboardPage() {
               ) : (
                 <div className="text-center py-8">
                   <Database className="w-12 h-12 text-muted-foreground/30 mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">No recent activity</p>
+                  <p className="text-sm text-muted-foreground">{t('common.noData')}</p>
                 </div>
               )}
             </CardContent>
