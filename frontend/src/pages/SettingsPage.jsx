@@ -91,6 +91,7 @@ const settingsNav = [
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export function SettingsPage() {
+  const { t } = useTranslation();
   const { user, token, logout } = useAuthStore();
   const { currentOrg } = useOrgStore();
   const { theme, setTheme, language, setLanguage } = useUIStore();
