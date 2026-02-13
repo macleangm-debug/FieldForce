@@ -116,6 +116,9 @@ FieldForce is a full-stack PWA for offline-capable mobile data collection, desig
 - [ ] Full light/dark theme consistency
 - [ ] Component refactoring for InteractiveDemoPage
 - [ ] Component refactoring for CollectionLinksPage.jsx (split into CreateLinkModal, BulkImportModal)
+- [ ] Complete i18n for all remaining pages (Forms, Submissions, Settings, etc.)
+- [ ] Translate navigation sidebar labels
+- [ ] Add more languages based on user demand
 
 ## Environment Ready (Pending API Key)
 - **Resend Email**: Add `RESEND_API_KEY=re_your_key` to `/app/backend/.env` to enable bulk email
