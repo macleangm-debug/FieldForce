@@ -468,7 +468,9 @@
     "verifyPin": "Verify PIN",
     "registerDevice": "Register Device",
     "verifying": "Verifying...",
+    "verifyingAccess": "Verifying access...",
     "accessGranted": "Access granted!",
+    "accessDenied": "Access Denied",
     "invalidPin": "Invalid PIN. Please try again.",
     "lockedToAnotherDevice": "This link is locked to another device. Contact your supervisor.",
     "noPinReceived": "Didn't receive a PIN? Contact your supervisor.",
@@ -481,7 +483,17 @@
     "submittedSuccessfully": "Submitted successfully!",
     "page": "Page",
     "of": "of",
-    "fillRequired": "Please fill required fields"
+    "fillRequired": "Please fill required fields",
+    "deviceLockActive": "Device Lock Active",
+    "pinProtected": "PIN Protected",
+    "locked": "Locked",
+    "pin": "PIN",
+    "dataCollector": "Data Collector",
+    "installForOffline": "Install for offline use",
+    "syncComplete": "Sync complete!",
+    "syncFailed": "Sync failed. Will retry later.",
+    "offlineCannotVerify": "Cannot verify token offline. Please connect to the internet.",
+    "workingOffline": "Working offline with cached forms"
   },
   "team": {
     "title": "Team",
