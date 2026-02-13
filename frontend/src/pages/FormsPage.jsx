@@ -533,19 +533,19 @@ export function FormsPage() {
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                 <FileText className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="font-barlow text-lg font-semibold mb-2">No forms found</h3>
+              <h3 className="font-barlow text-lg font-semibold mb-2">{t('forms.noForms')}</h3>
               <p className="text-muted-foreground text-center max-w-md mb-6">
-                {search ? 'Try adjusting your search' : 'Create your first form to start collecting data'}
+                {search ? t('forms.adjustSearch') : t('forms.noFormsDescription')}
               </p>
               {!search && projects.length > 0 && (
                 <Button onClick={() => setCreateDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Create Form
+                  {t('forms.createForm')}
                 </Button>
               )}
               {projects.length === 0 && (
                 <Button onClick={() => navigate('/projects')}>
-                  Create a Project First
+                  {t('forms.createProjectFirst')}
                 </Button>
               )}
             </CardContent>
