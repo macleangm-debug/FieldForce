@@ -161,13 +161,13 @@ export function DashboardPage() {
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
             <FolderKanban className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="font-barlow text-2xl font-bold mb-2">No Organization</h2>
+          <h2 className="font-barlow text-2xl font-bold mb-2">{t('settings.organization')}</h2>
           <p className="text-muted-foreground mb-6 text-center max-w-md">
-            Create your first organization to start collecting data
+            {t('organization.setupNew')}
           </p>
           <Button onClick={() => navigate('/organizations/new')} data-testid="create-org-btn">
             <Plus className="w-4 h-4 mr-2" />
-            Create Organization
+            {t('organization.createOrg')}
           </Button>
         </div>
       </DashboardLayout>
