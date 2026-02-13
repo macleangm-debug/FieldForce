@@ -450,10 +450,10 @@ export function FormsPage() {
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
                 <Button onClick={handleCreateForm} disabled={creating} data-testid="save-form-btn">
-                  {creating ? 'Creating...' : 'Create Form'}
+                  {creating ? t('common.creating') : t('forms.createForm')}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -465,7 +465,7 @@ export function FormsPage() {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search forms..."
+              placeholder={t('forms.searchForms')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -474,10 +474,10 @@ export function FormsPage() {
           </div>
           <Select value={selectedProject} onValueChange={setSelectedProject}>
             <SelectTrigger className="w-48">
-              <SelectValue placeholder="Project" />
+              <SelectValue placeholder={t('collectionLinks.project')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Projects</SelectItem>
+              <SelectItem value="all">{t('forms.allProjects')}</SelectItem>
               {projects.map((project) => (
                 <SelectItem key={project.id} value={project.id}>
                   {project.name}
@@ -487,13 +487,13 @@ export function FormsPage() {
           </Select>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t('common.status')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="published">Published</SelectItem>
-              <SelectItem value="archived">Archived</SelectItem>
+              <SelectItem value="all">{t('forms.allStatus')}</SelectItem>
+              <SelectItem value="draft">{t('forms.draft')}</SelectItem>
+              <SelectItem value="published">{t('forms.published')}</SelectItem>
+              <SelectItem value="archived">{t('forms.archived')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
