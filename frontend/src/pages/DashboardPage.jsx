@@ -262,7 +262,7 @@ export function DashboardPage() {
           {/* Submission Trends */}
           <Card className="lg:col-span-2 bg-card border border-border">
             <CardHeader>
-              <CardTitle className="text-foreground">Submission Trends</CardTitle>
+              <CardTitle className="text-foreground">{t('dashboard.submissionTrends')}</CardTitle>
               <CardDescription className="text-muted-foreground">Last 14 days</CardDescription>
             </CardHeader>
             <CardContent>
@@ -309,7 +309,7 @@ export function DashboardPage() {
           {/* Data Quality */}
           <Card className="bg-card border border-border">
             <CardHeader>
-              <CardTitle className="text-foreground">Data Quality</CardTitle>
+              <CardTitle className="text-foreground">{t('dashboard.qualityScore')}</CardTitle>
               <CardDescription className="text-muted-foreground">Overall quality metrics</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -323,7 +323,7 @@ export function DashboardPage() {
                 <>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="text-sm text-muted-foreground">Avg Quality Score</span>
+                      <span className="text-sm text-muted-foreground">{t('submissions.qualityScore')}</span>
                       <span className={`text-sm font-mono font-medium ${getQualityColor(quality.avg_quality_score)}`}>
                         {quality.avg_quality_score}%
                       </span>
@@ -333,11 +333,11 @@ export function DashboardPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                       <p className="text-2xl font-semibold text-emerald-500">{quality.approved_count}</p>
-                      <p className="text-xs text-muted-foreground">Approved</p>
+                      <p className="text-xs text-muted-foreground">{t('submissions.approved')}</p>
                     </div>
                     <div className="text-center p-3 rounded-lg bg-red-500/10 border border-red-500/20">
                       <p className="text-2xl font-semibold text-red-500">{quality.rejected_count}</p>
-                      <p className="text-xs text-muted-foreground">Rejected</p>
+                      <p className="text-xs text-muted-foreground">{t('submissions.rejected')}</p>
                     </div>
                   </div>
                   <div className="text-center p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
