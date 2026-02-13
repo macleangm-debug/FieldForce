@@ -152,6 +152,7 @@ const ProjectCard = ({ project, onStatusChange, onSelect }) => {
 
 export function ProjectsPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { currentOrg } = useOrgStore();
   const { projects, setProjects, setCurrentProject } = useProjectStore();
   const [loading, setLoading] = useState(true);
@@ -174,7 +175,7 @@ export function ProjectsPage() {
       const response = await projectAPI.list(currentOrg.id, statusFilter === 'all' ? null : statusFilter);
       setProjects(response.data);
     } catch (error) {
-      toast.error('Failed to load projects');
+      toast.error(t('errors.somethingWentWrong'));
     } finally {
       setLoading(false);
     }
@@ -182,7 +183,7 @@ export function ProjectsPage() {
 
   const handleCreateProject = async () => {
     if (!newProject.name.trim()) {
-      toast.error('Project name is required');
+      toast.error(t('projects.projectName') + ' required');
       return;
     }
     setCreating(true);
@@ -195,10 +196,10 @@ export function ProjectsPage() {
       setProjects([...projects, response.data]);
       setCreateDialogOpen(false);
       setNewProject({ name: '', description: '' });
-      toast.success('Project created');
+      toast.success(t('projects.projectCreated'));
       navigate(`/projects/${response.data.id}`);
     } catch (error) {
-      toast.error('Failed to create project');
+      toast.error(t('errors.somethingWentWrong'));
     } finally {
       setCreating(false);
     }
@@ -210,9 +211,9 @@ export function ProjectsPage() {
       setProjects(projects.map(p => 
         p.id === projectId ? { ...p, status: newStatus } : p
       ));
-      toast.success(`Project ${newStatus}`);
+      toast.success(t('common.success'));
     } catch (error) {
-      toast.error('Failed to update status');
+      toast.error(t('errors.somethingWentWrong'));
     }
   };
 
