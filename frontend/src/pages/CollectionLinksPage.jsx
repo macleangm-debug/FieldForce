@@ -734,7 +734,7 @@ export function CollectionLinksPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-white">{tokens.length}</p>
-                  <p className="text-slate-400 text-sm">Total Links</p>
+                  <p className="text-slate-400 text-sm">{t('collectionLinks.totalLinks', 'Total Links')}</p>
                 </div>
               </div>
             </CardContent>
