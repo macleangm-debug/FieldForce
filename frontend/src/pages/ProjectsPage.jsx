@@ -233,7 +233,7 @@ export function ProjectsPage() {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
-          <p className="text-muted-foreground">Please select an organization first</p>
+          <p className="text-muted-foreground">{t('organization.selectOrgFirst')}</p>
         </div>
       </DashboardLayout>
     );
@@ -245,24 +245,24 @@ export function ProjectsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="font-barlow text-3xl font-bold tracking-tight text-foreground">Projects</h1>
-            <p className="text-muted-foreground">Manage your data collection projects</p>
+            <h1 className="font-barlow text-3xl font-bold tracking-tight text-foreground">{t('projects.title')}</h1>
+            <p className="text-muted-foreground">{t('projects.manageProjects')}</p>
           </div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
               <Button data-testid="create-project-btn">
                 <Plus className="w-4 h-4 mr-2" />
-                New Project
+                {t('projects.newProject')}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="font-barlow">Create Project</DialogTitle>
-                <DialogDescription>Add a new data collection project</DialogDescription>
+                <DialogTitle className="font-barlow">{t('projects.createProject')}</DialogTitle>
+                <DialogDescription>{t('projects.addProject')}</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Project Name</Label>
+                  <Label htmlFor="name">{t('projects.projectName')}</Label>
                   <Input
                     id="name"
                     value={newProject.name}
@@ -272,7 +272,7 @@ export function ProjectsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t('forms.description')}</Label>
                   <Textarea
                     id="description"
                     value={newProject.description}
@@ -285,10 +285,10 @@ export function ProjectsPage() {
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
                 <Button onClick={handleCreateProject} disabled={creating} data-testid="save-project-btn">
-                  {creating ? 'Creating...' : 'Create Project'}
+                  {creating ? t('common.creating') : t('projects.createProject')}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -300,7 +300,7 @@ export function ProjectsPage() {
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search projects..."
+              placeholder={t('projects.searchProjects')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
