@@ -541,5 +541,16 @@
     "tokenExpired": "Token has expired",
     "formNotFound": "Form not found",
     "submissionFailed": "Submission failed"
+  },
+  "organization": {
+    "createOrg": "Create Organization",
+    "setupNew": "Set up a new organization to start collecting data with your team",
+    "orgName": "Organization Name",
+    "placeholder": "e.g., ACME Research Institute",
+    "description": "Description",
+    "descPlaceholder": "Brief description of your organization",
+    "creating": "Creating...",
+    "created": "Organization created",
+    "selectOrgFirst": "Please select an organization first"
   }
 }
