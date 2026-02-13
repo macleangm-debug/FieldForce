@@ -65,13 +65,14 @@ import { toast } from 'sonner';
 
 const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   
   const surveyUrl = `${window.location.origin}/survey/${form.id}`;
   
   const copyLink = (e) => {
     e.stopPropagation();
     navigator.clipboard.writeText(surveyUrl);
-    toast.success('Survey link copied!');
+    toast.success(t('forms.surveyLinkCopied'));
   };
   
   const shareViaWhatsApp = (e) => {
