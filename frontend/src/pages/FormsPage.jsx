@@ -289,7 +289,7 @@ export function FormsPage() {
       }
       setForms(allForms);
     } catch (error) {
-      toast.error('Failed to load forms');
+      toast.error(t('errors.somethingWentWrong'));
     } finally {
       setLoading(false);
     }
@@ -297,11 +297,11 @@ export function FormsPage() {
 
   const handleCreateForm = async () => {
     if (!newForm.name.trim()) {
-      toast.error('Form name is required');
+      toast.error(t('forms.formName') + ' required');
       return;
     }
     if (!newForm.project_id) {
-      toast.error('Please select a project');
+      toast.error(t('forms.selectProject'));
       return;
     }
     setCreating(true);
@@ -315,10 +315,10 @@ export function FormsPage() {
       setForms([...forms, response.data]);
       setCreateDialogOpen(false);
       setNewForm({ name: '', description: '', project_id: '' });
-      toast.success('Form created');
+      toast.success(t('forms.formCreated'));
       navigate(`/forms/${response.data.id}/edit`);
     } catch (error) {
-      toast.error('Failed to create form');
+      toast.error(t('errors.somethingWentWrong'));
     } finally {
       setCreating(false);
     }
@@ -330,9 +330,9 @@ export function FormsPage() {
       setForms(forms.map(f => 
         f.id === formId ? { ...f, status: 'published' } : f
       ));
-      toast.success('Form published');
+      toast.success(t('forms.formPublished'));
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Failed to publish');
+      toast.error(error.response?.data?.detail || t('errors.somethingWentWrong'));
     }
   };
 
@@ -340,9 +340,9 @@ export function FormsPage() {
     try {
       const response = await formAPI.duplicate(formId, `${formName} (Copy)`);
       setForms([...forms, response.data]);
-      toast.success('Form duplicated');
+      toast.success(t('forms.formDuplicated'));
     } catch (error) {
-      toast.error('Failed to duplicate form');
+      toast.error(t('errors.somethingWentWrong'));
     }
   };
 
@@ -352,9 +352,9 @@ export function FormsPage() {
       setForms(forms.map(f => 
         f.id === formId ? { ...f, status: 'archived' } : f
       ));
-      toast.success('Form archived');
+      toast.success(t('forms.formArchived'));
     } catch (error) {
-      toast.error('Failed to archive form');
+      toast.error(t('errors.somethingWentWrong'));
     }
   };
 
