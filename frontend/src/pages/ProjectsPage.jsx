@@ -309,14 +309,14 @@ export function ProjectsPage() {
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Status" />
+              <SelectValue placeholder={t('common.status')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="paused">Paused</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="all">{t('projects.allStatus')}</SelectItem>
+              <SelectItem value="draft">{t('forms.draft')}</SelectItem>
+              <SelectItem value="active">{t('common.active')}</SelectItem>
+              <SelectItem value="paused">{t('projects.paused')}</SelectItem>
+              <SelectItem value="completed">{t('projects.completed')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -354,14 +354,14 @@ export function ProjectsPage() {
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                 <FolderKanban className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="font-barlow text-lg font-semibold mb-2">No projects found</h3>
+              <h3 className="font-barlow text-lg font-semibold mb-2">{t('projects.noProjects')}</h3>
               <p className="text-muted-foreground text-center max-w-md mb-6">
-                {search ? 'Try adjusting your search' : 'Create your first project to start collecting data'}
+                {search ? t('projects.adjustSearch') : t('projects.noProjectsDescription')}
               </p>
               {!search && (
                 <Button onClick={() => setCreateDialogOpen(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Create Project
+                  {t('projects.createProject')}
                 </Button>
               )}
             </CardContent>
