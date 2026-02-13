@@ -380,7 +380,7 @@ export function FormsPage() {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
-          <p className="text-gray-400">Please select an organization first</p>
+          <p className="text-gray-400">{t('organization.selectOrgFirst')}</p>
         </div>
       </DashboardLayout>
     );
@@ -392,30 +392,30 @@ export function FormsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="font-barlow text-3xl font-bold tracking-tight text-white">Forms</h1>
-            <p className="text-gray-400">Design and manage your data collection forms</p>
+            <h1 className="font-barlow text-3xl font-bold tracking-tight text-white">{t('forms.title')}</h1>
+            <p className="text-gray-400">{t('forms.subtitle')}</p>
           </div>
           <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
             <DialogTrigger asChild>
               <Button data-testid="create-form-btn">
                 <Plus className="w-4 h-4 mr-2" />
-                New Form
+                {t('forms.newForm')}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className="font-barlow">Create Form</DialogTitle>
-                <DialogDescription>Add a new data collection form</DialogDescription>
+                <DialogTitle className="font-barlow">{t('forms.createForm')}</DialogTitle>
+                <DialogDescription>{t('forms.addForm')}</DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="project">Project</Label>
+                  <Label htmlFor="project">{t('collectionLinks.project')}</Label>
                   <Select
                     value={newForm.project_id}
                     onValueChange={(value) => setNewForm({ ...newForm, project_id: value })}
                   >
                     <SelectTrigger data-testid="form-project-select">
-                      <SelectValue placeholder="Select project" />
+                      <SelectValue placeholder={t('forms.selectProject')} />
                     </SelectTrigger>
                     <SelectContent>
                       {projects.map((project) => (
@@ -427,7 +427,7 @@ export function FormsPage() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="name">Form Name</Label>
+                  <Label htmlFor="name">{t('forms.formName')}</Label>
                   <Input
                     id="name"
                     value={newForm.name}
@@ -437,7 +437,7 @@ export function FormsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t('forms.description')}</Label>
                   <Textarea
                     id="description"
                     value={newForm.description}
