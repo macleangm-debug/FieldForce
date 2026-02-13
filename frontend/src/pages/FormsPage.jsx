@@ -138,17 +138,17 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
               <DropdownMenuContent align="end" className="w-52">
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/forms/${form.id}/edit`); }}>
                   <Edit3 className="w-4 h-4 mr-2" />
-                  Edit Form
+                  {t('forms.editForm')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/forms/${form.id}/preview`); }}>
                   <Eye className="w-4 h-4 mr-2" />
-                  Preview
+                  {t('forms.preview')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 {form.status === 'draft' && (
                   <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onPublish(form.id); }}>
                     <Play className="w-4 h-4 mr-2" />
-                    Publish
+                    {t('forms.publish')}
                   </DropdownMenuItem>
                 )}
                 {form.status === 'published' && (
@@ -156,35 +156,35 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger onClick={(e) => e.stopPropagation()}>
                         <Share2 className="w-4 h-4 mr-2" />
-                        Share Survey
+                        {t('forms.shareSurvey')}
                       </DropdownMenuSubTrigger>
                       <DropdownMenuPortal>
                         <DropdownMenuSubContent className="w-48">
                           <DropdownMenuItem onClick={copyLink}>
                             <Copy className="w-4 h-4 mr-2" />
-                            Copy Link
+                            {t('forms.copyLink')}
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onShare(form.id, form.name); }}>
                             <QrCode className="w-4 h-4 mr-2" />
-                            QR Code & Embed...
+                            {t('forms.qrCodeEmbed')}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={shareViaWhatsApp}>
                             <MessageCircle className="w-4 h-4 mr-2 text-green-500" />
-                            Share via WhatsApp
+                            {t('forms.shareViaWhatsApp')}
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={shareViaEmail}>
                             <Mail className="w-4 h-4 mr-2 text-blue-500" />
-                            Share via Email
+                            {t('forms.shareViaEmail')}
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={shareViaSMS}>
                             <Smartphone className="w-4 h-4 mr-2 text-purple-500" />
-                            Share via SMS
+                            {t('forms.shareViaSMS')}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={openSurvey}>
                             <ExternalLink className="w-4 h-4 mr-2" />
-                            Open Survey
+                            {t('forms.openSurvey')}
                           </DropdownMenuItem>
                         </DropdownMenuSubContent>
                       </DropdownMenuPortal>
@@ -193,7 +193,7 @@ const FormCard = ({ form, onPublish, onDuplicate, onArchive, onShare }) => {
                 )}
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onDuplicate(form.id, form.name); }}>
                   <Copy className="w-4 h-4 mr-2" />
-                  Duplicate
+                  {t('forms.duplicate')}
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={(e) => { e.stopPropagation(); onArchive(form.id); }}
