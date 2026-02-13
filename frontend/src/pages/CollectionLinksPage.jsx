@@ -777,10 +777,10 @@ export function CollectionLinksPage() {
         <Card className="bg-slate-800/50 border-slate-700">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-white">All Collection Links</CardTitle>
+              <CardTitle className="text-white">{t('collectionLinks.allLinks', 'All Collection Links')}</CardTitle>
               <Button variant="ghost" size="sm" onClick={loadData} disabled={loading}>
                 <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                Refresh
+                {t('common.refresh', 'Refresh')}
               </Button>
             </div>
           </CardHeader>
@@ -792,22 +792,22 @@ export function CollectionLinksPage() {
             ) : tokens.length === 0 ? (
               <div className="text-center py-12">
                 <Link2 className="w-12 h-12 mx-auto mb-4 text-slate-500" />
-                <h3 className="text-white font-medium mb-1">No Collection Links Yet</h3>
+                <h3 className="text-white font-medium mb-1">{t('collectionLinks.noLinksYet', 'No Collection Links Yet')}</h3>
                 <p className="text-slate-400 text-sm mb-4">
-                  Create your first link to start collecting data from field enumerators
+                  {t('collectionLinks.noLinksDescription', 'Create your first link to start collecting data from field enumerators')}
                 </p>
                 <Button onClick={() => setShowCreateDialog(true)}>
                   <Plus className="w-4 h-4 mr-2" />
-                  Create First Link
+                  {t('collectionLinks.createFirstLink', 'Create First Link')}
                 </Button>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow className="border-slate-700">
-                    <TableHead className="text-slate-400">Enumerator</TableHead>
-                    <TableHead className="text-slate-400">Project</TableHead>
-                    <TableHead className="text-slate-400">Forms</TableHead>
+                    <TableHead className="text-slate-400">{t('collectionLinks.enumerator', 'Enumerator')}</TableHead>
+                    <TableHead className="text-slate-400">{t('collectionLinks.project', 'Project')}</TableHead>
+                    <TableHead className="text-slate-400">{t('collectionLinks.forms', 'Forms')}</TableHead>
                     <TableHead className="text-slate-400">Submissions</TableHead>
                     <TableHead className="text-slate-400">Expires</TableHead>
                     <TableHead className="text-slate-400">Status</TableHead>
