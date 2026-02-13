@@ -1,186 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import {
-  Globe,
-  Check,
-  Loader2
-} from 'lucide-react';
+/**
+ * Language Selector Component
+ * Allows users to switch between available languages using react-i18next
+ */
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Globe, Check, ChevronDown } from 'lucide-react';
+import { Button } from './ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from './ui/dropdown-menu';
-import { Button } from './ui/button';
-import { toast } from 'sonner';
-import { useAuthStore } from '../store';
+import { SUPPORTED_LANGUAGES } from '../i18n';
+import { cn } from '../lib/utils';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+export function LanguageSelector({ variant = 'default', showLabel = false, className }) {
+  const { i18n, t } = useTranslation();
+  const currentLanguage = SUPPORTED_LANGUAGES.find(lang => lang.code === i18n.language) 
+    || SUPPORTED_LANGUAGES[0];
 
-// Default languages (fallback)
-const DEFAULT_LANGUAGES = [
-  { code: 'en', name: 'English', native: 'English', flag: 'EN' },
-  { code: 'es', name: 'Spanish', native: 'Español', flag: 'ES' },
-  { code: 'fr', name: 'French', native: 'Français', flag: 'FR' },
-  { code: 'de', name: 'German', native: 'Deutsch', flag: 'DE' },
-  { code: 'pt', name: 'Portuguese', native: 'Português', flag: 'PT' },
-  { code: 'zh', name: 'Chinese', native: '中文', flag: 'ZH' },
-  { code: 'ja', name: 'Japanese', native: '日本語', flag: 'JA' },
-  { code: 'ar', name: 'Arabic', native: 'العربية', flag: 'AR' },
-  { code: 'hi', name: 'Hindi', native: 'हिन्दी', flag: 'HI' },
-  { code: 'sw', name: 'Swahili', native: 'Kiswahili', flag: 'SW' },
-];
-
-export function LanguageSelector({ variant = 'default' }) {
-  const token = useAuthStore((state) => state.token);
-  
-  const [languages, setLanguages] = useState(DEFAULT_LANGUAGES);
-  const [currentLanguage, setCurrentLanguage] = useState('en');
-  const [loading, setLoading] = useState(false);
-  const [updating, setUpdating] = useState(false);
-
-  // Load supported languages and user preference
-  useEffect(() => {
-    loadLanguages();
-    loadUserPreference();
-    
-    // Check localStorage for saved language
-    const saved = localStorage.getItem('fieldforce_language');
-    if (saved) {
-      setCurrentLanguage(saved);
-    }
-  }, [token]);
-
-  const loadLanguages = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/settings/languages`);
-      if (res.ok) {
-        const data = await res.json();
-        setLanguages(data.languages || DEFAULT_LANGUAGES);
-      }
-    } catch (error) {
-      console.error('Failed to load languages:', error);
-    }
+  const changeLanguage = (langCode) => {
+    i18n.changeLanguage(langCode);
+    // Update document direction for RTL languages
+    const lang = SUPPORTED_LANGUAGES.find(l => l.code === langCode);
+    document.documentElement.dir = lang?.dir || 'ltr';
+    document.documentElement.lang = langCode;
   };
-
-  const loadUserPreference = async () => {
-    if (!token) return;
-    
-    try {
-      const res = await fetch(`${API_URL}/api/settings/preferences`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.language) {
-          setCurrentLanguage(data.language);
-          localStorage.setItem('fieldforce_language', data.language);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load user preferences:', error);
-    }
-  };
-
-  const updateLanguage = async (langCode) => {
-    setUpdating(true);
-    setCurrentLanguage(langCode);
-    localStorage.setItem('fieldforce_language', langCode);
-    
-    try {
-      if (token) {
-        await fetch(`${API_URL}/api/settings/language`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ language: langCode })
-        });
-      }
-      
-      const selectedLang = languages.find(l => l.code === langCode);
-      toast.success(`Language changed to ${selectedLang?.native || selectedLang?.name}`);
-      
-      // In a real app, this would trigger i18n library to switch languages
-      // For now, we just save the preference
-    } catch (error) {
-      console.error('Failed to update language:', error);
-      toast.error('Failed to update language');
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const currentLangData = languages.find(l => l.code === currentLanguage) || languages[0];
-
-  if (variant === 'compact') {
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="text-muted-foreground">
-            <Globe className="w-5 h-5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
-          {languages.map((lang) => (
-            <DropdownMenuItem
-              key={lang.code}
-              onClick={() => updateLanguage(lang.code)}
-              className="flex items-center justify-between"
-            >
-              <span>{lang.native}</span>
-              {currentLanguage === lang.code && (
-                <Check className="w-4 h-4 text-primary" />
-              )}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
-          className="gap-2 text-muted-foreground hover:text-foreground"
-          disabled={updating}
-          data-testid="language-selector"
-        >
-          {updating ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
+        {variant === 'icon' ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn("text-muted-foreground hover:text-foreground", className)}
+            data-testid="language-selector-btn"
+          >
+            <Globe className="w-5 h-5" />
+          </Button>
+        ) : variant === 'minimal' ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn("text-muted-foreground hover:text-foreground gap-1", className)}
+            data-testid="language-selector-btn"
+          >
+            <span className="text-base">{currentLanguage.flag}</span>
+            <span className="uppercase text-xs font-medium">{currentLanguage.code}</span>
+            <ChevronDown className="w-3 h-3" />
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            className={cn("gap-2 text-muted-foreground hover:text-foreground", className)}
+            data-testid="language-selector-btn"
+          >
             <Globe className="w-4 h-4" />
-          )}
-          <span className="text-sm font-medium">{currentLangData.flag}</span>
-        </Button>
+            {showLabel ? (
+              <>
+                <span>{currentLanguage.nativeName}</span>
+                <ChevronDown className="w-4 h-4" />
+              </>
+            ) : (
+              <span className="text-sm font-medium">{currentLanguage.flag}</span>
+            )}
+          </Button>
+        )}
       </DropdownMenuTrigger>
+      
       <DropdownMenuContent align="end" className="w-56">
-        <div className="px-3 py-2 border-b border-border">
-          <p className="text-xs font-medium text-muted-foreground">Select Language</p>
-        </div>
-        <div className="max-h-[300px] overflow-y-auto py-1">
-          {languages.map((lang) => (
+        <DropdownMenuLabel className="flex items-center gap-2">
+          <Globe className="w-4 h-4" />
+          {t('settings.language', 'Language')}
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        
+        <div className="max-h-[300px] overflow-y-auto">
+          {SUPPORTED_LANGUAGES.map((lang) => (
             <DropdownMenuItem
               key={lang.code}
-              onClick={() => updateLanguage(lang.code)}
-              className={`flex items-center justify-between ${
-                currentLanguage === lang.code ? 'bg-primary/10' : ''
-              }`}
+              onClick={() => changeLanguage(lang.code)}
+              className={cn(
+                "flex items-center justify-between cursor-pointer",
+                i18n.language === lang.code && "bg-primary/10"
+              )}
+              data-testid={`lang-option-${lang.code}`}
             >
               <div className="flex items-center gap-3">
-                <span className="w-8 text-center font-medium text-xs bg-muted rounded px-1.5 py-0.5">
-                  {lang.flag}
-                </span>
-                <div>
-                  <p className="font-medium text-sm">{lang.native}</p>
-                  <p className="text-xs text-muted-foreground">{lang.name}</p>
+                <span className="text-lg">{lang.flag}</span>
+                <div className="flex flex-col">
+                  <span className="font-medium">{lang.nativeName}</span>
+                  <span className="text-xs text-muted-foreground">{lang.name}</span>
                 </div>
               </div>
-              {currentLanguage === lang.code && (
-                <Check className="w-4 h-4 text-primary flex-shrink-0" />
+              {i18n.language === lang.code && (
+                <Check className="w-4 h-4 text-primary" />
               )}
             </DropdownMenuItem>
           ))}
@@ -188,6 +107,16 @@ export function LanguageSelector({ variant = 'default' }) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+// Compact version for header/navbar
+export function LanguageSelectorCompact({ className }) {
+  return <LanguageSelector variant="minimal" className={className} />;
+}
+
+// Icon-only version
+export function LanguageSelectorIcon({ className }) {
+  return <LanguageSelector variant="icon" className={className} />;
 }
 
 export default LanguageSelector;
