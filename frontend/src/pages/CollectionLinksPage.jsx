@@ -700,9 +700,9 @@ export function CollectionLinksPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">Collection Links</h1>
+            <h1 className="text-2xl font-bold text-white">{t('collectionLinks.title', 'Collection Links')}</h1>
             <p className="text-slate-400 mt-1">
-              Generate shareable links for field enumerators to collect data
+              {t('collectionLinks.subtitle', 'Generate shareable links for field enumerators to collect data')}
             </p>
           </div>
           <div className="flex gap-2">
@@ -715,11 +715,11 @@ export function CollectionLinksPage() {
               data-testid="bulk-links-btn"
             >
               <Upload className="w-4 h-4 mr-2" />
-              Bulk Links
+              {t('collectionLinks.bulkLinks', 'Bulk Links')}
             </Button>
             <Button onClick={() => setShowCreateDialog(true)} data-testid="create-single-link-btn">
               <Plus className="w-4 h-4 mr-2" />
-              Create Single Link
+              {t('collectionLinks.createSingleLink', 'Create Single Link')}
             </Button>
           </div>
         </div>
