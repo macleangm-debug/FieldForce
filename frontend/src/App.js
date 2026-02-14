@@ -222,6 +222,11 @@ function App() {
               <CollectionLinksPage />
             </ProtectedRoute>
           } />
+          <Route path="/help" element={
+            <ProtectedRoute>
+              <HelpCenterPage />
+            </ProtectedRoute>
+          } />
           
           {/* Public CAWI Survey Routes */}
           <Route path="/survey/:formId" element={<CAWISurveyPage />} />
