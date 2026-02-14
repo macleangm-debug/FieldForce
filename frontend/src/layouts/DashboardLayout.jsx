@@ -476,11 +476,15 @@ export function DashboardLayout({ children }) {
               {/* Help Button */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className="hidden lg:flex p-2 rounded-lg hover:bg-muted text-muted-foreground">
+                  <button 
+                    onClick={() => navigate('/help')}
+                    className="hidden lg:flex p-2 rounded-lg hover:bg-muted text-muted-foreground"
+                    data-testid="help-center-btn"
+                  >
                     <span className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center text-xs font-bold">?</span>
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Help & Resources</TooltipContent>
+                <TooltipContent>Help Center</TooltipContent>
               </Tooltip>
 
               {/* New Button */}
