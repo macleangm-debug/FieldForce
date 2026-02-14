@@ -24,7 +24,10 @@ import {
   Link2,
   Download,
   Globe,
-  HelpCircle
+  HelpCircle,
+  ZoomIn,
+  X,
+  Image as ImageIcon
 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
@@ -33,7 +36,95 @@ import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 
 /**
- * Help Center Categories and Articles
+ * Screenshot Modal for zoomed view
+ */
+function ScreenshotModal({ src, alt, onClose }) {
+  if (!src) return null;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.9 }}
+        className="relative max-w-5xl w-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute -top-10 right-0 p-2 text-white hover:text-primary transition-colors"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        <img 
+          src={src} 
+          alt={alt} 
+          className="w-full rounded-lg shadow-2xl"
+        />
+        <p className="text-center text-white/70 mt-3 text-sm">{alt}</p>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/**
+ * Screenshot component with zoom capability
+ */
+function Screenshot({ src, alt, caption }) {
+  const [zoomed, setZoomed] = useState(false);
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <div className="my-4 p-8 rounded-xl bg-muted/30 border border-border flex flex-col items-center justify-center text-muted-foreground">
+        <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
+        <span className="text-sm">{caption || alt}</span>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <motion.figure 
+        className="my-4 group cursor-zoom-in"
+        onClick={() => setZoomed(true)}
+        whileHover={{ scale: 1.01 }}
+      >
+        <div className="relative rounded-xl overflow-hidden border border-border shadow-lg">
+          <img 
+            src={src} 
+            alt={alt}
+            onError={() => setError(true)}
+            className="w-full h-auto"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+            <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+        </div>
+        {caption && (
+          <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+            {caption}
+          </figcaption>
+        )}
+      </motion.figure>
+      
+      <AnimatePresence>
+        {zoomed && (
+          <ScreenshotModal src={src} alt={alt || caption} onClose={() => setZoomed(false)} />
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+/**
+ * Help Center Categories and Articles with Screenshots
  */
 const HELP_CATEGORIES = [
   {
@@ -48,16 +139,24 @@ const HELP_CATEGORIES = [
         title: 'Quick Start Guide',
         description: 'Get up and running in 5 minutes',
         readTime: '5 min',
+        screenshots: [
+          { id: 'dashboard', caption: 'The FieldForce Dashboard - Your command center for data collection' },
+          { id: 'sidebar', caption: 'Navigation sidebar with quick access to all features' }
+        ],
         content: `
 ## Welcome to FieldForce!
 
 FieldForce is a powerful mobile data collection platform designed for field research organizations. Here's how to get started:
 
+[SCREENSHOT:dashboard]
+
 ### Step 1: Create Your Organization
-After signing up, create your organization to serve as your team workspace. Go to **Team > Create Organization**.
+After signing up, create your organization to serve as your team workspace. Click the **Create Organization** button on your dashboard.
 
 ### Step 2: Create a Project
-Projects help you organize related surveys. Navigate to **Projects > New Project** and give it a meaningful name.
+Projects help you organize related surveys. Navigate to **Projects** in the sidebar and click **New Project**.
+
+[SCREENSHOT:sidebar]
 
 ### Step 3: Build Your First Form
 Use our drag-and-drop form builder to create surveys. Go to **Forms > New Form** and start adding questions.
@@ -74,13 +173,27 @@ View submissions, export data, and generate reports from the **Submissions** and
         title: 'Account Setup',
         description: 'Configure your profile and preferences',
         readTime: '3 min',
+        screenshots: [
+          { id: 'settings', caption: 'Profile settings page - customize your account' }
+        ],
         content: `
 ## Setting Up Your Account
+
+[SCREENSHOT:settings]
 
 ### Profile Settings
 1. Click your avatar in the top-right corner
 2. Select **Settings**
 3. Update your name, email, and avatar
+
+### Personal Information
+Fill in your details including:
+- Full Name
+- Email Address  
+- Phone Number
+- Job Title
+- Department
+- Location
 
 ### Notification Preferences
 Configure how you receive updates about submissions, team activity, and system alerts.
@@ -96,20 +209,28 @@ Configure how you receive updates about submissions, team activity, and system a
         title: 'Navigating the Dashboard',
         description: 'Understanding the interface',
         readTime: '4 min',
+        screenshots: [
+          { id: 'nav-sidebar', caption: 'The sidebar provides quick access to all main features' },
+          { id: 'nav-header', caption: 'Top header with search, notifications, and user profile' }
+        ],
         content: `
 ## Dashboard Navigation
+
+[SCREENSHOT:nav-sidebar]
 
 ### Left Sidebar
 The sidebar provides quick access to all main features:
 - **Home**: Dashboard overview with key metrics
-- **Projects**: Manage your data collection projects
+- **Projects**: Manage your data collection projects  
 - **Data**: Access cases, datasets, and exports
 - **Field**: GPS map, devices, and collection links
 - **Settings**: Team, roles, and preferences
 
+[SCREENSHOT:nav-header]
+
 ### Top Bar
-- **Search**: Press Cmd+K for quick search
-- **Notifications**: Stay updated on submissions
+- **Search**: Press Cmd+K for quick search across all data
+- **Notifications**: Stay updated on submissions and team activity
 - **Profile**: Access settings and sign out
 
 ### Keyboard Shortcuts
@@ -132,35 +253,49 @@ The sidebar provides quick access to all main features:
         title: 'Using the Form Builder',
         description: 'Create powerful surveys with drag-and-drop',
         readTime: '8 min',
+        screenshots: [
+          { id: 'forms-list', caption: 'Forms page showing all your surveys' },
+          { id: 'form-builder', caption: 'Drag-and-drop form builder interface' }
+        ],
         content: `
 ## Form Builder Guide
+
+[SCREENSHOT:forms-list]
+
+### Accessing the Form Builder
+1. Navigate to **Projects > Forms** in the sidebar
+2. Click **+ New Form** button
+3. Choose "Start from scratch" or select a template
+
+[SCREENSHOT:form-builder]
 
 ### Adding Questions
 1. Click **+ Add Question** or drag from the sidebar
 2. Choose question type (text, number, select, etc.)
-3. Configure question properties
+3. Configure question properties in the right panel
 
-### Question Types
+### Question Types Available
 - **Text**: Short and long text responses
 - **Number**: Numeric input with validation
 - **Select One**: Single choice from options
 - **Select Multiple**: Multiple choice selection
 - **Date/Time**: Date and time pickers
-- **GPS**: Location capture
+- **GPS**: Location capture with map
 - **Photo**: Image capture with camera
 - **Signature**: Digital signature capture
+- **Barcode**: Scan barcodes and QR codes
 
 ### Skip Logic
 Add conditional logic to show/hide questions:
 1. Select a question
-2. Click **Add Logic**
+2. Click **Add Logic** in the properties panel
 3. Set conditions and actions
 
 ### Validation Rules
 Ensure data quality with validation:
 - Required fields
 - Min/max values
-- Pattern matching
+- Pattern matching (regex)
 - Custom formulas
         `
       },
@@ -169,24 +304,36 @@ Ensure data quality with validation:
         title: 'Using Form Templates',
         description: 'Start faster with pre-built templates',
         readTime: '3 min',
+        screenshots: [
+          { id: 'templates', caption: 'Browse pre-built form templates' }
+        ],
         content: `
 ## Form Templates
 
+[SCREENSHOT:templates]
+
 ### Available Templates
-- Household Survey
-- Health Assessment
-- Customer Feedback
-- Employee Survey
-- Event Registration
+FieldForce comes with professionally designed templates:
+- **Household Survey** - Demographic data collection
+- **Health Assessment** - Patient intake and screening
+- **Customer Feedback** - Satisfaction surveys
+- **Employee Survey** - HR and workplace assessments
+- **Event Registration** - Sign-ups and RSVPs
+- **Agriculture Survey** - Farm and crop monitoring
 
 ### Using a Template
-1. Go to **Templates** page
-2. Preview the template
-3. Click **Use Template**
-4. Customize as needed
+1. Go to **Templates** page from the sidebar
+2. Preview the template to see all questions
+3. Click **Use Template** to create a copy
+4. Customize questions as needed
+5. Publish when ready
 
 ### Creating Your Own Templates
-Save any form as a template for reuse across projects.
+Save any form as a template for reuse:
+1. Open an existing form
+2. Click **Save as Template**
+3. Give it a name and description
+4. Share with your organization
         `
       },
       {
@@ -194,23 +341,41 @@ Save any form as a template for reuse across projects.
         title: 'Form Settings & Publishing',
         description: 'Configure and deploy your forms',
         readTime: '4 min',
+        screenshots: [
+          { id: 'form-settings', caption: 'Form settings and configuration options' }
+        ],
         content: `
 ## Form Settings
 
+[SCREENSHOT:form-settings]
+
 ### General Settings
-- Form title and description
-- Default language
-- Submission limits
+- **Form title and description** - What users see
+- **Default language** - Primary language for the form
+- **Submission limits** - Max responses allowed
 
 ### Access Control
-- Who can submit responses
-- Authentication requirements
-- Geographic restrictions
+Configure who can submit responses:
+- Public (anyone with the link)
+- Team members only
+- Specific users or groups
+- Password protected
 
-### Publishing
-1. Click **Publish** when ready
-2. Share via collection links
-3. Monitor submissions in real-time
+### Geographic Restrictions
+- Enable geofencing to limit where forms can be submitted
+- Set allowed regions on a map
+
+### Publishing Options
+1. **Draft**: Form is not accessible
+2. **Published**: Form is live and accepting responses
+3. **Closed**: No new submissions accepted
+
+### Publishing Workflow
+1. Review all questions and logic
+2. Test with preview mode
+3. Click **Publish** when ready
+4. Share via collection links or embed
+5. Monitor submissions in real-time
         `
       }
     ]
@@ -227,27 +392,50 @@ Save any form as a template for reuse across projects.
         title: 'Collection Links',
         description: 'Share surveys without requiring login',
         readTime: '5 min',
+        screenshots: [
+          { id: 'collection-links', caption: 'Collection Links page - manage all your shareable survey links' },
+          { id: 'create-link', caption: 'Creating a new collection link with security options' }
+        ],
         content: `
 ## Collection Links
 
-Collection links allow enumerators to submit data without creating accounts.
+Collection links allow enumerators to submit data without creating accounts - perfect for field teams.
+
+[SCREENSHOT:collection-links]
 
 ### Security Modes
-1. **Standard**: Simple shareable link
-2. **Device Locked**: Locks to first device used
-3. **PIN Protected**: Requires PIN + device lock
+Choose the right level of protection:
+
+1. **Standard Link**
+   - Simple shareable URL
+   - No restrictions
+   - Best for public surveys
+
+2. **Device Locked**
+   - Locks to first device used
+   - Prevents link sharing
+   - Good for assigned enumerators
+
+3. **PIN Protected**
+   - Requires 4-digit PIN + device lock
+   - Maximum security
+   - Best for sensitive data
+
+[SCREENSHOT:create-link]
 
 ### Creating Links
 1. Go to **Field > Collection Links**
 2. Click **Create Single Link** or **Bulk Links**
-3. Select forms and security mode
-4. Share via WhatsApp, Email, or SMS
+3. Select the form(s) to include
+4. Choose security mode
+5. Set expiration date (optional)
+6. Generate and share
 
 ### Bulk Import
-Import multiple enumerators from CSV/Excel:
-- Name, Email columns required
+Import multiple enumerators at once:
+- Upload CSV/Excel with Name, Email columns
 - Auto-generate unique PINs
-- Send distribution emails
+- Send distribution emails automatically
         `
       },
       {
@@ -255,25 +443,46 @@ Import multiple enumerators from CSV/Excel:
         title: 'Offline Data Collection',
         description: 'Work without internet connectivity',
         readTime: '4 min',
+        screenshots: [
+          { id: 'offline-status', caption: 'Offline status indicator and sync status' }
+        ],
         content: `
 ## Offline Mode
 
-FieldForce works seamlessly offline using Progressive Web App (PWA) technology.
+FieldForce works seamlessly offline using Progressive Web App (PWA) technology - essential for remote field work.
+
+[SCREENSHOT:offline-status]
 
 ### How It Works
-1. Forms are cached locally
+1. Forms are automatically cached locally
 2. Submissions saved to device storage
-3. Auto-sync when back online
+3. Auto-sync when connectivity returns
+4. No data loss even without internet
 
 ### Installing the PWA
-1. Open FieldForce in Chrome/Safari
-2. Click "Add to Home Screen" prompt
-3. Access like a native app
+For the best offline experience:
 
-### Sync Status
-- Green: All synced
-- Yellow: Pending uploads
-- Red: Sync errors (tap to retry)
+**On Mobile (Android/iOS)**
+1. Open FieldForce in Chrome/Safari
+2. Tap "Add to Home Screen" prompt
+3. Access like a native app
+4. Works fully offline
+
+**On Desktop**
+1. Click the install icon in the address bar
+2. Or go to Settings > Install FieldForce
+3. App opens in its own window
+
+### Sync Status Indicators
+- **Green dot**: All data synced
+- **Yellow dot**: Pending uploads
+- **Red dot**: Sync errors (tap to retry)
+
+### Best Practices
+- Sync before going to field
+- Check pending uploads regularly
+- Keep device charged
+- Test offline mode before deployment
         `
       },
       {
@@ -281,22 +490,45 @@ FieldForce works seamlessly offline using Progressive Web App (PWA) technology.
         title: 'GPS & Location Tracking',
         description: 'Capture and verify locations',
         readTime: '3 min',
+        screenshots: [
+          { id: 'gps-map', caption: 'GPS Map view showing all submissions with location data' }
+        ],
         content: `
 ## GPS Features
 
-### Location Capture
-- Automatic GPS on form open
-- Manual location questions
-- Accuracy indicators
+Location data helps verify submissions and visualize coverage.
+
+[SCREENSHOT:gps-map]
+
+### Automatic Location Capture
+- GPS coordinates captured when form opens
+- Accuracy indicator shows quality
+- Works with device GPS or network location
+
+### GPS Question Type
+Add dedicated GPS questions to forms:
+- Manual location capture
+- Map picker for precise positioning
+- Multiple locations per submission
 
 ### GPS Map View
-View all submissions on an interactive map:
-- Filter by form, date, enumerator
-- Cluster markers for dense areas
-- Export as KML/GeoJSON
+Visualize all submissions on an interactive map:
+1. Go to **Field > GPS Map**
+2. Filter by form, date, or enumerator
+3. Click markers for submission details
+4. Cluster view for dense areas
+
+### Export Options
+- **KML**: For Google Earth
+- **GeoJSON**: For GIS applications
+- **CSV with coordinates**: For spreadsheets
 
 ### Geofencing
-Restrict submissions to specific areas for quality control.
+Restrict submissions to specific areas:
+1. Draw boundaries on map
+2. Enable geofencing for form
+3. Submissions outside boundary rejected
+4. Great for quality control
         `
       }
     ]
@@ -313,24 +545,46 @@ Restrict submissions to specific areas for quality control.
         title: 'Inviting Team Members',
         description: 'Add users to your organization',
         readTime: '3 min',
+        screenshots: [
+          { id: 'team-page', caption: 'Team page showing all organization members' }
+        ],
         content: `
 ## Team Invitations
 
+Build your field team quickly with multiple invitation methods.
+
+[SCREENSHOT:team-page]
+
 ### Invite Methods
-1. **Email Invite**: Send invitation link via email
-2. **Direct Link**: Share signup link
-3. **Bulk Import**: Upload CSV with email list
+
+**Email Invite**
+1. Go to **Settings > Team**
+2. Click **Invite Member**
+3. Enter email address
+4. Select role
+5. Send invitation
+
+**Direct Link**
+- Generate a signup link
+- Share via any channel
+- New users auto-join your org
+
+**Bulk Import**
+- Upload CSV with email list
+- Assign roles in bulk
+- Great for large teams
 
 ### User Roles
 - **Admin**: Full access to all features
 - **Supervisor**: Manage projects and view all data
 - **Enumerator**: Submit data only
-- **Viewer**: Read-only access
+- **Viewer**: Read-only access to data
 
 ### Managing Members
-- View activity and submissions
-- Change roles
-- Deactivate accounts
+- View activity and submission counts
+- Change roles as needed
+- Deactivate accounts (data preserved)
+- Re-activate when needed
         `
       },
       {
@@ -338,18 +592,48 @@ Restrict submissions to specific areas for quality control.
         title: 'Roles & Permissions',
         description: 'Configure access control',
         readTime: '5 min',
+        screenshots: [
+          { id: 'rbac', caption: 'Role-based access control settings' }
+        ],
         content: `
 ## Role-Based Access Control (RBAC)
 
+Fine-grained permissions for enterprise security needs.
+
+[SCREENSHOT:rbac]
+
 ### Default Roles
-Each role has predefined permissions that can be customized.
+Each role has predefined permissions:
+
+**Admin**
+- Full organization management
+- User management
+- Billing access
+- All data access
+
+**Supervisor**  
+- Project management
+- Form creation/editing
+- View all submissions
+- Export data
+
+**Enumerator**
+- Submit forms assigned to them
+- View own submissions
+- Basic profile access
+
+**Viewer**
+- Read-only data access
+- View reports
+- No editing capabilities
 
 ### Custom Roles
-Create custom roles for specific needs:
+Create roles tailored to your needs:
 1. Go to **Settings > Roles**
 2. Click **Create Role**
-3. Select permissions
-4. Assign to users
+3. Name your role
+4. Select specific permissions
+5. Assign to users
 
 ### Permission Categories
 - Organization management
@@ -358,6 +642,7 @@ Create custom roles for specific needs:
 - Submission viewing
 - Export capabilities
 - Team management
+- Billing access
         `
       }
     ]
@@ -374,27 +659,49 @@ Create custom roles for specific needs:
         title: 'Understanding Analytics',
         description: 'Key metrics and visualizations',
         readTime: '4 min',
+        screenshots: [
+          { id: 'analytics', caption: 'Analytics dashboard with key metrics and charts' }
+        ],
         content: `
 ## Analytics Dashboard
 
-### Key Metrics
-- Total submissions
-- Completion rate
-- Average duration
-- Validation pass rate
+Get insights from your data at a glance.
 
-### Charts & Graphs
-- Submission trends over time
-- Response distribution
-- Geographic coverage
-- Enumerator performance
+[SCREENSHOT:analytics]
+
+### Key Metrics
+Track what matters most:
+- **Total Submissions**: All responses collected
+- **Active Forms**: Currently published surveys
+- **Quality Score**: Validation pass rate
+- **Team Members**: Active enumerators
+
+### Charts & Visualizations
+
+**Submission Trends**
+- Line chart showing submissions over time
+- Compare periods
+- Identify patterns
+
+**Status Distribution**
+- Pie chart of approved/pending/rejected
+- Quick quality overview
+
+**Top Forms**
+- Bar chart ranking forms by submissions
+- Focus resources effectively
+
+**Geographic Coverage**
+- Map visualization of data points
+- Identify coverage gaps
 
 ### Filtering
-Filter data by:
+Slice data by:
 - Date range
 - Form/Project
 - Enumerator
 - Location
+- Status
         `
       },
       {
@@ -402,24 +709,57 @@ Filter data by:
         title: 'Exporting Data',
         description: 'Download your data in various formats',
         readTime: '3 min',
+        screenshots: [
+          { id: 'exports', caption: 'Export options and format selection' }
+        ],
         content: `
 ## Data Export
 
+Get your data in the format you need.
+
+[SCREENSHOT:exports]
+
 ### Export Formats
-- **Excel (.xlsx)**: Full formatting
-- **CSV**: Universal compatibility
-- **JSON**: For developers
-- **SPSS (.sav)**: Statistical analysis
-- **PDF**: Printable reports
+
+**Excel (.xlsx)**
+- Full formatting preserved
+- Multiple sheets for complex forms
+- Best for business users
+
+**CSV**
+- Universal compatibility
+- Lightweight files
+- Great for data processing
+
+**JSON**
+- Structured data for developers
+- API-friendly format
+- Preserves nested data
+
+**SPSS (.sav)**
+- Statistical analysis ready
+- Variable labels included
+- For researchers
+
+**PDF Reports**
+- Printable summaries
+- Charts included
+- Shareable reports
 
 ### Export Options
+Customize your export:
 - Select columns to include
 - Filter by date/status
-- Include metadata
+- Include/exclude metadata
 - Split by form sections
+- Add calculated fields
 
 ### Scheduled Exports
-Set up automatic exports to email or cloud storage.
+Automate regular exports:
+1. Set up export template
+2. Choose frequency (daily/weekly/monthly)
+3. Select destination (email/cloud storage)
+4. Receive data automatically
         `
       }
     ]
@@ -436,8 +776,15 @@ Set up automatic exports to email or cloud storage.
         title: 'API Documentation',
         description: 'Integrate with your systems',
         readTime: '6 min',
+        screenshots: [
+          { id: 'api-settings', caption: 'API settings and key management' }
+        ],
         content: `
 ## API Access
+
+Build custom integrations with our REST API.
+
+[SCREENSHOT:api-settings]
 
 ### Authentication
 Use JWT tokens for API authentication:
@@ -445,17 +792,33 @@ Use JWT tokens for API authentication:
 Authorization: Bearer YOUR_TOKEN
 \`\`\`
 
-### Endpoints
-- \`GET /api/submissions\`: List submissions
-- \`POST /api/forms\`: Create forms
-- \`GET /api/projects\`: List projects
+Generate tokens in **Settings > API & Integrations**.
+
+### Key Endpoints
+
+**Submissions**
+- \`GET /api/submissions\` - List all submissions
+- \`GET /api/submissions/{id}\` - Get single submission
+- \`POST /api/submissions\` - Create submission
+
+**Forms**
+- \`GET /api/forms\` - List forms
+- \`POST /api/forms\` - Create form
+- \`PUT /api/forms/{id}\` - Update form
+
+**Projects**
+- \`GET /api/projects\` - List projects
+- \`POST /api/projects\` - Create project
 
 ### Rate Limits
-- 1000 requests per hour
-- Bulk endpoints available
+- 1000 requests per hour (standard)
+- 10000 requests per hour (enterprise)
+- Bulk endpoints available for large operations
 
-### Webhooks
-Receive real-time notifications when submissions arrive.
+### SDKs & Libraries
+- Python SDK
+- JavaScript/Node.js
+- REST API for any platform
         `
       },
       {
@@ -463,28 +826,80 @@ Receive real-time notifications when submissions arrive.
         title: 'Setting Up Webhooks',
         description: 'Real-time data notifications',
         readTime: '4 min',
+        screenshots: [
+          { id: 'webhooks', caption: 'Webhook configuration and event selection' }
+        ],
         content: `
 ## Webhooks
+
+Receive real-time notifications when events occur.
+
+[SCREENSHOT:webhooks]
 
 ### Configuration
 1. Go to **Settings > Integrations**
 2. Click **Add Webhook**
 3. Enter your endpoint URL
 4. Select events to trigger
+5. Save and test
 
-### Events
-- new_submission
-- submission_updated
-- form_published
-- user_invited
+### Available Events
+- \`submission.created\` - New submission received
+- \`submission.updated\` - Submission modified
+- \`submission.approved\` - Submission approved
+- \`submission.rejected\` - Submission rejected
+- \`form.published\` - Form goes live
+- \`user.invited\` - New team member
 
 ### Payload Format
-Webhooks send JSON payloads with event details and full submission data.
+Webhooks send JSON payloads:
+\`\`\`json
+{
+  "event": "submission.created",
+  "timestamp": "2026-01-15T10:30:00Z",
+  "data": {
+    "submission_id": "sub_123",
+    "form_id": "form_456",
+    "responses": {...}
+  }
+}
+\`\`\`
+
+### Security
+- HTTPS endpoints required
+- Signature verification available
+- Retry on failure (3 attempts)
+- Event logs for debugging
         `
       }
     ]
   }
 ];
+
+/**
+ * Screenshot paths mapping
+ */
+const SCREENSHOT_PATHS = {
+  'dashboard': '/help-images/dashboard-overview.png',
+  'sidebar': '/help-images/nav-sidebar.png',
+  'settings': '/help-images/settings-page.png',
+  'nav-sidebar': '/help-images/nav-sidebar.png',
+  'nav-header': '/help-images/nav-header.png',
+  'forms-list': '/help-images/forms-page.png',
+  'form-builder': '/help-images/form-builder.png',
+  'templates': '/help-images/templates-page.png',
+  'form-settings': '/help-images/form-settings.png',
+  'collection-links': '/help-images/collection-links.png',
+  'create-link': '/help-images/create-link.png',
+  'offline-status': '/help-images/offline-status.png',
+  'gps-map': '/help-images/gps-map.png',
+  'team-page': '/help-images/team-page.png',
+  'rbac': '/help-images/rbac-page.png',
+  'analytics': '/help-images/analytics-page.png',
+  'exports': '/help-images/exports-page.png',
+  'api-settings': '/help-images/api-settings.png',
+  'webhooks': '/help-images/webhooks.png',
+};
 
 /**
  * Quick Links for common actions
@@ -621,7 +1036,7 @@ export function HelpCenter({ onArticleClick, onNavigate }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="max-w-xl mx-auto mt-8"
+              className="max-w-xl mx-auto mt-8 relative"
             >
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -642,9 +1057,9 @@ export function HelpCenter({ onArticleClick, onNavigate }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute left-0 right-0 mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-xl overflow-hidden z-10 max-w-xl mx-auto"
+                    className="absolute left-0 right-0 mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-xl overflow-hidden z-10"
                   >
-                    {searchResults.slice(0, 5).map((result, index) => (
+                    {searchResults.slice(0, 5).map((result) => (
                       <button
                         key={`${result.categoryId}-${result.id}`}
                         onClick={() => handleArticleSelect(result.categoryId, result)}
@@ -808,6 +1223,12 @@ function CategoryView({ category, onArticleSelect }) {
                 {article.title}
               </h3>
               <p className="text-sm text-muted-foreground">{article.description}</p>
+              {article.screenshots && article.screenshots.length > 0 && (
+                <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                  <ImageIcon className="w-3 h-3" />
+                  <span>{article.screenshots.length} screenshot{article.screenshots.length > 1 ? 's' : ''}</span>
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-3 ml-4">
               <Badge variant="secondary" className="text-xs">
@@ -824,62 +1245,128 @@ function CategoryView({ category, onArticleSelect }) {
 }
 
 /**
- * Article View - Shows full article content
+ * Article View - Shows full article content with screenshots
  */
 function ArticleView({ article, category }) {
-  // Simple markdown-like rendering
+  // Parse content and render with screenshots
   const renderContent = (content) => {
-    return content.split('\n').map((line, i) => {
+    const lines = content.split('\n');
+    const elements = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Screenshot placeholder
+      if (line.trim().startsWith('[SCREENSHOT:')) {
+        const match = line.match(/\[SCREENSHOT:(\w+)\]/);
+        if (match) {
+          const screenshotId = match[1];
+          const screenshotInfo = article.screenshots?.find(s => s.id === screenshotId);
+          const path = SCREENSHOT_PATHS[screenshotId];
+          
+          if (path) {
+            elements.push(
+              <Screenshot 
+                key={`screenshot-${i}`}
+                src={path}
+                alt={screenshotInfo?.caption || `Screenshot: ${screenshotId}`}
+                caption={screenshotInfo?.caption}
+              />
+            );
+          }
+        }
+        continue;
+      }
+      
       // Headers
       if (line.startsWith('## ')) {
-        return <h2 key={i} className="text-xl font-bold text-foreground mt-6 mb-3">{line.replace('## ', '')}</h2>;
+        elements.push(
+          <h2 key={i} className="text-xl font-bold text-foreground mt-8 mb-4">
+            {line.replace('## ', '')}
+          </h2>
+        );
+        continue;
       }
       if (line.startsWith('### ')) {
-        return <h3 key={i} className="text-lg font-semibold text-foreground mt-4 mb-2">{line.replace('### ', '')}</h3>;
+        elements.push(
+          <h3 key={i} className="text-lg font-semibold text-foreground mt-6 mb-3">
+            {line.replace('### ', '')}
+          </h3>
+        );
+        continue;
       }
+      
       // Code blocks
       if (line.startsWith('```')) {
-        return null; // Skip code block markers
+        // Find the end of code block
+        let codeContent = [];
+        let lang = line.replace('```', '').trim();
+        i++;
+        while (i < lines.length && !lines[i].startsWith('```')) {
+          codeContent.push(lines[i]);
+          i++;
+        }
+        elements.push(
+          <pre key={`code-${i}`} className="my-4 p-4 rounded-lg bg-slate-900 border border-slate-700 overflow-x-auto">
+            <code className="text-sm text-slate-300 font-mono">
+              {codeContent.join('\n')}
+            </code>
+          </pre>
+        );
+        continue;
       }
+      
       // List items
       if (line.startsWith('- ')) {
-        return (
-          <li key={i} className="flex items-start gap-2 text-muted-foreground ml-4 mb-1">
+        elements.push(
+          <li key={i} className="flex items-start gap-2 text-muted-foreground ml-4 mb-1.5">
             <CheckCircle2 className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-            <span>{line.replace('- ', '')}</span>
+            <span>{renderInlineFormatting(line.replace('- ', ''))}</span>
           </li>
         );
+        continue;
       }
+      
       // Numbered list
       if (/^\d+\.\s/.test(line)) {
         const num = line.match(/^(\d+)\./)[1];
-        return (
+        elements.push(
           <li key={i} className="flex items-start gap-3 text-muted-foreground ml-4 mb-2">
             <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center shrink-0 font-medium">
               {num}
             </span>
-            <span>{line.replace(/^\d+\.\s/, '')}</span>
+            <span>{renderInlineFormatting(line.replace(/^\d+\.\s/, ''))}</span>
           </li>
         );
+        continue;
       }
-      // Bold text
-      if (line.includes('**')) {
-        const parts = line.split(/\*\*(.*?)\*\*/g);
-        return (
-          <p key={i} className="text-muted-foreground mb-2">
-            {parts.map((part, j) => 
-              j % 2 === 1 
-                ? <strong key={j} className="text-foreground font-medium">{part}</strong>
-                : part
-            )}
+      
+      // Regular paragraph
+      if (line.trim()) {
+        elements.push(
+          <p key={i} className="text-muted-foreground mb-3 leading-relaxed">
+            {renderInlineFormatting(line)}
           </p>
         );
       }
-      // Regular paragraph
-      if (line.trim()) {
-        return <p key={i} className="text-muted-foreground mb-2">{line}</p>;
+    }
+    
+    return elements;
+  };
+  
+  // Handle inline formatting like **bold** and `code`
+  const renderInlineFormatting = (text) => {
+    // Split by bold and code patterns
+    const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g);
+    
+    return parts.map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={i} className="text-foreground font-medium">{part.slice(2, -2)}</strong>;
       }
-      return null;
+      if (part.startsWith('`') && part.endsWith('`')) {
+        return <code key={i} className="px-1.5 py-0.5 rounded bg-muted text-sm font-mono">{part.slice(1, -1)}</code>;
+      }
+      return part;
     });
   };
 
@@ -896,6 +1383,12 @@ function ArticleView({ article, category }) {
               <Clock className="w-3 h-3 mr-1" />
               {article.readTime} read
             </Badge>
+            {article.screenshots && article.screenshots.length > 0 && (
+              <Badge variant="secondary" className="text-xs">
+                <ImageIcon className="w-3 h-3 mr-1" />
+                {article.screenshots.length} screenshots
+              </Badge>
+            )}
           </div>
 
           {/* Article content */}
