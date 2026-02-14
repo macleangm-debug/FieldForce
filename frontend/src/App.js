@@ -31,6 +31,7 @@ import { CollectPage } from './pages/CollectPage';
 import { TokenCollectPage } from './pages/TokenCollectPage';
 import { MobileFormPage } from './pages/MobileFormPage';
 import { CollectionLinksPage } from './pages/CollectionLinksPage';
+import { HelpCenterPage } from './pages/HelpCenterPage';
 import { PWAInstallPrompt } from './components/PWAComponents';
 import { NetworkStatusBanner } from './components/OfflineSync';
 import { OnboardingWizard, useOnboarding } from './components/OnboardingWizard';
