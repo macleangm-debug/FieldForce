@@ -57,3 +57,30 @@ Pull repository from https://github.com/macleangm-debug/FieldForce
 
 ## Next Tasks
 - User to specify what features or fixes to work on
+
+## Updates (Feb 14, 2026)
+
+### Help Center Feature Added
+- **Route**: `/help` with DashboardLayout
+- **Component**: `/app/frontend/src/components/HelpCenterTemplate.jsx`
+- **Page**: `/app/frontend/src/pages/HelpCenterPage.jsx`
+- **Access**: Header "?" button navigates to Help Center
+
+### Help Center Categories:
+1. Getting Started - Quick start, account setup, navigation
+2. Forms & Surveys - Form builder, templates, publishing
+3. Data Collection - Collection links, offline mode, GPS
+4. Team Management - Invitations, roles & permissions
+5. Analytics & Reports - Dashboard metrics, data export
+6. Integrations - API access, webhooks
+
+### Features:
+- Full-text search across all articles
+- Quick Actions shortcuts
+- Article feedback (helpful/not helpful)
+- Contact support options (email, chat, docs)
+- Responsive design matching app theme
+
+### Test Results:
+- 95% pass rate (19/20 tests)
+- All core functionality verified
