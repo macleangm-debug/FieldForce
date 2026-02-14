@@ -84,3 +84,30 @@ Pull repository from https://github.com/macleangm-debug/FieldForce
 ### Test Results:
 - 95% pass rate (19/20 tests)
 - All core functionality verified
+
+## Update - Feb 14, 2026 (Screenshots Added)
+
+### Help Center Screenshots Implementation
+- Created `/app/frontend/public/help-images/` with 18 actual app screenshots
+- Updated `HelpCenterTemplate.jsx` with Screenshot component featuring:
+  - Zoomable images (click to enlarge)
+  - Modal overlay for full-size view
+  - Captions under each screenshot
+  - Error fallback for missing images
+  - Screenshot count badges in article list
+
+### Screenshots Added:
+1. dashboard-overview.png - Main dashboard
+2. settings-page.png - Profile settings
+3. collection-links.png - Collection links page
+4. analytics-page.png - Analytics dashboard with charts
+5. forms-page.png - Forms listing
+6. templates-page.png - Form templates
+7. team-page.png - Team management
+8. gps-map.png - GPS map view
+9. nav-sidebar.png - Sidebar navigation
+10. Plus 9 more placeholder screenshots
+
+### Test Results:
+- 85% pass rate
+- Fixed: Screenshot modal click interaction (pointer-events)
