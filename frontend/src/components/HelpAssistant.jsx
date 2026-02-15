@@ -211,7 +211,7 @@ export function HelpAssistant({ isDark = true }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className={cn(
-              "fixed bottom-6 right-6 z-50 w-96 h-[500px] rounded-2xl shadow-2xl overflow-hidden flex flex-col",
+              "fixed bottom-20 right-6 z-50 w-96 h-[500px] rounded-2xl shadow-2xl overflow-hidden flex flex-col",
               bgSecondary, borderColor, "border"
             )}
             data-testid="help-assistant-chat"
