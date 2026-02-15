@@ -111,3 +111,35 @@ Pull repository from https://github.com/macleangm-debug/FieldForce
 ### Test Results:
 - 85% pass rate
 - Fixed: Screenshot modal click interaction (pointer-events)
+
+## Update - Feb 15, 2026 (New Help Center with AI Assistant)
+
+### New Help Center Implementation
+- **Page**: `/app/frontend/src/pages/HelpCenterNew.jsx`
+- **AI Assistant**: `/app/frontend/src/components/HelpAssistant.jsx`
+- **Backend Routes**: `/app/backend/routes/help_assistant.py`
+
+### Features:
+1. Two-column layout with expandable categories
+2. Full-text search across all articles
+3. FAQ accordion with category grouping
+4. Troubleshooting guide with symptoms/solutions
+5. Keyboard shortcuts reference
+6. What's New changelog (v2.5.0, v2.4.0)
+7. AI Assistant powered by GPT-5.2
+
+### AI Assistant Capabilities:
+- Multi-turn conversation with session management
+- Context-aware responses about FieldForce
+- Article links included in responses
+- Feedback tracking (helpful/not helpful)
+- Question analytics for FAQ improvement
+
+### Backend API Endpoints:
+- POST /api/help-assistant/chat - Chat with AI
+- POST /api/help-assistant/feedback - Submit feedback
+- GET /api/help-assistant/analytics - Question analytics
+- POST /api/help-assistant/reset - Reset session
+
+### Test Results:
+- 100% pass rate (backend, frontend, integration)
