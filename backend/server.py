@@ -341,6 +341,15 @@ async def startup_db_client():
         await db.quality_alerts.create_index("id", unique=True)
         await db.quality_alerts.create_index([("org_id", 1), ("status", 1)])
         
+        # Help Center AI Assistant
+        await db.help_chat_sessions.create_index("session_id", unique=True)
+        await db.help_chat_sessions.create_index("created_at")
+        await db.help_chat_messages.create_index([("session_id", 1), ("timestamp", 1)])
+        await db.help_feedback.create_index("session_id")
+        await db.help_feedback.create_index("created_at")
+        await db.help_question_analytics.create_index("question_key", unique=True)
+        await db.help_question_analytics.create_index([("count", -1)])
+        
         logger.info("Database indexes created successfully")
     except Exception as e:
         logger.error(f"Error creating indexes: {e}")
