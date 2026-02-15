@@ -225,7 +225,7 @@ function App() {
           } />
           <Route path="/help" element={
             <ProtectedRoute>
-              <HelpCenterPage />
+              <HelpCenterNew />
             </ProtectedRoute>
           } />
           
