@@ -117,6 +117,7 @@ api_router.include_router(notification_router)
 api_router.include_router(settings_router)
 api_router.include_router(template_message_router)
 api_router.include_router(email_router)
+api_router.include_router(help_assistant_router)
 
 
 # Health check endpoint
