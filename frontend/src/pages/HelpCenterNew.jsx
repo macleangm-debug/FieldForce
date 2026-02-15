@@ -445,6 +445,1669 @@ Import multiple enumerators from CSV:
 - **QR Code** - Generate scannable code
     `,
   },
+
+  // Getting Started Articles
+  'first-project': {
+    title: 'Create Your First Project',
+    content: `This guide walks you through creating your first project in FieldForce.
+
+## What is a Project?
+
+Projects are containers that organize your surveys, forms, and data. Think of them as folders for related data collection activities.
+
+## Creating a Project
+
+### Step 1: Navigate to Projects
+Click **Projects** in the left sidebar, then click **+ New Project**.
+
+### Step 2: Enter Project Details
+- **Project Name** - Give it a descriptive name (e.g., "Household Survey 2026")
+- **Description** - Add details about the project goals
+- **Start Date** - When data collection begins
+- **End Date** - When data collection ends (optional)
+
+### Step 3: Configure Settings
+- **Default Language** - Primary language for forms
+- **Geographic Scope** - Region or area of coverage
+- **Data Access** - Who can view submissions
+
+### Step 4: Add Team Members
+Invite team members and assign roles:
+- **Supervisors** - Manage forms and view all data
+- **Enumerators** - Submit data only
+- **Viewers** - Read-only access
+
+## Next Steps
+
+After creating a project:
+1. **Create Forms** - Build your survey questions
+2. **Generate Links** - Create collection links for enumerators
+3. **Deploy** - Start collecting data
+
+## Tips
+
+- Use clear, descriptive project names
+- Set realistic date ranges
+- Add all team members before deployment
+    `,
+  },
+
+  'account-setup': {
+    title: 'Setting Up Your Account',
+    content: `Configure your FieldForce account for the best experience.
+
+## Profile Settings
+
+### Updating Your Profile
+1. Click your avatar in the top-right corner
+2. Select **Settings**
+3. Update your information:
+   - **Full Name** - Your display name
+   - **Email** - Login email (cannot change)
+   - **Phone** - Contact number
+   - **Job Title** - Your role
+   - **Department** - Your team
+   - **Location** - Where you're based
+
+### Profile Photo
+1. Click **Change Photo**
+2. Upload an image (JPG, PNG)
+3. Crop and save
+
+## Language & Region
+
+### Interface Language
+FieldForce supports 6 languages:
+- English
+- Spanish (Español)
+- French (Français)
+- Portuguese (Português)
+- Swahili (Kiswahili)
+- Arabic (العربية)
+
+Change language in **Settings > Appearance**.
+
+## Security Settings
+
+### Password
+- Use strong passwords (8+ characters)
+- Include numbers and symbols
+- Change regularly
+
+### Two-Factor Authentication
+1. Go to **Settings > Security**
+2. Click **Enable 2FA**
+3. Scan QR code with authenticator app
+4. Enter verification code
+
+## Notification Preferences
+
+Control what notifications you receive:
+- **Email notifications** - Submission alerts, team updates
+- **Push notifications** - Real-time alerts (mobile)
+- **Daily digest** - Summary of activity
+    `,
+  },
+
+  // Forms & Surveys Articles
+  'form-builder': {
+    title: 'Using the Form Builder',
+    content: `Master FieldForce's drag-and-drop form builder to create powerful surveys.
+
+## Accessing the Form Builder
+
+1. Navigate to **Projects > Forms**
+2. Click **+ New Form**
+3. Choose **Start from Scratch** or select a template
+
+## Form Builder Interface
+
+### Left Panel - Question Types
+Drag question types from here to your form:
+- **Text** - Short/long text input
+- **Number** - Numeric input
+- **Select One** - Single choice
+- **Select Multiple** - Multiple choices
+- **Date/Time** - Date and time pickers
+- **GPS** - Location capture
+- **Photo** - Image capture
+- **Signature** - Digital signatures
+- **Barcode** - Scan codes
+
+### Center Panel - Form Canvas
+Your form preview. Drag questions here and reorder.
+
+### Right Panel - Question Properties
+Configure the selected question:
+- **Label** - Question text
+- **Required** - Make mandatory
+- **Hint** - Help text
+- **Validation** - Rules and constraints
+
+## Adding Questions
+
+### Basic Steps
+1. Drag a question type to the canvas
+2. Click to select it
+3. Edit properties in the right panel
+4. Add more questions as needed
+
+### Question Options (Select types)
+1. Click **Add Option**
+2. Enter option text
+3. Reorder with drag handles
+4. Delete with X button
+
+## Form Settings
+
+### General
+- **Form Title** - Display name
+- **Description** - Instructions
+- **Language** - Default language
+
+### Submission
+- **Allow edits** - Can edit after submit
+- **Confirmation message** - Thank you text
+
+## Saving & Publishing
+
+1. Click **Save** to save draft
+2. Click **Preview** to test
+3. Click **Publish** when ready
+
+## Tips
+
+- Keep forms concise (under 50 questions)
+- Group related questions
+- Use skip logic for conditional questions
+- Test thoroughly before publishing
+    `,
+  },
+
+  'question-types': {
+    title: 'Question Types Guide',
+    content: `Complete reference for all question types in FieldForce.
+
+## Text Questions
+
+### Short Text
+- Single line input
+- Max 255 characters
+- Use for: Names, IDs, brief answers
+
+### Long Text
+- Multi-line textarea
+- Max 5000 characters
+- Use for: Comments, descriptions, notes
+
+## Numeric Questions
+
+### Number
+- Integer or decimal input
+- Min/max validation
+- Use for: Age, quantities, measurements
+
+### Calculate
+- Formula-based field
+- Auto-computes values
+- Use for: Totals, scores, BMI
+
+## Selection Questions
+
+### Select One
+- Radio buttons (single choice)
+- Dropdown for many options
+- Use for: Yes/No, categories, ratings
+
+### Select Multiple
+- Checkboxes (multiple choices)
+- Use for: Features, symptoms, preferences
+
+## Date & Time
+
+### Date
+- Calendar picker
+- Format: YYYY-MM-DD
+- Use for: Birth dates, event dates
+
+### Time
+- Time picker
+- Format: HH:MM
+- Use for: Schedules, durations
+
+### Date/Time
+- Combined picker
+- Use for: Appointments, timestamps
+
+## Location Questions
+
+### GPS Point
+- Captures coordinates
+- Shows accuracy
+- Use for: Survey location, landmarks
+
+### GPS Shape
+- Draw areas on map
+- Polygon or line
+- Use for: Farm boundaries, routes
+
+## Media Questions
+
+### Photo
+- Camera capture or upload
+- Compression options
+- Use for: Documentation, evidence
+
+### Audio
+- Voice recording
+- Max duration setting
+- Use for: Interviews, notes
+
+### Video
+- Video recording
+- Duration limits
+- Use for: Demonstrations
+
+## Special Questions
+
+### Signature
+- Touch/mouse drawing
+- Use for: Consent, verification
+
+### Barcode/QR
+- Scan codes
+- Supports multiple formats
+- Use for: Asset tracking, IDs
+
+### Matrix
+- Grid of questions
+- Rows and columns
+- Use for: Ratings, comparisons
+    `,
+  },
+
+  'skip-logic': {
+    title: 'Adding Skip Logic',
+    content: `Create smart forms that adapt based on user responses.
+
+## What is Skip Logic?
+
+Skip logic (conditional logic) shows or hides questions based on previous answers. This:
+- Shortens forms for users
+- Collects relevant data only
+- Improves data quality
+
+## Types of Logic
+
+### Show/Hide Questions
+Show a question only if a condition is met.
+
+**Example**: Show "Specify other" only if "Other" is selected.
+
+### Skip to Question
+Jump to a specific question based on answer.
+
+**Example**: If age < 18, skip to guardian consent section.
+
+### Required Conditionally
+Make a question required only in certain cases.
+
+**Example**: Phone number required only if "Contact by phone" is selected.
+
+## Creating Skip Logic
+
+### Step 1: Select Question
+Click the question you want to add logic to.
+
+### Step 2: Open Logic Panel
+Click **Add Logic** in the right panel.
+
+### Step 3: Set Condition
+- **If** - Select the source question
+- **Operator** - Equals, Not equals, Greater than, etc.
+- **Value** - The answer to check
+
+### Step 4: Set Action
+- **Show this question** - Display when condition met
+- **Hide this question** - Hide when condition met
+- **Skip to** - Jump to another question
+
+### Step 5: Save
+Click **Save Logic** to apply.
+
+## Multiple Conditions
+
+### AND Logic
+All conditions must be true:
+- Age > 18 AND Consent = Yes
+
+### OR Logic  
+Any condition can be true:
+- Role = Doctor OR Role = Nurse
+
+## Best Practices
+
+1. **Plan logic before building** - Map out your form flow
+2. **Keep it simple** - Avoid overly complex conditions
+3. **Test thoroughly** - Check all logic paths
+4. **Document logic** - Add comments for team
+
+## Troubleshooting
+
+**Question not showing:**
+- Check condition is correct
+- Verify source question has value
+- Test with different answers
+
+**Infinite loops:**
+- Avoid circular references
+- Check skip destinations
+    `,
+  },
+
+  'form-templates': {
+    title: 'Using Form Templates',
+    content: `Save time with pre-built form templates.
+
+## Available Templates
+
+### Household Survey
+- Demographics questions
+- Income and assets
+- Housing conditions
+- 25+ questions ready to use
+
+### Health Assessment
+- Patient information
+- Symptoms checklist
+- Vital signs
+- Medical history
+
+### Customer Feedback
+- Satisfaction ratings
+- NPS score
+- Open comments
+- Contact info
+
+### Employee Survey
+- Job satisfaction
+- Work environment
+- Manager feedback
+- Professional development
+
+### Event Registration
+- Attendee details
+- Session preferences
+- Dietary requirements
+- Payment info
+
+### Agriculture Survey
+- Farm details
+- Crop information
+- Livestock counts
+- Input usage
+
+## Using a Template
+
+### Step 1: Browse Templates
+1. Go to **Projects > Templates**
+2. Browse by category
+3. Click to preview
+
+### Step 2: Preview
+Review all questions and logic before using.
+
+### Step 3: Use Template
+1. Click **Use Template**
+2. Enter form name
+3. Choose project
+4. Click **Create**
+
+### Step 4: Customize
+- Add/remove questions
+- Edit labels and options
+- Modify logic
+- Update settings
+
+## Creating Your Own Templates
+
+### Save as Template
+1. Open an existing form
+2. Click **More > Save as Template**
+3. Enter template name
+4. Add description
+5. Choose category
+6. Click **Save**
+
+### Sharing Templates
+Templates can be:
+- **Private** - Only you can see
+- **Organization** - Shared with team
+- **Public** - Available to all
+
+## Template Best Practices
+
+1. **Start with templates** - Faster than building from scratch
+2. **Customize for needs** - Templates are starting points
+3. **Create organization templates** - Share common forms
+4. **Version control** - Update templates periodically
+    `,
+  },
+
+  // Data Collection Articles
+  'offline-mode': {
+    title: 'Offline Data Collection',
+    content: `FieldForce works seamlessly without internet connectivity.
+
+## How Offline Mode Works
+
+### Automatic Caching
+When you access FieldForce online:
+- Forms are downloaded to your device
+- Media assets are cached
+- The app shell is stored locally
+
+### Offline Submission
+When offline:
+1. Open forms as usual
+2. Complete the survey
+3. Submit - data saves locally
+4. Sync happens when back online
+
+## Setting Up Offline Mode
+
+### Install the PWA
+For best offline experience:
+
+**On Mobile (Android/iOS)**
+1. Open FieldForce in Chrome/Safari
+2. Tap the "Install" or "Add to Home Screen" prompt
+3. Access from your home screen
+
+**On Desktop**
+1. Click install icon in address bar
+2. Or go to browser menu > Install FieldForce
+
+### Pre-Cache Forms
+Before going to field:
+1. Open each form you'll need
+2. Wait for "Ready for offline" indicator
+3. Verify forms load without internet
+
+## Sync Status Indicators
+
+### Green Dot
+All data synced successfully.
+
+### Yellow Dot
+Pending uploads. Data saved locally, will sync when online.
+
+### Red Dot
+Sync errors. Tap to see details and retry.
+
+## Managing Offline Data
+
+### Viewing Pending Submissions
+1. Go to **Data > Pending**
+2. See all unsynced submissions
+3. Tap to view details
+
+### Force Sync
+1. Connect to internet
+2. Pull down to refresh
+3. Or click **Sync Now**
+
+### Handling Conflicts
+If data conflicts occur:
+- Keep device version
+- Keep server version  
+- Merge changes
+
+## Best Practices
+
+1. **Sync before fieldwork** - Download latest forms
+2. **Charge devices fully** - Offline uses battery
+3. **Sync daily** - Don't let data pile up
+4. **Check sync status** - Before leaving field
+
+## Troubleshooting
+
+**Data not syncing:**
+- Check internet connection
+- Ensure you're logged in
+- Clear cache and retry
+- Contact support if stuck
+
+**Form not available offline:**
+- Open form while online first
+- Wait for caching to complete
+- Reinstall PWA if needed
+    `,
+  },
+
+  'gps-tracking': {
+    title: 'GPS & Location Features',
+    content: `Capture and verify locations with FieldForce GPS features.
+
+## GPS Capabilities
+
+### Automatic Location
+- Captures coordinates when form opens
+- Shows accuracy indicator
+- Stores with submission
+
+### GPS Questions
+- Manual location capture
+- Map picker for precision
+- Multiple points per form
+
+### Geofencing
+- Restrict submissions to areas
+- Verify field visits
+- Quality control
+
+## Adding GPS to Forms
+
+### Automatic Capture
+1. Open form settings
+2. Enable **Auto-capture GPS**
+3. Choose timing (on open/submit)
+
+### GPS Question Type
+1. Drag GPS to form
+2. Configure options:
+   - Accuracy threshold
+   - Allow manual entry
+   - Show map preview
+
+## GPS Map View
+
+### Viewing Submissions on Map
+1. Go to **Field > GPS Map**
+2. Select project/form
+3. View all submission locations
+
+### Map Features
+- **Cluster view** - Group nearby points
+- **Filter** - By date, form, enumerator
+- **Export** - KML, GeoJSON, CSV
+
+## Geofencing
+
+### Creating Geofences
+1. Go to **Field > Geofences**
+2. Click **Create Geofence**
+3. Draw boundary on map
+4. Name and save
+
+### Applying to Forms
+1. Open form settings
+2. Enable **Require geofence**
+3. Select geofence(s)
+4. Choose action (warn/block)
+
+## Accuracy Settings
+
+### Accuracy Levels
+- **High** - Within 10 meters
+- **Medium** - Within 50 meters
+- **Low** - Within 100 meters
+
+### Improving Accuracy
+1. Enable GPS on device
+2. Wait for accuracy to improve
+3. Move to open area
+4. Avoid buildings/trees
+
+## Exporting Location Data
+
+### Formats
+- **CSV** - Spreadsheet with lat/long
+- **KML** - Google Earth format
+- **GeoJSON** - GIS applications
+
+### Export Steps
+1. Go to **Data > Export**
+2. Select submissions
+3. Choose format
+4. Include GPS fields
+5. Download
+    `,
+  },
+
+  'pwa-install': {
+    title: 'Installing the Mobile App',
+    content: `Install FieldForce as a Progressive Web App (PWA) for the best mobile experience.
+
+## What is a PWA?
+
+A Progressive Web App gives you:
+- **App-like experience** - Feels like native app
+- **Offline support** - Works without internet
+- **Home screen icon** - Quick access
+- **Push notifications** - Stay updated
+- **No app store** - Install directly from browser
+
+## Installing on Android
+
+### Chrome Browser
+1. Open FieldForce in Chrome
+2. Look for "Install" banner at bottom
+3. Tap **Install**
+4. Or tap menu (⋮) > **Install app**
+
+### Samsung Internet
+1. Open FieldForce
+2. Tap menu > **Add page to**
+3. Select **Home screen**
+
+## Installing on iOS
+
+### Safari Browser
+1. Open FieldForce in Safari
+2. Tap Share button (□↑)
+3. Scroll down, tap **Add to Home Screen**
+4. Tap **Add**
+
+**Note**: iOS requires Safari for PWA installation.
+
+## Installing on Desktop
+
+### Chrome
+1. Open FieldForce
+2. Click install icon (⊕) in address bar
+3. Or menu > **Install FieldForce**
+
+### Edge
+1. Open FieldForce
+2. Click menu (...)
+3. Select **Apps > Install FieldForce**
+
+## After Installation
+
+### First Launch
+1. Tap FieldForce icon
+2. Log in (once)
+3. Grant permissions (location, camera)
+
+### Granting Permissions
+For full functionality, allow:
+- **Location** - GPS features
+- **Camera** - Photo questions
+- **Notifications** - Sync alerts
+
+## Updating the PWA
+
+PWAs update automatically when online. To force update:
+1. Open FieldForce
+2. Pull down to refresh
+3. Or clear cache in settings
+
+## Troubleshooting
+
+**Install option not showing:**
+- Ensure HTTPS connection
+- Clear browser cache
+- Try different browser
+
+**App not working offline:**
+- Open while online first
+- Wait for caching
+- Check storage space
+    `,
+  },
+
+  // Analytics Articles
+  'analytics-overview': {
+    title: 'Analytics Dashboard',
+    content: `Get insights from your data with FieldForce analytics.
+
+## Dashboard Overview
+
+### Key Metrics Cards
+At a glance view of:
+- **Total Submissions** - All responses collected
+- **Active Forms** - Currently published
+- **Quality Score** - Validation pass rate
+- **Team Members** - Active enumerators
+
+### Submission Trends
+Line chart showing submissions over time:
+- Daily, weekly, monthly views
+- Compare periods
+- Identify patterns
+
+### Status Distribution
+Pie chart of submission statuses:
+- **Approved** - Passed review
+- **Pending** - Awaiting review
+- **Rejected** - Failed validation
+
+### Top Forms
+Bar chart ranking forms by submissions.
+
+## Filtering Data
+
+### Date Range
+- Last 7 days
+- Last 30 days
+- This month
+- Custom range
+
+### By Form
+Select specific forms to analyze.
+
+### By Enumerator
+View individual performance.
+
+### By Location
+Filter by geographic area.
+
+## Analytics Tabs
+
+### Overview
+Summary metrics and trends.
+
+### Submissions
+Detailed submission analysis:
+- By time of day
+- By day of week
+- Response times
+
+### Quality
+Data quality metrics:
+- Validation pass rates
+- Error types
+- Improvement trends
+
+### Performance
+Team performance:
+- Submissions per enumerator
+- Average completion time
+- Quality scores by person
+
+## Exporting Analytics
+
+### Charts
+1. Hover over chart
+2. Click download icon
+3. Choose PNG or PDF
+
+### Data
+1. Click **Export**
+2. Select metrics
+3. Choose format (Excel, CSV)
+4. Download
+
+## Tips
+
+- Check analytics daily during active collection
+- Set up automated reports
+- Compare to previous periods
+- Share insights with team
+    `,
+  },
+
+  'export-data': {
+    title: 'Exporting Your Data',
+    content: `Export your submissions in various formats.
+
+## Export Formats
+
+### Excel (.xlsx)
+- Best for business users
+- Preserves formatting
+- Multiple sheets for sections
+- Includes charts option
+
+### CSV
+- Universal compatibility
+- Lightweight files
+- Works with any software
+- Good for data processing
+
+### JSON
+- Structured data
+- Developer-friendly
+- Preserves nested data
+- API-compatible
+
+### SPSS (.sav)
+- Statistical analysis ready
+- Variable labels included
+- For researchers
+- SPSS/PSPP compatible
+
+### PDF Report
+- Printable summaries
+- Charts included
+- Shareable format
+- Professional look
+
+## Exporting Steps
+
+### Basic Export
+1. Go to **Data > Submissions**
+2. Select submissions (or all)
+3. Click **Export**
+4. Choose format
+5. Click **Download**
+
+### Custom Export
+1. Click **Custom Export**
+2. Select columns to include
+3. Apply filters (date, status)
+4. Set options:
+   - Include metadata
+   - Split by sections
+   - Add calculated fields
+5. Download
+
+## Export Options
+
+### Column Selection
+Choose which fields to export:
+- Question responses
+- Metadata (date, user, GPS)
+- Calculated fields
+- System fields
+
+### Filtering
+Export specific data:
+- Date range
+- Status (approved/pending)
+- Form/Project
+- Enumerator
+
+### Formatting
+- Include headers
+- Date format
+- Number format
+- Language
+
+## Scheduled Exports
+
+### Setting Up
+1. Go to **Data > Scheduled Exports**
+2. Click **+ New Schedule**
+3. Configure:
+   - Export settings
+   - Frequency (daily/weekly)
+   - Recipients
+4. Save
+
+### Delivery Options
+- Email attachment
+- Cloud storage (Google Drive, Dropbox)
+- SFTP server
+- Webhook
+
+## API Export
+
+For developers:
+- REST API available
+- Bulk export endpoints
+- Real-time streaming
+- See API documentation
+    `,
+  },
+
+  'quality-metrics': {
+    title: 'Understanding Quality Scores',
+    content: `Learn how FieldForce measures and tracks data quality.
+
+## What is a Quality Score?
+
+Quality score is a percentage indicating how many submissions pass validation rules. Higher scores mean better data quality.
+
+## Score Components
+
+### Completeness (40%)
+- Required fields filled
+- No skipped questions
+- All sections complete
+
+### Accuracy (30%)
+- Values within range
+- Consistent answers
+- No contradictions
+
+### Timeliness (20%)
+- Submitted on time
+- Reasonable duration
+- Within date range
+
+### Location (10%)
+- GPS captured
+- Within geofence
+- Accuracy acceptable
+
+## Validation Rules
+
+### Built-in Rules
+- Required field check
+- Data type validation
+- Range constraints
+- Pattern matching
+
+### Custom Rules
+Create your own:
+1. Go to form settings
+2. Click **Validation Rules**
+3. Add rule:
+   - Name
+   - Condition
+   - Error message
+4. Save
+
+### Cross-field Validation
+Check relationships:
+- Age matches birth date
+- End date after start date
+- Total equals sum of parts
+
+## Viewing Quality
+
+### Submission Level
+Each submission shows:
+- Overall score
+- Failed rules
+- Warnings
+
+### Form Level
+Aggregate quality for form:
+- Average score
+- Common errors
+- Trend over time
+
+### Project Level
+Overall project quality:
+- By form comparison
+- By enumerator
+- Over time
+
+## Improving Quality
+
+### For Form Designers
+1. Add appropriate validation
+2. Use clear labels
+3. Provide hints
+4. Test thoroughly
+
+### For Supervisors
+1. Review low-score submissions
+2. Identify problem patterns
+3. Provide feedback
+4. Update training
+
+### For Enumerators
+1. Read questions carefully
+2. Double-check entries
+3. Ask if unsure
+4. Review before submit
+
+## Quality Reports
+
+### Automated Alerts
+Set up alerts for:
+- Score below threshold
+- Specific rule failures
+- Unusual patterns
+
+### Quality Dashboard
+Visual overview:
+- Score distribution
+- Trend analysis
+- Problem areas
+    `,
+  },
+
+  // Team Articles
+  'team-management': {
+    title: 'Managing Team Members',
+    content: `Invite and manage your FieldForce team.
+
+## Team Overview
+
+### Viewing Team
+1. Go to **Settings > Team**
+2. See all members:
+   - Name and email
+   - Role
+   - Status (active/inactive)
+   - Last active
+
+## Inviting Members
+
+### Email Invitation
+1. Click **Invite Member**
+2. Enter email address
+3. Select role
+4. Add personal message (optional)
+5. Click **Send Invite**
+
+### Bulk Invite
+1. Click **Bulk Invite**
+2. Download CSV template
+3. Fill in: Name, Email, Role
+4. Upload file
+5. Click **Send All**
+
+### Invite Link
+1. Click **Get Invite Link**
+2. Copy link
+3. Share via any channel
+4. New users join with default role
+
+## Managing Members
+
+### Changing Roles
+1. Click member name
+2. Select new role
+3. Confirm change
+
+### Deactivating Users
+1. Click member name
+2. Click **Deactivate**
+3. Confirm
+
+User loses access but data preserved.
+
+### Reactivating Users
+1. Filter by "Inactive"
+2. Click member name
+3. Click **Reactivate**
+
+### Removing Users
+1. Click member name
+2. Click **Remove from team**
+3. Confirm
+
+Permanent - reassign their work first.
+
+## Team Activity
+
+### Activity Log
+View recent team actions:
+- Logins
+- Submissions
+- Form changes
+- Settings updates
+
+### Performance Metrics
+See per-member stats:
+- Submission count
+- Quality scores
+- Active time
+
+## Best Practices
+
+1. **Use appropriate roles** - Least privilege
+2. **Regular audits** - Review access
+3. **Offboard promptly** - Remove departed staff
+4. **Document roles** - Clear responsibilities
+    `,
+  },
+
+  'roles-permissions': {
+    title: 'Roles & Permissions',
+    content: `Understand and configure role-based access control.
+
+## Default Roles
+
+### Admin
+Full access to everything:
+- Organization settings
+- Billing management
+- User management
+- All data access
+- Form creation/editing
+
+### Supervisor
+Manage projects and data:
+- Create/edit forms
+- View all submissions
+- Manage team
+- Export data
+- Cannot access billing
+
+### Enumerator
+Submit data only:
+- Access assigned forms
+- Submit responses
+- View own submissions
+- Cannot edit forms
+- Cannot see other's data
+
+### Viewer
+Read-only access:
+- View submissions
+- View analytics
+- Cannot submit
+- Cannot edit anything
+
+## Permission Categories
+
+### Organization
+- View organization settings
+- Edit organization settings
+- Manage billing
+- Manage integrations
+
+### Users
+- View team members
+- Invite members
+- Change roles
+- Remove members
+
+### Projects
+- Create projects
+- Edit projects
+- Delete projects
+- Assign members
+
+### Forms
+- Create forms
+- Edit forms
+- Publish forms
+- Delete forms
+
+### Data
+- View submissions
+- Edit submissions
+- Delete submissions
+- Export data
+
+### Analytics
+- View dashboards
+- Create reports
+- Export analytics
+
+## Custom Roles
+
+### Creating Custom Role
+1. Go to **Settings > Roles**
+2. Click **Create Role**
+3. Enter role name
+4. Select permissions
+5. Save
+
+### Editing Roles
+1. Click role name
+2. Modify permissions
+3. Save changes
+
+Changes apply to all users with that role.
+
+### Deleting Roles
+1. Click role name
+2. Click **Delete**
+3. Reassign users first
+
+## Best Practices
+
+1. **Start with defaults** - Customize if needed
+2. **Least privilege** - Give minimum needed
+3. **Regular review** - Audit permissions
+4. **Document custom roles** - Clear definitions
+    `,
+  },
+
+  'bulk-import': {
+    title: 'Bulk Import Enumerators',
+    content: `Import multiple enumerators at once from a spreadsheet.
+
+## When to Use Bulk Import
+
+- Large teams (10+ people)
+- Frequent onboarding
+- Migrating from other systems
+- Temporary field staff
+
+## Preparing Your File
+
+### Download Template
+1. Go to **Field > Collection Links**
+2. Click **Bulk Links**
+3. Click **Download Template**
+
+### Required Columns
+- **Name** - Full name
+- **Email** - Valid email address
+
+### Optional Columns
+- **Phone** - Mobile number
+- **Role** - Enumerator (default)
+- **Language** - Preferred language
+- **Region** - Geographic area
+
+### File Format
+- Excel (.xlsx) or CSV
+- UTF-8 encoding for special characters
+- No empty rows
+- Headers in first row
+
+## Import Process
+
+### Step 1: Upload File
+1. Click **Choose File**
+2. Select your spreadsheet
+3. Click **Upload**
+
+### Step 2: Review Mapping
+1. Verify column mapping
+2. Fix any errors shown
+3. Click **Continue**
+
+### Step 3: Validation
+System checks:
+- Email format valid
+- No duplicates
+- Required fields present
+
+### Step 4: Import
+1. Review summary
+2. Click **Import**
+3. Wait for completion
+
+## After Import
+
+### Collection Links Created
+Each enumerator gets:
+- Unique collection link
+- Auto-generated PIN (if enabled)
+- Email notification (optional)
+
+### Distribution
+Send links via:
+- **Bulk Email** - Click "Email All"
+- **Export List** - Download links
+- **WhatsApp** - Copy individual links
+
+## Handling Errors
+
+### Common Issues
+- **Invalid email** - Check format
+- **Duplicate email** - Already exists
+- **Missing required** - Fill all columns
+
+### Partial Import
+If some fail:
+1. View error details
+2. Fix in spreadsheet
+3. Re-import failures only
+
+## Tips
+
+1. **Test with small batch** - Verify before large import
+2. **Clean data first** - Remove duplicates
+3. **Verify emails** - Reduce bounces
+4. **Save original file** - For reference
+    `,
+  },
+
+  // Settings Articles
+  'profile-settings': {
+    title: 'Profile Settings',
+    content: `Customize your FieldForce profile.
+
+## Accessing Profile
+
+1. Click your avatar (top-right)
+2. Select **Settings**
+3. Click **Profile** tab
+
+## Personal Information
+
+### Basic Details
+- **Full Name** - Display name across app
+- **Email** - Login email (read-only)
+- **Phone** - Contact number
+- **Job Title** - Your position
+- **Department** - Your team/unit
+- **Location** - City/Country
+
+### Updating Info
+1. Edit fields
+2. Click **Save Changes**
+3. Confirmation appears
+
+## Profile Photo
+
+### Uploading Photo
+1. Click **Change Photo**
+2. Choose file (JPG, PNG)
+3. Crop as needed
+4. Click **Save**
+
+### Removing Photo
+1. Click **Remove**
+2. Confirm removal
+3. Initials shown instead
+
+### Photo Requirements
+- Max 5MB file size
+- Square recommended
+- Professional image
+
+## Display Preferences
+
+### Name Display
+Choose how your name appears:
+- Full name
+- First name only
+- Initials
+
+### Timezone
+Select your timezone for:
+- Submission timestamps
+- Scheduled reports
+- Notifications
+
+## Connected Accounts
+
+### Single Sign-On (SSO)
+If enabled by organization:
+- Google account
+- Microsoft account
+- SAML provider
+
+### API Keys
+For developers:
+1. Click **API Keys**
+2. Generate new key
+3. Copy and secure
+    `,
+  },
+
+  'notification-preferences': {
+    title: 'Notification Preferences',
+    content: `Control how and when FieldForce notifies you.
+
+## Notification Types
+
+### Email Notifications
+Sent to your registered email:
+- New submissions
+- Team updates
+- System alerts
+- Weekly digests
+
+### Push Notifications
+Real-time alerts on device:
+- Requires PWA installation
+- Submission alerts
+- Sync status
+- Mentions
+
+### In-App Notifications
+Bell icon in top bar:
+- All activity
+- Click to view
+- Mark as read
+
+## Configuring Notifications
+
+### Access Settings
+1. Go to **Settings**
+2. Click **Notifications**
+
+### Per-Category Settings
+For each notification type:
+- **Email** - On/Off
+- **Push** - On/Off
+- **In-App** - Always on
+
+## Notification Categories
+
+### Submissions
+- New submission received
+- Submission edited
+- Submission rejected
+- Review requested
+
+### Team
+- New member joined
+- Member role changed
+- Invitation accepted
+
+### Forms
+- Form published
+- Form updated
+- Collection link created
+
+### System
+- Sync completed
+- Storage warning
+- Maintenance alerts
+
+## Digest Settings
+
+### Daily Digest
+Summary email at end of day:
+- Submission count
+- Key metrics
+- Action items
+
+### Weekly Report
+Weekly summary:
+- Trends
+- Performance
+- Recommendations
+
+### Digest Timing
+Choose delivery time:
+- Morning (8 AM)
+- Evening (6 PM)
+- Custom time
+
+## Managing Notifications
+
+### Muting Temporarily
+- **Do Not Disturb** - Pause all
+- Set duration
+- Auto-resume
+
+### Unsubscribing
+Each email has unsubscribe link.
+Or manage all in settings.
+
+## Tips
+
+1. Enable push for urgent items
+2. Use digest for overview
+3. Don't over-notify
+4. Review periodically
+    `,
+  },
+
+  'security-settings': {
+    title: 'Security Settings',
+    content: `Secure your FieldForce account.
+
+## Password Security
+
+### Password Requirements
+- Minimum 8 characters
+- At least one uppercase
+- At least one number
+- At least one symbol
+
+### Changing Password
+1. Go to **Settings > Security**
+2. Click **Change Password**
+3. Enter current password
+4. Enter new password twice
+5. Click **Update**
+
+### Password Tips
+- Use unique password
+- Don't share
+- Change regularly
+- Use password manager
+
+## Two-Factor Authentication
+
+### What is 2FA?
+Extra security layer requiring:
+1. Your password
+2. Code from your phone
+
+### Enabling 2FA
+1. Go to **Settings > Security**
+2. Click **Enable 2FA**
+3. Choose method:
+   - Authenticator app
+   - SMS (less secure)
+4. Scan QR code
+5. Enter verification code
+6. Save backup codes
+
+### Backup Codes
+- One-time use codes
+- For when phone unavailable
+- Store securely
+- 10 codes provided
+
+### Disabling 2FA
+1. Go to **Settings > Security**
+2. Click **Disable 2FA**
+3. Enter password
+4. Confirm
+
+## Active Sessions
+
+### Viewing Sessions
+See all logged-in devices:
+- Device type
+- Location
+- Last active
+- IP address
+
+### Signing Out Sessions
+1. Click session
+2. Click **Sign Out**
+3. Confirm
+
+### Sign Out All
+1. Click **Sign Out All Sessions**
+2. You'll be logged out too
+3. Re-login required
+
+## Security Recommendations
+
+1. **Enable 2FA** - Essential protection
+2. **Strong password** - Unique and complex
+3. **Review sessions** - Check regularly
+4. **Secure devices** - Lock screens
+5. **Report suspicious activity** - Contact support
+    `,
+  },
+
+  'api-access': {
+    title: 'API & Integrations',
+    content: `Connect FieldForce with other systems via API.
+
+## API Overview
+
+### What You Can Do
+- Retrieve submissions
+- Create forms programmatically
+- Manage users
+- Trigger workflows
+
+### Authentication
+All API calls require:
+- API Key (header)
+- Or OAuth token
+
+## Getting API Keys
+
+### Generate Key
+1. Go to **Settings > API**
+2. Click **Generate Key**
+3. Name your key
+4. Set permissions
+5. Copy and secure
+
+### Key Permissions
+- **Read** - View data only
+- **Write** - Create/update
+- **Delete** - Remove data
+- **Admin** - Full access
+
+### Revoking Keys
+1. Find key in list
+2. Click **Revoke**
+3. Confirm
+
+## API Endpoints
+
+### Submissions
+\`\`\`
+GET /api/submissions
+POST /api/submissions
+GET /api/submissions/{id}
+\`\`\`
+
+### Forms
+\`\`\`
+GET /api/forms
+POST /api/forms
+PUT /api/forms/{id}
+\`\`\`
+
+### Users
+\`\`\`
+GET /api/users
+POST /api/users/invite
+\`\`\`
+
+## Webhooks
+
+### What are Webhooks?
+Automatic notifications when events occur.
+
+### Setting Up
+1. Go to **Settings > Webhooks**
+2. Click **Add Webhook**
+3. Enter URL
+4. Select events
+5. Save
+
+### Events
+- submission.created
+- submission.updated
+- form.published
+- user.invited
+
+## Integrations
+
+### Available Integrations
+- Google Sheets
+- Power BI
+- Zapier
+- Custom webhooks
+
+### Setting Up Integration
+1. Go to **Settings > Integrations**
+2. Select service
+3. Follow auth flow
+4. Configure mapping
+5. Test connection
+
+## Rate Limits
+
+- 1000 requests/hour (standard)
+- 10000 requests/hour (enterprise)
+- Bulk endpoints available
+
+## Documentation
+
+Full API docs available at:
+**/api/docs** (Swagger UI)
+    `,
+  },
 };
 
 // ============================================================
