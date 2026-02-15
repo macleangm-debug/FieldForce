@@ -143,3 +143,43 @@ Pull repository from https://github.com/macleangm-debug/FieldForce
 
 ### Test Results:
 - 100% pass rate (backend, frontend, integration)
+
+## Update - Feb 15, 2026 (MongoDB Persistence for AI Assistant)
+
+### MongoDB Refactoring Complete
+- **Refactored**: AI Assistant backend from in-memory storage to MongoDB persistence
+- **Collections Added**:
+  - `help_chat_sessions` - Store chat session metadata
+  - `help_chat_messages` - Store individual messages with timestamps
+  - `help_feedback` - Store user feedback on AI responses
+  - `help_question_analytics` - Aggregated analytics on questions
+
+### New API Endpoints:
+- GET /api/help-assistant/stats - Overall statistics (sessions, messages, satisfaction rate)
+- GET /api/help-assistant/sessions/{session_id}/history - Chat history for a session
+
+### MongoDB Indexes (server.py):
+- `help_chat_sessions`: session_id (unique), created_at
+- `help_chat_messages`: session_id + timestamp compound
+- `help_feedback`: session_id, created_at
+- `help_question_analytics`: question_key (unique), count (descending)
+
+### Benefits:
+- Chat history persists across server restarts
+- Analytics data survives deployments
+- Session recovery possible
+- Scalable for multiple server instances
+
+### Help Articles Verified Complete:
+All 22 articles have comprehensive content:
+- Getting Started: welcome, first-project, dashboard-overview, account-setup
+- Forms & Surveys: form-builder, question-types, skip-logic, form-templates
+- Data Collection: collection-links, offline-mode, gps-tracking, pwa-install
+- Analytics: analytics-overview, export-data, quality-metrics
+- Team: team-management, roles-permissions, bulk-import
+- Settings: profile-settings, notification-preferences, security-settings, api-access
+
+### Test Results:
+- 100% pass rate (backend and frontend)
+- MongoDB persistence verified
+- All 22 articles tested
