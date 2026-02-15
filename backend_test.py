@@ -10,7 +10,7 @@ import json
 from datetime import datetime
 
 class HelpCenterAPITester:
-    def __init__(self, base_url="https://workforce-pull.preview.emergentagent.com"):
+    def __init__(self, base_url="https://comprehensive-help.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
