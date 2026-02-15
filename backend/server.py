@@ -84,6 +84,7 @@ from routes.notification_routes import router as notification_router
 from routes.settings_routes import router as settings_router
 from routes.template_message_routes import router as template_message_router
 from routes.email_routes import router as email_router
+from routes.help_assistant import router as help_assistant_router
 
 # Include core route modules
 api_router.include_router(auth_router)
