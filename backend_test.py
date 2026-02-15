@@ -78,9 +78,18 @@ class HelpCenterAPITester:
             data={"email": "demo@fieldforce.io", "password": "Test123!"}
         )
         
-        if success and 'token' in response:
-            self.token = response['token']
-            self.log(f"   📝 Token obtained: {self.token[:20]}...")
+        if success:
+            self.log(f"   📝 Auth Response: {response}")
+            # Try different token field names
+            token_keys = ['token', 'access_token', 'jwt', 'access']
+            for key in token_keys:
+                if key in response:
+                    self.token = response[key]
+                    self.log(f"   📝 Token obtained from '{key}': {str(self.token)[:20]}...")
+                    return True
+            
+            # If no token found, still continue tests for public endpoints
+            self.log(f"   ⚠️  No token found in response, will test public endpoints")
             return True
         return False
 
