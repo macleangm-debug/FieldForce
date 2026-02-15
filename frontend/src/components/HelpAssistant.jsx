@@ -190,7 +190,7 @@ export function HelpAssistant({ isDark = true }) {
       <motion.button
         onClick={() => setIsOpen(true)}
         className={cn(
-          "fixed bottom-6 right-6 z-50 p-4 rounded-full shadow-xl",
+          "fixed bottom-20 right-6 z-50 p-4 rounded-full shadow-xl",
           "bg-gradient-to-r from-teal-500 to-cyan-500",
           "text-white hover:shadow-2xl hover:shadow-teal-500/20",
           "transition-shadow",
