@@ -160,11 +160,15 @@ async def create_submission(
     
     await db.submissions.insert_one(submission_dict)
     
-    # Trigger async processing if Celery is available
+    # Trigger async processing if Celery is available and Redis is connected
     if CELERY_AVAILABLE:
-        process_submission.delay(submission.id)
-        validate_submission_media.delay(submission.id)
-        trigger_submission_webhooks.delay(submission.id)
+        try:
+            process_submission.delay(submission.id)
+            validate_submission_media.delay(submission.id)
+            trigger_submission_webhooks.delay(submission.id)
+        except Exception as e:
+            # Celery not available (Redis down), skip async processing
+            logger.warning(f"Celery task failed (Redis unavailable): {e}")
     
     return SubmissionOut(
         id=submission.id,
