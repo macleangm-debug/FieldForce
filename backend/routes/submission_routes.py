@@ -317,31 +317,6 @@ async def create_bulk_submissions(
         processing_mode="async" if (CELERY_AVAILABLE and data.async_processing) else "sync",
         task_id=task_id
     )
-                device_info=sub_data.device_info,
-                org_id=form["org_id"],
-                project_id=form["project_id"],
-                submitted_by=current_user["user_id"],
-                synced_at=datetime.now(timezone.utc),
-                quality_score=quality_score,
-                quality_flags=quality_flags
-            )
-            
-            submission_dict = submission.model_dump()
-            submission_dict["submitted_at"] = submission_dict["submitted_at"].isoformat()
-            submission_dict["synced_at"] = submission_dict["synced_at"].isoformat()
-            
-            await db.submissions.insert_one(submission_dict)
-            results.append({"index": idx, "id": submission.id})
-            
-        except Exception as e:
-            errors.append({"index": idx, "error": str(e)})
-    
-    return {
-        "success_count": len(results),
-        "error_count": len(errors),
-        "results": results,
-        "errors": errors
-    }
 
 
 @router.get("", response_model=List[SubmissionOut])
