@@ -131,11 +131,17 @@ api_router.include_router(help_assistant_router)
 
 
 # Prometheus metrics endpoint
-@app.get("/metrics")
-async def metrics():
+from fastapi.responses import Response as FastAPIResponse
+from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
+
+@app.get("/metrics", include_in_schema=False)
+async def metrics_endpoint():
     """Prometheus metrics endpoint"""
     if METRICS_ENABLED:
-        return get_metrics()
+        return FastAPIResponse(
+            content=generate_latest(),
+            media_type=CONTENT_TYPE_LATEST
+        )
     return {"error": "Metrics not enabled"}
 
 
