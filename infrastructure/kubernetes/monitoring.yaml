@@ -1,0 +1,679 @@
+# Prometheus & Grafana Monitoring Stack for FieldForce
+# Comprehensive monitoring for 2M+ daily submissions
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    app: monitoring
+
+---
+# Prometheus ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+    
+    rule_files:
+      - /etc/prometheus/rules/*.yml
+    
+    scrape_configs:
+      # Prometheus self-monitoring
+      - job_name: 'prometheus'
+        static_configs:
+        - targets: ['localhost:9090']
+      
+      # FieldForce API metrics
+      - job_name: 'fieldforce-api'
+        kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names: ['fieldforce']
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          regex: fieldforce
+        - source_labels: [__meta_kubernetes_pod_label_component]
+          regex: api
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          regex: "true"
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_ip]
+          target_label: __address__
+          replacement: ${1}:8001
+      
+      # MongoDB metrics
+      - job_name: 'mongodb'
+        kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names: ['fieldforce']
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          regex: mongo
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_ip]
+          target_label: __address__
+          replacement: ${1}:9216
+      
+      # Redis metrics
+      - job_name: 'redis'
+        kubernetes_sd_configs:
+        - role: pod
+          namespaces:
+            names: ['fieldforce']
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_label_app]
+          regex: redis
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_ip]
+          target_label: __address__
+          replacement: ${1}:9121
+      
+      # Celery/Flower metrics
+      - job_name: 'celery'
+        static_configs:
+        - targets: ['fieldforce-flower.fieldforce.svc.cluster.local:5555']
+      
+      # Node metrics
+      - job_name: 'kubernetes-nodes'
+        kubernetes_sd_configs:
+        - role: node
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+
+  alerts.yml: |
+    groups:
+    - name: fieldforce-alerts
+      rules:
+      # High API Latency
+      - alert: HighAPILatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="fieldforce-api"}[5m])) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency detected"
+          description: "95th percentile latency is {{ $value }}s (threshold: 0.5s)"
+      
+      # API Error Rate
+      - alert: HighAPIErrorRate
+        expr: rate(http_requests_total{job="fieldforce-api",status=~"5.."}[5m]) / rate(http_requests_total{job="fieldforce-api"}[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High API error rate"
+          description: "Error rate is {{ $value | humanizePercentage }}"
+      
+      # Celery Queue Depth
+      - alert: HighCeleryQueueDepth
+        expr: celery_queue_length{queue="submissions"} > 5000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Celery queue depth"
+          description: "Submissions queue has {{ $value }} pending tasks"
+      
+      # Critical Queue Depth
+      - alert: CriticalCeleryQueueDepth
+        expr: celery_queue_length{queue="submissions"} > 20000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical Celery queue depth"
+          description: "Submissions queue has {{ $value }} pending tasks - immediate action required"
+      
+      # MongoDB Replication Lag
+      - alert: MongoDBReplicationLag
+        expr: mongodb_mongod_replset_member_replication_lag > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "MongoDB replication lag detected"
+          description: "Replication lag is {{ $value }}s"
+      
+      # MongoDB Connection Pool
+      - alert: MongoDBHighConnections
+        expr: mongodb_connections{state="current"} > 800
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High MongoDB connections"
+          description: "Current connections: {{ $value }}"
+      
+      # Redis Memory
+      - alert: RedisHighMemory
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage high"
+          description: "Redis memory usage is {{ $value | humanizePercentage }}"
+      
+      # Pod CPU
+      - alert: PodHighCPU
+        expr: rate(container_cpu_usage_seconds_total{namespace="fieldforce"}[5m]) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage in pod"
+          description: "Pod {{ $labels.pod }} CPU usage is {{ $value | humanizePercentage }}"
+      
+      # Pod Memory
+      - alert: PodHighMemory
+        expr: container_memory_usage_bytes{namespace="fieldforce"} / container_spec_memory_limit_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage in pod"
+          description: "Pod {{ $labels.pod }} memory usage is {{ $value | humanizePercentage }}"
+      
+      # Submission Rate Drop
+      - alert: LowSubmissionRate
+        expr: rate(fieldforce_submissions_total[5m]) < 10 and hour() >= 8 and hour() <= 18
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low submission rate during business hours"
+          description: "Submission rate is {{ $value }}/s"
+
+---
+# Prometheus Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.47.0
+        args:
+        - "--config.file=/etc/prometheus/prometheus.yml"
+        - "--storage.tsdb.path=/prometheus"
+        - "--storage.tsdb.retention.time=30d"
+        - "--web.enable-lifecycle"
+        ports:
+        - containerPort: 9090
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: prometheus-config
+          mountPath: /etc/prometheus
+        - name: prometheus-data
+          mountPath: /prometheus
+      volumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-config
+      - name: prometheus-data
+        persistentVolumeClaim:
+          claimName: prometheus-pvc
+
+---
+# Prometheus PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pvc
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp3
+  resources:
+    requests:
+      storage: 100Gi
+
+---
+# Prometheus Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9090
+    targetPort: 9090
+  selector:
+    app: prometheus
+
+---
+# Prometheus ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+
+---
+# Prometheus ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "nodes/proxy", "services", "endpoints", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+
+---
+# Prometheus ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: prometheus
+  namespace: monitoring
+
+---
+# Grafana ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      access: proxy
+      url: http://prometheus:9090
+      isDefault: true
+      editable: false
+
+---
+# Grafana Dashboard ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: monitoring
+data:
+  fieldforce-dashboard.json: |
+    {
+      "dashboard": {
+        "title": "FieldForce - Production Dashboard",
+        "uid": "fieldforce-main",
+        "panels": [
+          {
+            "title": "Submissions Per Second",
+            "type": "graph",
+            "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+            "targets": [
+              {
+                "expr": "rate(fieldforce_submissions_total[5m])",
+                "legendFormat": "Submissions/s"
+              }
+            ]
+          },
+          {
+            "title": "API Latency (p95)",
+            "type": "graph",
+            "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"fieldforce-api\"}[5m]))",
+                "legendFormat": "p95 Latency"
+              }
+            ]
+          },
+          {
+            "title": "Celery Queue Depth",
+            "type": "graph",
+            "gridPos": {"x": 0, "y": 8, "w": 8, "h": 8},
+            "targets": [
+              {
+                "expr": "celery_queue_length",
+                "legendFormat": "{{queue}}"
+              }
+            ]
+          },
+          {
+            "title": "Active Workers",
+            "type": "stat",
+            "gridPos": {"x": 8, "y": 8, "w": 4, "h": 4},
+            "targets": [
+              {
+                "expr": "celery_workers_total",
+                "legendFormat": "Workers"
+              }
+            ]
+          },
+          {
+            "title": "MongoDB Operations/s",
+            "type": "graph",
+            "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+            "targets": [
+              {
+                "expr": "rate(mongodb_op_counters_total[5m])",
+                "legendFormat": "{{type}}"
+              }
+            ]
+          },
+          {
+            "title": "Redis Memory Usage",
+            "type": "gauge",
+            "gridPos": {"x": 8, "y": 12, "w": 4, "h": 4},
+            "targets": [
+              {
+                "expr": "redis_memory_used_bytes / redis_memory_max_bytes * 100",
+                "legendFormat": "Memory %"
+              }
+            ]
+          },
+          {
+            "title": "API Pod Count",
+            "type": "stat",
+            "gridPos": {"x": 0, "y": 16, "w": 4, "h": 4},
+            "targets": [
+              {
+                "expr": "count(kube_pod_status_ready{namespace=\"fieldforce\",pod=~\"fieldforce-api.*\"})",
+                "legendFormat": "API Pods"
+              }
+            ]
+          },
+          {
+            "title": "Worker Pod Count",
+            "type": "stat",
+            "gridPos": {"x": 4, "y": 16, "w": 4, "h": 4},
+            "targets": [
+              {
+                "expr": "count(kube_pod_status_ready{namespace=\"fieldforce\",pod=~\"fieldforce-worker.*\"})",
+                "legendFormat": "Worker Pods"
+              }
+            ]
+          },
+          {
+            "title": "Daily Submissions",
+            "type": "stat",
+            "gridPos": {"x": 8, "y": 16, "w": 4, "h": 4},
+            "targets": [
+              {
+                "expr": "increase(fieldforce_submissions_total[24h])",
+                "legendFormat": "24h Total"
+              }
+            ]
+          },
+          {
+            "title": "Error Rate",
+            "type": "stat",
+            "gridPos": {"x": 12, "y": 16, "w": 4, "h": 4},
+            "targets": [
+              {
+                "expr": "rate(http_requests_total{job=\"fieldforce-api\",status=~\"5..\"}[5m]) / rate(http_requests_total{job=\"fieldforce-api\"}[5m]) * 100",
+                "legendFormat": "Error %"
+              }
+            ]
+          }
+        ]
+      }
+    }
+
+---
+# Grafana Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:10.1.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-secrets
+              key: admin-password
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-piechart-panel,grafana-clock-panel"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: grafana-datasources
+          mountPath: /etc/grafana/provisioning/datasources
+        - name: grafana-dashboards
+          mountPath: /etc/grafana/provisioning/dashboards
+        - name: grafana-data
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-datasources
+        configMap:
+          name: grafana-datasources
+      - name: grafana-dashboards
+        configMap:
+          name: grafana-dashboards
+      - name: grafana-data
+        persistentVolumeClaim:
+          claimName: grafana-pvc
+
+---
+# Grafana PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp3
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# Grafana Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: grafana
+
+---
+# Grafana Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-secrets
+  namespace: monitoring
+type: Opaque
+stringData:
+  admin-password: "FieldForce2026!"
+
+---
+# AlertManager Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+      - name: alertmanager
+        image: prom/alertmanager:v0.26.0
+        ports:
+        - containerPort: 9093
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "100m"
+        volumeMounts:
+        - name: alertmanager-config
+          mountPath: /etc/alertmanager
+      volumes:
+      - name: alertmanager-config
+        configMap:
+          name: alertmanager-config
+
+---
+# AlertManager ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 5m
+    
+    route:
+      group_by: ['alertname', 'severity']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      receiver: 'default'
+      routes:
+      - match:
+          severity: critical
+        receiver: 'critical'
+    
+    receivers:
+    - name: 'default'
+      webhook_configs:
+      - url: 'http://fieldforce-api.fieldforce.svc.cluster.local:8001/api/webhooks/alerts'
+    
+    - name: 'critical'
+      webhook_configs:
+      - url: 'http://fieldforce-api.fieldforce.svc.cluster.local:8001/api/webhooks/alerts'
+      # Add PagerDuty, Slack, etc. in production
+
+---
+# AlertManager Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9093
+    targetPort: 9093
+  selector:
+    app: alertmanager
+
+---
+# Monitoring Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monitoring-ingress
+  namespace: monitoring
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: monitoring-auth
+spec:
+  rules:
+  - host: grafana.fieldforce.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+  - host: prometheus.fieldforce.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus
+            port:
+              number: 9090
