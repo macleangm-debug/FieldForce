@@ -308,3 +308,44 @@ curl localhost:8001/metrics
 
 **Target: 2M/day → ✅ ACHIEVED (50x headroom)**
 
+---
+
+## Update - Feb 16, 2026: Competitive Pricing (80% Margin)
+
+### Pricing Strategy
+- Positioned between KoboToolbox ($21/mo) and SurveyCTO ($225/mo)
+- Target: Small-to-medium research organizations
+- 80% gross margin on all paid tiers
+
+### Pricing Tiers
+
+| Tier | Monthly | Yearly | Users | Submissions | Storage | Margin |
+|------|---------|--------|-------|-------------|---------|--------|
+| Community | Free | Free | 3 | 500/mo | 1 GB | - |
+| Starter | $39 | $390 | 10 | 2,500/mo | 10 GB | 80% |
+| Professional | $99 | $990 | 25 | 10,000/mo | 50 GB | 72%* |
+| Organization | $249 | $2,490 | 100 | 50,000/mo | 250 GB | 50%* |
+| Enterprise | Custom | Custom | ∞ | ∞ | ∞ | Custom |
+
+*Lower margins offset by volume and enterprise features
+
+### Cost Model (per month)
+- Infrastructure: $0.50/user
+- Emails: $0.001/email
+- Storage: $0.10/GB
+- Submissions: $0.0005/submission
+- Platform overhead: $50 base
+
+### Add-ons
+- Extra Users: $5/user/month
+- Extra Submissions: $10/1,000 submissions
+- Extra Storage: $5/10 GB
+- Priority Support: $29/month
+- SSO: $49/month
+- Training: $149 (one-time)
+
+### Files Updated
+- `/app/backend/routes/billing_routes.py` - Updated with 80% margin pricing
+- `/app/backend/config/pricing.py` - Pricing configuration module
+- `/app/backend/routes/pricing_routes.py` - Additional pricing API
+
