@@ -236,3 +236,64 @@ All 22 articles have comprehensive content:
 - **Bulk sync:** 10,000 submissions in ~5 seconds
 - **Worker scaling:** Auto-scale 5-50 pods based on queue depth
 
+---
+
+## Update - Feb 16, 2026: Production Infrastructure
+
+### 1. Redis Production Configuration ✅
+**File:** `/app/infrastructure/kubernetes/redis-cluster.yaml`
+- Redis master with 2 replicas (read scaling)
+- Redis Sentinel for automatic failover (3 nodes)
+- Prometheus redis_exporter sidecar for metrics
+- Persistence with appendonly mode
+- Memory management (4GB max, LRU eviction)
+
+### 2. Prometheus & Grafana Monitoring ✅
+**File:** `/app/infrastructure/kubernetes/monitoring.yaml`
+- Prometheus with 30-day retention
+- Grafana with pre-configured FieldForce dashboard
+- AlertManager with alert rules for:
+  - High API latency (p95 > 500ms)
+  - High error rate (> 5%)
+  - Celery queue depth (> 5000 tasks)
+  - MongoDB replication lag
+  - Redis memory usage
+  - Pod CPU/Memory thresholds
+  - Low submission rate during business hours
+
+### 3. Application Metrics Endpoint ✅
+**File:** `/app/backend/middleware/prometheus_metrics.py`
+- HTTP request metrics (count, latency, in-progress)
+- Custom FieldForce metrics:
+  - `fieldforce_submissions_total`
+  - `fieldforce_submission_processing_seconds`
+  - `fieldforce_bulk_submissions_total`
+  - `celery_queue_length`
+- Endpoint: `GET /metrics` (Prometheus format)
+
+### 4. Load Testing Suite ✅
+**Directory:** `/app/infrastructure/load-testing/`
+
+**k6 Scripts:**
+| Script | Purpose | Duration |
+|--------|---------|----------|
+| `load-test.js` | Standard load test | 15 min |
+| `stress-test.js` | Find breaking point | 45 min |
+| `soak-test.js` | Endurance/memory leaks | 4 hours |
+
+**Locust Script:**
+- `locustfile.py` - Python alternative with web UI
+- Multiple user classes: FieldForceUser, HighVolumeUser, BulkSyncUser
+
+### Quick Commands:
+```bash
+# k6 load test
+k6 run infrastructure/load-testing/k6/load-test.js
+
+# Locust with web UI
+locust -f infrastructure/load-testing/locust/locustfile.py --host=http://localhost:8001
+
+# Check Prometheus metrics
+curl localhost:8001/metrics
+```
+
