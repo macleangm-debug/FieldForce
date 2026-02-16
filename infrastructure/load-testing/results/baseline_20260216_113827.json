@@ -1,0 +1,26 @@
+{
+  "timestamp": "2026-02-16T11:38:27.804456",
+  "config": {
+    "duration_seconds": 30.031900644302368,
+    "concurrent_workers": 10,
+    "form_id": "d36afbbd-56f1-4e60-99eb-d9f8f31c048e"
+  },
+  "results": {
+    "total_submissions": 89134,
+    "single_submissions": 0,
+    "bulk_items": 89134,
+    "errors": 5823
+  },
+  "throughput": {
+    "items_per_second": 2967.977320373509,
+    "daily_extrapolation": 256433240.48027116
+  },
+  "latency_ms": {
+    "avg": 35.855393504479984,
+    "p50": 34.23118591308594,
+    "p95": 48.569679260253906,
+    "p99": 112.7634048461914
+  },
+  "error_rate_percent": 69.70313622216902,
+  "checks_passed": "3/4"
+}
