@@ -130,6 +130,15 @@ api_router.include_router(email_router)
 api_router.include_router(help_assistant_router)
 
 
+# Prometheus metrics endpoint
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint"""
+    if METRICS_ENABLED:
+        return get_metrics()
+    return {"error": "Metrics not enabled"}
+
+
 # Health check endpoint
 @api_router.get("/")
 async def root():
