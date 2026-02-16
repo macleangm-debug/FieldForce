@@ -349,3 +349,70 @@ curl localhost:8001/metrics
 - `/app/backend/config/pricing.py` - Pricing configuration module
 - `/app/backend/routes/pricing_routes.py` - Additional pricing API
 
+---
+
+## Update - Feb 16, 2026: Reusable Pricing Components Library
+
+### Files Created in `/app/frontend/src/components/pricing/`
+
+| File | Purpose |
+|------|---------|
+| `PricingComponents.jsx` | Core UI components (PricingCard, PricingToggle, PricingGrid, etc.) |
+| `PricingConfig.js` | Customizable pricing data (tiers, features, FAQ, credits) |
+| `PricingExamples.jsx` | 6 ready-to-use example implementations |
+| `index.js` | Clean exports for all components |
+
+### Available Components
+
+```jsx
+import { 
+  PricingSection,      // Full pricing page with all sections
+  PricingCard,         // Individual plan card
+  PricingGrid,         // Grid of plan cards
+  PricingToggle,       // Monthly/Yearly billing switch
+  PricingComparison,   // Feature comparison table
+  PricingFAQ,          // Collapsible FAQ accordion
+  TrustBadges,         // Security & trust indicators
+  CreditPackCard,      // Pay-as-you-go credit pack
+  CreditsInfo          // Credits explanation card
+} from './components/pricing';
+```
+
+### Configuration Data
+
+```jsx
+import {
+  PRICING_TIERS,       // 4 tiers (Community, Starter, Professional, Organization)
+  FEATURE_CATEGORIES,  // 7 categories, 30+ features
+  FAQ_ITEMS,           // 7 common questions
+  CREDIT_PACKS,        // 4 credit pack options
+  calculatePrice,      // Helper function for price calculation
+  calculateAnnualPrice // Helper for annual pricing
+} from './components/pricing';
+```
+
+### Key Features
+- Dark/Light theme support
+- Monthly/Annual toggle with discount badge (-17%)
+- Animated cards with Framer Motion
+- Collapsible feature comparison table
+- FAQ accordion with expand/collapse
+- Trust badges (encryption, uptime, M-Pesa, support)
+- Fully responsive design
+- data-testid on all interactive elements
+
+### Updated PricingPage.jsx
+- Now uses reusable components from the library
+- Falls back to config defaults if API fails
+- Maintains all existing functionality (subscribe, credits purchase)
+- Reduced code from 535 lines to ~180 lines
+
+### Test Results
+- All 4 pricing tiers displayed correctly
+- Billing toggle working (Monthly/Yearly)
+- Credit packs with "Best Value" badge
+- Feature comparison expandable/collapsible
+- FAQ accordion functional
+- Trust badges displayed
+- CTA buttons working (Demo, Free Trial)
+
