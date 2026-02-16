@@ -47,6 +47,16 @@ app = FastAPI(
     redoc_url="/api/redoc" if not PRODUCTION_MODE else None,
 )
 
+# Add Prometheus metrics middleware
+try:
+    from middleware.prometheus_metrics import PrometheusMiddleware, get_metrics
+    app.add_middleware(PrometheusMiddleware)
+    METRICS_ENABLED = True
+    logger.info("Prometheus metrics enabled")
+except ImportError as e:
+    METRICS_ENABLED = False
+    logger.warning(f"Prometheus metrics not available: {e}")
+
 # Store db in app state for route access
 app.state.db = db
 
