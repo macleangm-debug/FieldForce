@@ -1,0 +1,374 @@
+# FieldForce Kubernetes Deployment Configuration
+# Supports 2M+ daily submissions with horizontal pod autoscaling
+# P3: Kubernetes horizontal pod autoscaling (DevOps)
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fieldforce
+  labels:
+    app: fieldforce
+
+---
+# ConfigMap for environment variables
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fieldforce-config
+  namespace: fieldforce
+data:
+  DB_NAME: "fieldforce"
+  CORS_ORIGINS: "*"
+  LOG_LEVEL: "INFO"
+  WORKER_CONCURRENCY: "8"
+  CELERY_PREFETCH_MULTIPLIER: "4"
+
+---
+# Secret for sensitive data (use actual secrets management in production)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: fieldforce-secrets
+  namespace: fieldforce
+type: Opaque
+stringData:
+  MONGO_URL: "mongodb://mongo-0.mongo-svc.fieldforce.svc.cluster.local:27017,mongo-1.mongo-svc.fieldforce.svc.cluster.local:27017,mongo-2.mongo-svc.fieldforce.svc.cluster.local:27017/fieldforce?replicaSet=rs0"
+  REDIS_URL: "redis://redis-master.fieldforce.svc.cluster.local:6379"
+  JWT_SECRET: "your-production-secret-here"
+  EMERGENT_LLM_KEY: "your-llm-key-here"
+
+---
+# Backend API Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fieldforce-api
+  namespace: fieldforce
+  labels:
+    app: fieldforce
+    component: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fieldforce
+      component: api
+  template:
+    metadata:
+      labels:
+        app: fieldforce
+        component: api
+    spec:
+      containers:
+      - name: api
+        image: fieldforce/api:latest
+        ports:
+        - containerPort: 8001
+        envFrom:
+        - configMapRef:
+            name: fieldforce-config
+        - secretRef:
+            name: fieldforce-secrets
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: uploads
+          mountPath: /app/uploads
+      volumes:
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: fieldforce-uploads
+
+---
+# API Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: fieldforce-api-svc
+  namespace: fieldforce
+spec:
+  selector:
+    app: fieldforce
+    component: api
+  ports:
+  - port: 8001
+    targetPort: 8001
+  type: ClusterIP
+
+---
+# Horizontal Pod Autoscaler for API
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fieldforce-api-hpa
+  namespace: fieldforce
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fieldforce-api
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "1000"
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+      - type: Pods
+        value: 4
+        periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Pods
+        value: 2
+        periodSeconds: 120
+
+---
+# Celery Worker Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fieldforce-worker
+  namespace: fieldforce
+  labels:
+    app: fieldforce
+    component: worker
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: fieldforce
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: fieldforce
+        component: worker
+    spec:
+      containers:
+      - name: worker
+        image: fieldforce/api:latest
+        command: ["celery", "-A", "workers.celery_app", "worker", "-l", "INFO", "-Q", "submissions,analytics,notifications,default", "-c", "8"]
+        envFrom:
+        - configMapRef:
+            name: fieldforce-config
+        - secretRef:
+            name: fieldforce-secrets
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "4000m"
+
+---
+# HPA for Celery Workers
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fieldforce-worker-hpa
+  namespace: fieldforce
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fieldforce-worker
+  minReplicas: 5
+  maxReplicas: 50
+  metrics:
+  - type: External
+    external:
+      metric:
+        name: celery_queue_length
+        selector:
+          matchLabels:
+            queue: submissions
+      target:
+        type: AverageValue
+        averageValue: "100"
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Pods
+        value: 10
+        periodSeconds: 30
+    scaleDown:
+      stabilizationWindowSeconds: 600
+      policies:
+      - type: Pods
+        value: 5
+        periodSeconds: 300
+
+---
+# Celery Beat Scheduler (single instance)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fieldforce-beat
+  namespace: fieldforce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fieldforce
+      component: beat
+  template:
+    metadata:
+      labels:
+        app: fieldforce
+        component: beat
+    spec:
+      containers:
+      - name: beat
+        image: fieldforce/api:latest
+        command: ["celery", "-A", "workers.celery_app", "beat", "-l", "INFO"]
+        envFrom:
+        - configMapRef:
+            name: fieldforce-config
+        - secretRef:
+            name: fieldforce-secrets
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fieldforce-frontend
+  namespace: fieldforce
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fieldforce
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: fieldforce
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: fieldforce/frontend:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: fieldforce-frontend-svc
+  namespace: fieldforce
+spec:
+  selector:
+    app: fieldforce
+    component: frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fieldforce-ingress
+  namespace: fieldforce
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - fieldforce.example.com
+    secretName: fieldforce-tls
+  rules:
+  - host: fieldforce.example.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: fieldforce-api-svc
+            port:
+              number: 8001
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fieldforce-frontend-svc
+            port:
+              number: 3000
+
+---
+# PVC for uploads
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fieldforce-uploads
+  namespace: fieldforce
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc  # Use EFS for shared storage
+  resources:
+    requests:
+      storage: 100Gi
