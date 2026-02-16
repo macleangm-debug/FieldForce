@@ -95,6 +95,7 @@ from routes.settings_routes import router as settings_router
 from routes.template_message_routes import router as template_message_router
 from routes.email_routes import router as email_router
 from routes.help_assistant import router as help_assistant_router
+from routes.pricing_routes import router as pricing_router
 
 # Include core route modules
 api_router.include_router(auth_router)
@@ -113,6 +114,7 @@ api_router.include_router(widget_router)
 api_router.include_router(device_router)
 api_router.include_router(rbac_router)
 api_router.include_router(analytics_router)
+api_router.include_router(pricing_router)
 api_router.include_router(translation_router)
 api_router.include_router(paradata_router)
 api_router.include_router(revision_router)
