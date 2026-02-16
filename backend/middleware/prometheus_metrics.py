@@ -124,6 +124,7 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
 
 def get_metrics():
     """Generate Prometheus metrics output"""
+    from fastapi import Response
     return Response(
         content=generate_latest(),
         media_type=CONTENT_TYPE_LATEST
