@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-02-16T11:36:24.437225",
+  "duration_seconds": 30.0168297290802,
+  "concurrent_workers": 5,
+  "results": {
+    "total_operations": 11885,
+    "total_items": 0,
+    "submissions": 0,
+    "reads": 0,
+    "bulk_items": 0,
+    "errors": 10677
+  },
+  "throughput": {
+    "ops_per_second": 395.94454535236457,
+    "items_per_second": 0.0,
+    "daily_extrapolation": 0.0
+  },
+  "latency_ms": {
+    "avg": 12.566384137755039,
+    "p50": 12.325048446655273,
+    "p95": 16.49022102355957,
+    "p99": 18.923521041870117
+  },
+  "error_rate_percent": 89.8359276398822
+}
