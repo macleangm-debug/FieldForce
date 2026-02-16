@@ -274,11 +274,17 @@ class UsageRecord(BaseModel):
 
 @router.get("/plans")
 async def get_pricing_plans():
-    """Get all available pricing plans"""
+    """Get all available pricing plans with competitive 80% margin pricing"""
     return {
         "plans": list(PRICING_PLANS.values()),
+        "addons": ADDONS,
         "credit_packs": CREDIT_PACKS,
-        "credit_rates": CREDIT_RATES
+        "credit_rates": CREDIT_RATES,
+        "pricing_notes": {
+            "yearly_discount": "17% off with annual billing",
+            "nonprofit_discount": "Contact sales for nonprofit pricing",
+            "trial": "14-day free trial on all paid plans"
+        }
     }
 
 
