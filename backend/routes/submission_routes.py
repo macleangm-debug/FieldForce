@@ -1,13 +1,33 @@
-"""DataPulse - Submission Routes"""
-from fastapi import APIRouter, HTTPException, status, Request, Depends, Query
+"""
+FieldForce - Submission Routes
+Optimized for 2M+ daily submissions with bulk operations and async processing
+"""
+from fastapi import APIRouter, HTTPException, status, Request, Depends, Query, BackgroundTasks
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone, timedelta
 from pydantic import BaseModel
+from pymongo import InsertOne, UpdateOne
+import logging
 
 from models import Submission, SubmissionCreate, SubmissionOut
 from auth import get_current_user
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/submissions", tags=["Submissions"])
+
+# Try to import Celery tasks (optional - graceful fallback if not available)
+try:
+    from workers.submission_tasks import (
+        process_submission,
+        process_bulk_submissions,
+        validate_submission_media,
+        trigger_submission_webhooks
+    )
+    CELERY_AVAILABLE = True
+except ImportError:
+    CELERY_AVAILABLE = False
+    logger.warning("Celery workers not available - running in synchronous mode")
 
 
 class SubmissionReview(BaseModel):
@@ -17,6 +37,16 @@ class SubmissionReview(BaseModel):
 
 class BulkSubmissionCreate(BaseModel):
     submissions: List[SubmissionCreate]
+    async_processing: bool = True  # Enable async processing by default
+
+
+class BulkSubmissionResponse(BaseModel):
+    success_count: int
+    error_count: int
+    submission_ids: List[str]
+    errors: List[dict]
+    processing_mode: str  # "async" or "sync"
+    task_id: Optional[str] = None
 
 
 async def check_form_access(db, form_id: str, user_id: str):
